@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# Test output (local runs and CI rounds)
+test-output/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# Built dashboard site and the results history checked out in CI
+_site/
+results-branch/
+
+# Local-only files
+.env

@@ -1,0 +1,22 @@
+{
+  "name": "playwright-e2e-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "E2E test automation portfolio: Playwright + TypeScript tests for a demo e-commerce site, run N rounds on GitHub Actions with a public bilingual results dashboard.",
+  "license": "MIT",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "rounds": "node scripts/run-rounds.mjs",
+    "aggregate": "node scripts/aggregate.mjs",
+    "report": "playwright show-report test-output/local/report",
+    "site": "node scripts/publish.mjs && node scripts/build-site.mjs",
+    "serve": "node scripts/serve.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1",
+    "@types/node": "24.0.9",
+    "typescript": "5.9.3"
+  }
+}

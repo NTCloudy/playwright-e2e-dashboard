@@ -1,0 +1,134 @@
+name: E2E tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      rounds:
+        description: 'Number of rounds (each round runs every test case once)'
+        type: choice
+        required: true
+        default: '3'
+        options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+  schedule:
+    # Every Monday 01:00 UTC = 09:00 Taiwan time (UTC+8).
+    - cron: '0 1 * * 1'
+
+permissions:
+  contents: write # push results to the "results" branch
+  pages: write # deploy the dashboard
+  id-token: write # required by actions/deploy-pages
+
+# One execution at a time; a new trigger waits instead of cancelling a running one.
+concurrency:
+  group: e2e
+  cancel-in-progress: false
+
+env:
+  RUN_DIR: test-output/run
+  KEEP_RUNS: 30
+
+jobs:
+  test:
+    name: Run ${{ inputs.rounds || '3' }} round(s)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    outputs:
+      failed: ${{ steps.aggregate.outputs.failed }}
+      total: ${{ steps.aggregate.outputs.total }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run tests
+        env:
+          ROUNDS: ${{ inputs.rounds || '3' }}
+        run: node scripts/run-rounds.mjs
+
+      - name: Aggregate results
+        id: aggregate
+        if: always()
+        run: node scripts/aggregate.mjs
+
+      # The "results" branch stores the history shown on the dashboard. It is
+      # created automatically on the first run (e.g. in a fork).
+      - name: Fetch result history
+        if: always() && steps.aggregate.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          remote="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git ls-remote --exit-code --heads "$remote" results > /dev/null; then
+            git clone --quiet --depth 1 --branch results "$remote" results-branch
+          else
+            echo "No results branch yet; starting a new history."
+            git init --quiet -b results results-branch
+            git -C results-branch remote add origin "$remote"
+          fi
+
+      - name: Publish results
+        if: always() && steps.aggregate.outcome == 'success'
+        working-directory: results-branch
+        run: |
+          node ../scripts/publish.mjs --run-dir "../$RUN_DIR" --data-dir data --keep "$KEEP_RUNS"
+          # One squashed commit holding only the kept runs keeps the branch small.
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git checkout --quiet --orphan results-new
+          git add -A
+          git commit --quiet -m "Results after run ${{ steps.aggregate.outputs.run_id }}"
+          git push --quiet --force origin results-new:results
+
+      - name: Build dashboard
+        if: always() && steps.aggregate.outcome == 'success'
+        run: node scripts/build-site.mjs --data-dir results-branch/data --out _site
+
+      - name: Upload dashboard
+        if: always() && steps.aggregate.outcome == 'success'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    name: Deploy dashboard
+    needs: test
+    if: always() && needs.test.result == 'success'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
+
+  # Results are always published first; this job then turns the workflow red
+  # when any test failed, so the README badge stays honest.
+  verdict:
+    name: Verdict
+    needs: [test, deploy]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check results
+        env:
+          TEST_JOB: ${{ needs.test.result }}
+          DEPLOY_JOB: ${{ needs.deploy.result }}
+          FAILED: ${{ needs.test.outputs.failed }}
+          TOTAL: ${{ needs.test.outputs.total }}
+        run: |
+          if [ "$TEST_JOB" != "success" ]; then echo "::error::The test job did not finish ($TEST_JOB)."; exit 1; fi
+          if [ "$DEPLOY_JOB" != "success" ]; then echo "::error::The dashboard was not deployed ($DEPLOY_JOB)."; exit 1; fi
+          if [ "${FAILED:-1}" != "0" ]; then echo "::error::${FAILED} of ${TOTAL} test results failed. See the dashboard for details."; exit 1; fi
+          echo "All ${TOTAL} test results passed."

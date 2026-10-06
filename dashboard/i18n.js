@@ -262,8 +262,8 @@ export const CASE_INFO = {
     en: { checks: 'Two products in the cart: remove one → the total is recalculated; remove the other → the cart is empty' },
   },
   TC15: {
-    'zh-TW': { title: '登出', checks: '先透過 API 登入（登入表單由 TC09 驗證），再從使用者選單登出 → 「Sign in」重新出現、使用者選單消失，瀏覽器保存的登入 token 已清除' },
-    en: { checks: 'Signed in through the API (TC09 covers the sign-in form) → sign out from the user menu → "Sign in" is back, the user menu is gone and the stored sign-in token is cleared' },
+    'zh-TW': { title: '登出', checks: '先透過 API 登入（登入表單由 TC09 驗證），再從使用者選單登出 → 「Sign in」重新出現、登入 token 已清除，也無法再進入帳戶頁（會被導回登入頁）' },
+    en: { checks: 'Signed in through the API (TC09 covers the sign-in form) → sign out from the user menu → "Sign in" is back, the stored token is cleared, and the account page redirects to sign-in' },
   },
   TC16: {
     'zh-TW': { title: '完整結帳（貨到付款）', checks: '購物車 → 登入 → 帳單地址（等郵遞區號自動帶入完成）→ 貨到付款 → 訂單建立成功並顯示訂單編號（不使用信用卡）' },

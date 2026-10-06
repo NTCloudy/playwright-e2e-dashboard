@@ -35,7 +35,7 @@ test.describe('Account', () => {
     });
   });
 
-  test('TC15 Sign out', async ({ home, nav, session, botCheck, user }) => {
+  test('TC15 Sign out', async ({ page, home, nav, loginPage, session, botCheck, user }) => {
     await test.step('Precondition: signed in (through the API; TC09 covers the sign-in form)', async () => {
       await session.signInViaApi(user);
       await home.open();
@@ -51,6 +51,12 @@ test.describe('Account', () => {
       await botCheck.waitFor(nav.signIn);
       await nav.verifySignedOut();
       expect(await session.storedToken(), 'sign-in token in localStorage').toBeNull();
+    });
+
+    await test.step('The account page is no longer accessible: it redirects to sign-in', async () => {
+      await page.goto('/account');
+      await botCheck.waitFor(loginPage.form);
+      await loginPage.verifyLoaded();
     });
   });
 });

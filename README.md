@@ -43,7 +43,7 @@ every round is published to a **public, bilingual dashboard**.
 | TC12 | Cart | Increase quantity in the cart | Quantity 3: line total = unit price × 3; cart total and badge are updated |
 | TC13 | Cart | Decrease quantity in the cart | Quantity 3 → 1: totals go back to the unit price |
 | TC14 | Cart | Remove products from the cart | Removing one of two products recalculates the total; removing the last empties the cart |
-| TC15 | Account | Sign out | Signed in through the API; after signing out, "Sign in" is back and the stored token is cleared |
+| TC15 | Account | Sign out | Signed in through the API; after signing out, "Sign in" is back, the token is cleared and the account page redirects to sign-in |
 | TC16 | Checkout | Complete checkout (Cash on Delivery) | Cart → sign in → billing address → payment → order created with an invoice number |
 
 TC10 uses an address that does not exist: repeating wrong passwords for a real account
@@ -106,10 +106,12 @@ npm run site && npm run serve   # then open http://localhost:8080
 
 - The target is [Practice Software Testing](https://practicesoftwaretesting.com), a public demo
   site built for practicing test automation. Tests run one at a time to be gentle on it.
-- The site is behind Cloudflare. From GitHub-hosted runners (cloud IP addresses), Cloudflare can answer
-  some full page loads with a "Performing security verification" challenge, for example the page load
-  of `/account` right after signing in (TC09). Tests never try to get past it: the case is skipped with
-  the reason and shown as **Blocked** on the dashboard. From a regular network it runs normally (`npm test`).
+- The site is behind Cloudflare. On GitHub-hosted runners (cloud IP addresses), the first page load of
+  each test goes through, but a later full page load in the same session can get a "Performing security
+  verification" challenge instead. That affects the two cases where the app itself reloads the page:
+  TC09 (the app loads `/account` after signing in) and TC15 (the app reloads after signing out).
+  Tests never try to get past the challenge: the case is skipped with the reason and shown as **Blocked**
+  on the dashboard. From a regular network all 16 cases run normally (`npm test`).
 - GitHub pauses scheduled workflows in public repositories after 60 days without activity;
   re-enable it from the Actions tab.
 - Forking: enable GitHub Pages with "GitHub Actions" as the source, then run the workflow once.

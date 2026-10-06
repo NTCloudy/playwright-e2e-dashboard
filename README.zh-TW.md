@@ -43,7 +43,7 @@
 | TC12 | 購物車 | 購物車增加數量 | 數量改成 3：小計 = 單價 × 3，總計與圖示同步更新 |
 | TC13 | 購物車 | 購物車減少數量 | 數量 3 → 1：小計、總計回到單價 |
 | TC14 | 購物車 | 從購物車刪除商品 | 兩項商品刪除一項 → 總計重算；刪除最後一項 → 購物車清空 |
-| TC15 | 會員 | 登出 | 先透過 API 登入；登出後「Sign in」重新出現，登入 token 已清除 |
+| TC15 | 會員 | 登出 | 先透過 API 登入；登出後「Sign in」重新出現、token 已清除，也無法再進入帳戶頁 |
 | TC16 | 結帳 | 完整結帳（貨到付款） | 購物車 → 登入 → 帳單地址 → 付款 → 訂單建立成功並顯示訂單編號 |
 
 TC10 刻意使用不存在的帳號：如果用真實帳號輸錯密碼，跑很多輪可能會把帳號鎖住。
@@ -105,9 +105,11 @@ npm run site && npm run serve   # 打開 http://localhost:8080
 
 - 測試目標是 [Practice Software Testing](https://practicesoftwaretesting.com)，專門給自動化測試
   練習的公開示範網站。測試一次只跑一條，避免對網站造成負擔。
-- 這個網站有 Cloudflare 保護。從 GitHub 提供的 CI 主機（雲端 IP）執行時，Cloudflare 可能會把某些整頁載入
-  換成「Performing security verification」驗證頁，例如登入後載入 `/account`（TC09）。測試不會嘗試繞過驗證：
-  該案例會記為略過並附上原因，在儀表板上標示「被擋下」。在一般網路環境執行（`npm test`）可以正常跑完。
+- 這個網站有 Cloudflare 保護。從 GitHub 提供的 CI 主機（雲端 IP）執行時，每條測試的第一次頁面載入可以通過，
+  但同一個瀏覽器工作階段裡的下一次整頁載入，可能會被換成「Performing security verification」驗證頁。
+  受影響的是網站自己會重新載入頁面的兩條案例：TC09（登入後網站會載入 `/account`）和 TC15（登出後網站會重新整理）。
+  測試不會嘗試繞過驗證：該案例會記為略過並附上原因，在儀表板上標示「被擋下」。
+  在一般網路環境執行（`npm test`），16 條都可以正常跑完。
 - 公開 repo 如果 60 天沒有任何活動，GitHub 會暫停排程；到 Actions 頁面重新啟用即可。
 - Fork 使用：在 Settings → Pages 把來源設為「GitHub Actions」，再執行一次 workflow 即可，
   `results` 分支會自動建立。

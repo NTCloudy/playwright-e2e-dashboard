@@ -98,11 +98,15 @@ for (const { round, durationMs, startedAt } of meta.roundMeta) {
     if (!cases.has(caseId)) {
       cases.set(caseId, { id: caseId, module, title: match ? match[2] : spec.title, file: spec.file, results: [] });
     }
+    // Runtime skips carry their reason as a "skip" annotation; "blocked" marks a bot-check block (src/support/botCheck.ts).
+    const annotations = result?.annotations ?? test?.annotations ?? [];
     cases.get(caseId).results.push({
       round,
       status,
       durationMs: result?.duration ?? 0,
       error: status === 'failed' ? stripAnsi(result?.error?.message ?? result?.errors?.[0]?.message ?? 'Unknown error').slice(0, 2000) : null,
+      skipReason: status === 'skipped' ? (annotations.find((a) => a.type === 'skip')?.description ?? null) : null,
+      blocked: status === 'skipped' && annotations.some((a) => a.type === 'blocked'),
       screenshot,
       reportLink: `${roundRel}/report/index.html#?testId=${encodeURIComponent(spec.id)}`,
     });
@@ -154,12 +158,15 @@ if (process.env.GITHUB_OUTPUT) {
 }
 if (process.env.GITHUB_STEP_SUMMARY) {
   const header = `| Case | ${roundSummaries.map((r) => `R${r.round}`).join(' | ')} | Pass rate |\n|---|${roundSummaries.map(() => ':-:').join('|')}|:-:|\n`;
-  const icon = { passed: '✅', failed: '❌', skipped: '⏭️' };
+  const icon = { passed: '✅', failed: '❌', skipped: '⏭️', blocked: '🛡️' };
+  const cell = (result) => (result ? icon[result.blocked ? 'blocked' : result.status] : '—');
   const rows = caseList
-    .map((c) => `| ${c.id} ${c.title} | ${roundSummaries.map((r) => icon[c.results.find((x) => x.round === r.round)?.status] ?? '—').join(' | ')} | ${pct(c.passRate)} |`)
+    .map((c) => `| ${c.id} ${c.title} | ${roundSummaries.map((r) => cell(c.results.find((x) => x.round === r.round))).join(' | ')} | ${pct(c.passRate)} |`)
     .join('\n');
+  const anyBlocked = caseList.some((c) => c.results.some((r) => r.blocked));
+  const legend = anyBlocked ? `\n${icon.blocked} Skipped: blocked by the site's Cloudflare bot check on the CI runner (not a product failure).\n` : '';
   fs.appendFileSync(
     process.env.GITHUB_STEP_SUMMARY,
-    `## E2E results: ${pct(totals.passRate)} passed (${totals.passed}/${executedTotal})\n\n${header}${rows}\n`,
+    `## E2E results: ${pct(totals.passRate)} passed (${totals.passed}/${executedTotal})\n\n${header}${rows}\n${legend}`,
   );
 }

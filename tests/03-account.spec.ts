@@ -1,24 +1,18 @@
-import type { TestUser } from '../src/api/toolshopApi';
 import { expect, test } from '../src/fixtures';
-import type { AccountPage, LoginPage } from '../src/pages/AuthPages';
-import type { HomePage } from '../src/pages/HomePage';
-
-/** Signs in through the UI, starting from the home page. */
-async function signIn(home: HomePage, loginPage: LoginPage, accountPage: AccountPage, user: TestUser): Promise<void> {
-  await home.open();
-  await home.nav.openSignIn();
-  await loginPage.verifyLoaded();
-  await loginPage.login(user.email, user.password);
-  await accountPage.verifyLoaded();
-}
 
 test.describe('Account', () => {
-  test('TC09 Sign in with a valid account', async ({ home, nav, loginPage, accountPage, user }) => {
+  test('TC09 Sign in with a valid account', async ({ home, nav, loginPage, accountPage, botCheck, user }) => {
     await test.step('Sign in with the test account', async () => {
-      await signIn(home, loginPage, accountPage, user);
+      await home.open();
+      await nav.openSignIn();
+      await loginPage.verifyLoaded();
+      await loginPage.login(user.email, user.password);
     });
 
     await test.step('"My account" is shown and the navigation bar shows the user name', async () => {
+      // After signing in, the app does a full page load of /account (see BotCheck).
+      await botCheck.waitFor(accountPage.title);
+      await accountPage.verifyLoaded();
       await nav.verifySignedInAs(`${user.firstName} ${user.lastName}`);
     });
   });
@@ -41,9 +35,10 @@ test.describe('Account', () => {
     });
   });
 
-  test('TC15 Sign out', async ({ page, home, nav, loginPage, accountPage, user }) => {
-    await test.step('Precondition: signed in', async () => {
-      await signIn(home, loginPage, accountPage, user);
+  test('TC15 Sign out', async ({ home, nav, session, botCheck, user }) => {
+    await test.step('Precondition: signed in (through the API; TC09 covers the sign-in form)', async () => {
+      await session.signInViaApi(user);
+      await home.open();
       await nav.verifySignedInAs(`${user.firstName} ${user.lastName}`);
     });
 
@@ -51,10 +46,11 @@ test.describe('Account', () => {
       await nav.signOutViaMenu();
     });
 
-    await test.step('Signed out: "Sign in" is back and the account page is no longer accessible', async () => {
+    await test.step('Signed out: "Sign in" is back, the user menu is gone and the stored token is cleared', async () => {
+      // Signing out reloads the page (see BotCheck).
+      await botCheck.waitFor(nav.signIn);
       await nav.verifySignedOut();
-      await page.goto('/account');
-      await loginPage.verifyLoaded();
+      expect(await session.storedToken(), 'sign-in token in localStorage').toBeNull();
     });
   });
 });

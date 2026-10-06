@@ -356,11 +356,12 @@ function renderRun(summary) {
 function renderCaseRow(summary, c, rounds) {
   const statuses = c.results.map((r) => r.status);
   const flaky = statuses.includes('passed') && statuses.includes('failed');
+  const blocked = c.results.some((r) => r.blocked);
   const cells = rounds
     .map((round) => {
       const result = c.results.find((r) => r.round === round.round);
       if (!result) return `<td><span class="cell cell-none" title="${esc(t('notRun'))}">${ICON.none}</span></td>`;
-      const label = `${c.id} · ${t('roundN', { n: round.round })} · ${t(result.status)}`;
+      const label = `${c.id} · ${t('roundN', { n: round.round })} · ${t(result.status)}${result.blocked ? ` (${t('blocked')})` : ''}`;
       return `<td><button type="button" class="cell cell-${result.status}" data-case="${esc(c.id)}" data-round="${round.round}" title="${esc(label)}" aria-label="${esc(label)}">${ICON[result.status]}</button></td>`;
     })
     .join('');
@@ -374,11 +375,19 @@ function renderCaseRow(summary, c, rounds) {
       <td class="num">
         <span class="rate-text-${rateClass(c.passRate)}">${pct(c.passRate)}</span>
         ${flaky ? `<span class="tag tag-warn" title="${esc(t('flakyHint'))}">${esc(t('flaky'))}</span>` : ''}
+        ${blocked ? `<span class="tag tag-blocked" title="${esc(t('blockedNote'))}">${esc(t('blocked'))}</span>` : ''}
       </td>
     </tr>`;
 }
 
 // ---------------------------------------------------------------- detail dialog
+
+function resultNote(result) {
+  if (result.status === 'passed') return t('passedNote');
+  if (result.status !== 'skipped') return null;
+  if (result.blocked) return t('blockedNote');
+  return result.skipReason ? `${t('skippedNote')} ${t('skipReason', { reason: result.skipReason })}` : t('skippedNote');
+}
 
 function renderDetail() {
   const dialog = document.getElementById('detail');
@@ -388,7 +397,7 @@ function renderDetail() {
   const result = c?.results.find((r) => r.round === round);
   if (!result) return;
 
-  const note = { passed: t('passedNote'), skipped: t('skippedNote') }[result.status];
+  const note = resultNote(result);
   dialog.innerHTML = `
     <div class="dialog-inner">
       <header class="dialog-head">
@@ -397,7 +406,8 @@ function renderDetail() {
           <h3>${esc(caseTitle(c))}</h3>
           <div>
             ${esc(t('roundN', { n: round }))} ·
-            <span class="status status-${result.status}">${ICON[result.status]} ${esc(t(result.status))}</span> ·
+            <span class="status status-${result.status}">${ICON[result.status]} ${esc(t(result.status))}</span>
+            ${result.blocked ? `<span class="tag tag-blocked">${esc(t('blocked'))}</span>` : ''} ·
             ${esc(fmtSeconds(result.durationMs))}
           </div>
         </div>

@@ -48,10 +48,11 @@ export class NavBar {
     await this.cart.click();
   }
 
+  /** Signing out reloads the page; this waits until the reloaded page has loaded. */
   async signOutViaMenu(): Promise<void> {
     await this.userMenu.click();
     await expect(this.signOut).toBeVisible();
-    await this.signOut.click();
+    await Promise.all([this.page.waitForEvent('load'), this.signOut.click()]);
   }
 
   async verifySignedInAs(fullName: string): Promise<void> {

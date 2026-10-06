@@ -77,6 +77,10 @@ export const STRINGS = {
     close: '關閉',
     passedNote: '這一輪的所有步驟都通過。',
     skippedNote: '這一輪略過了這個案例。',
+    skipReason: '原因：{reason}',
+    blocked: '被擋下',
+    blockedNote:
+      '網站的 Cloudflare 機器人驗證擋下了這次頁面載入（雲端／CI 主機的 IP 常會遇到）。測試不會嘗試繞過驗證，所以記為「略過」而不是「失敗」；這不是網站功能的問題，在一般網路環境執行可以正常跑完。',
 
     aboutTitle: '關於這個專案',
     about: [
@@ -85,6 +89,7 @@ export const STRINGS = {
       '每一輪都用全新的瀏覽器環境跑完 16 條測試案例；失敗不重試，呈現真實的穩定度。',
       '每一輪都透過 API 註冊一個全新的測試帳號，不會用到真實個資。',
       '結帳案例只使用「貨到付款」，不會輸入任何信用卡資料。',
+      '如果網站的機器人驗證（Cloudflare）擋下 CI 主機，相關案例會標示「被擋下」並記為略過，測試不會嘗試繞過驗證。',
       '擁有者可以在 GitHub Actions 選擇 1～10 輪手動執行；另外每週一 09:00（台灣時間）自動執行一次。',
     ],
     keepNote: '保留最近 30 次執行紀錄。',
@@ -163,6 +168,10 @@ export const STRINGS = {
     close: 'Close',
     passedNote: 'Every step passed in this round.',
     skippedNote: 'This case was skipped in this round.',
+    skipReason: 'Reason: {reason}',
+    blocked: 'Blocked',
+    blockedNote:
+      "The site's Cloudflare bot check blocked this page load (common for cloud/CI IP addresses). Tests never try to get past such checks, so the case is recorded as skipped, not failed. It is not a product failure, and the case runs normally from a regular network.",
 
     aboutTitle: 'About this project',
     about: [
@@ -171,6 +180,7 @@ export const STRINGS = {
       'Every round runs all 16 test cases in fresh browser contexts with no retries, so the numbers show real stability.',
       'Each round registers a brand-new test account through the API; no real personal data is used.',
       'The checkout case only uses "Cash on Delivery"; no credit card data is ever entered.',
+      'If the site\'s bot check (Cloudflare) blocks the CI runner, the affected case is labeled "Blocked" and recorded as skipped; tests never try to get past it.',
       'The owner starts runs from GitHub Actions (1–10 rounds); a scheduled run also happens every Monday 09:00 Taiwan time.',
     ],
     keepNote: 'The latest 30 runs are kept.',
@@ -252,11 +262,11 @@ export const CASE_INFO = {
     en: { checks: 'Two products in the cart: remove one → the total is recalculated; remove the other → the cart is empty' },
   },
   TC15: {
-    'zh-TW': { title: '登出', checks: '登入後從使用者選單登出 → 回到未登入狀態，也無法再進入帳戶頁' },
-    en: { checks: 'Sign out from the user menu → signed out, and the account page is no longer accessible' },
+    'zh-TW': { title: '登出', checks: '先透過 API 登入（登入表單由 TC09 驗證），再從使用者選單登出 → 「Sign in」重新出現、使用者選單消失，瀏覽器保存的登入 token 已清除' },
+    en: { checks: 'Signed in through the API (TC09 covers the sign-in form) → sign out from the user menu → "Sign in" is back, the user menu is gone and the stored sign-in token is cleared' },
   },
   TC16: {
-    'zh-TW': { title: '完整結帳（貨到付款）', checks: '購物車 → 登入 → 帳單地址 → 貨到付款 → 顯示訂單編號（不使用信用卡）' },
-    en: { checks: 'Cart → sign in → billing address → Cash on Delivery → an invoice number is shown (no card data)' },
+    'zh-TW': { title: '完整結帳（貨到付款）', checks: '購物車 → 登入 → 帳單地址（等郵遞區號自動帶入完成）→ 貨到付款 → 訂單建立成功並顯示訂單編號（不使用信用卡）' },
+    en: { checks: 'Cart → sign in → billing address (after the postcode auto-fill completes) → Cash on Delivery → the order is created and an invoice number is shown (no card data)' },
   },
 };

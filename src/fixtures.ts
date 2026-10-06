@@ -5,6 +5,8 @@ import { CartPage } from './pages/CartPage';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { HomePage } from './pages/HomePage';
 import { NavBar } from './pages/NavBar';
+import { BotCheck } from './support/botCheck';
+import { Session } from './support/session';
 
 type PageFixtures = {
   home: HomePage;
@@ -13,6 +15,10 @@ type PageFixtures = {
   accountPage: AccountPage;
   cartPage: CartPage;
   checkoutPage: CheckoutPage;
+  /** Sign-in state in the browser (API sign-in for preconditions, stored token). */
+  session: Session;
+  /** Skips the case instead of failing it when Cloudflare challenges a page load. */
+  botCheck: BotCheck;
   /** Test account for the current round; the source is recorded as an annotation. */
   user: TestUser;
 };
@@ -49,6 +55,8 @@ export const test = base.extend<PageFixtures, WorkerFixtures>({
   accountPage: async ({ page }, use) => use(new AccountPage(page)),
   cartPage: async ({ page }, use) => use(new CartPage(page)),
   checkoutPage: async ({ page }, use) => use(new CheckoutPage(page)),
+  session: async ({ page }, use) => use(new Session(page)),
+  botCheck: async ({ page }, use) => use(new BotCheck(page)),
 });
 
 export { expect };

@@ -19,6 +19,8 @@ every round is published to a **public, bilingual dashboard**.
 - **No retries**: running N rounds measures real stability, and flaky cases are flagged
 - **Independent tests**: fresh browser context per test, and a fresh account registered through the API for every round
 - **Safe checkout**: "Cash on Delivery" only; no card data is ever entered
+- **Honest about bot checks**: if the site's Cloudflare bot check challenges the CI runner, the case is
+  skipped with the reason and labeled "Blocked"; tests never try to get past it
 - **Results website**: history of the latest 30 runs, a test case × round matrix, failure
   screenshots, and full Playwright HTML reports (steps, video, trace)
 - **Bilingual UI** (繁體中文 / English), plain HTML/CSS/JS with zero dependencies
@@ -41,8 +43,8 @@ every round is published to a **public, bilingual dashboard**.
 | TC12 | Cart | Increase quantity in the cart | Quantity 3: line total = unit price × 3; cart total and badge are updated |
 | TC13 | Cart | Decrease quantity in the cart | Quantity 3 → 1: totals go back to the unit price |
 | TC14 | Cart | Remove products from the cart | Removing one of two products recalculates the total; removing the last empties the cart |
-| TC15 | Account | Sign out | Signed out, and the account page is no longer accessible |
-| TC16 | Checkout | Complete checkout (Cash on Delivery) | Cart → sign in → billing address → payment → invoice number |
+| TC15 | Account | Sign out | Signed in through the API; after signing out, "Sign in" is back and the stored token is cleared |
+| TC16 | Checkout | Complete checkout (Cash on Delivery) | Cart → sign in → billing address → payment → order created with an invoice number |
 
 TC10 uses an address that does not exist: repeating wrong passwords for a real account
 over many rounds could lock it.
@@ -95,7 +97,7 @@ npm run site && npm run serve   # then open http://localhost:8080
 │   ├── pages/                  # Page Objects (Home, Product, Cart, Checkout, Auth, NavBar)
 │   ├── api/toolshopApi.ts      # registers a fresh test account per round
 │   ├── fixtures.ts             # injects page objects and the test account
-│   └── support/ui.ts           # price parsing, toast and sort helpers
+│   └── support/                # bot-check handling, API sign-in, price/toast/sort helpers
 ├── scripts/                    # run-rounds, aggregate, publish, build-site, serve
 └── dashboard/                  # static results website (zh-TW / EN)
 ```
@@ -104,6 +106,10 @@ npm run site && npm run serve   # then open http://localhost:8080
 
 - The target is [Practice Software Testing](https://practicesoftwaretesting.com), a public demo
   site built for practicing test automation. Tests run one at a time to be gentle on it.
+- The site is behind Cloudflare. From GitHub-hosted runners (cloud IP addresses), Cloudflare can answer
+  some full page loads with a "Performing security verification" challenge, for example the page load
+  of `/account` right after signing in (TC09). Tests never try to get past it: the case is skipped with
+  the reason and shown as **Blocked** on the dashboard. From a regular network it runs normally (`npm test`).
 - GitHub pauses scheduled workflows in public repositories after 60 days without activity;
   re-enable it from the Actions tab.
 - Forking: enable GitHub Pages with "GitHub Actions" as the source, then run the workflow once.

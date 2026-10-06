@@ -418,6 +418,9 @@ tr.clickable:hover td {
   background: var(--bad-bg);
   color: var(--bad);
 }
+.tag-blocked {
+  margin-left: 6px;
+}
 
 /* ------------------------------------------------------------ run view */
 

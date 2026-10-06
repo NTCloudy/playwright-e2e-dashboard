@@ -19,6 +19,8 @@
 - **失敗不重試**：跑 N 輪就是要看真實的穩定度，時好時壞的案例會標示「不穩定」
 - **案例彼此獨立**：每條案例都用全新的瀏覽器環境；每一輪都透過 API 註冊全新的測試帳號
 - **安全的結帳測試**：只用「貨到付款」，不會輸入任何信用卡資料
+- **誠實面對機器人驗證**：如果網站的 Cloudflare 機器人驗證擋下 CI 主機，該案例會記為略過、附上原因並標示
+  「被擋下」；測試不會嘗試繞過驗證
 - **結果網站**：保留最近 30 次執行紀錄、「測試案例 × 輪次」矩陣、失敗截圖，
   以及完整的 Playwright HTML 報告（步驟、影片、trace）
 - **中英雙語介面**，純 HTML/CSS/JS，沒有任何套件相依
@@ -41,8 +43,8 @@
 | TC12 | 購物車 | 購物車增加數量 | 數量改成 3：小計 = 單價 × 3，總計與圖示同步更新 |
 | TC13 | 購物車 | 購物車減少數量 | 數量 3 → 1：小計、總計回到單價 |
 | TC14 | 購物車 | 從購物車刪除商品 | 兩項商品刪除一項 → 總計重算；刪除最後一項 → 購物車清空 |
-| TC15 | 會員 | 登出 | 回到未登入狀態，也無法再進入帳戶頁 |
-| TC16 | 結帳 | 完整結帳（貨到付款） | 購物車 → 登入 → 帳單地址 → 付款 → 顯示訂單編號 |
+| TC15 | 會員 | 登出 | 先透過 API 登入；登出後「Sign in」重新出現，登入 token 已清除 |
+| TC16 | 結帳 | 完整結帳（貨到付款） | 購物車 → 登入 → 帳單地址 → 付款 → 訂單建立成功並顯示訂單編號 |
 
 TC10 刻意使用不存在的帳號：如果用真實帳號輸錯密碼，跑很多輪可能會把帳號鎖住。
 
@@ -94,7 +96,7 @@ npm run site && npm run serve   # 打開 http://localhost:8080
 │   ├── pages/                  # Page Objects（首頁、商品、購物車、結帳、登入、導覽列）
 │   ├── api/toolshopApi.ts      # 每一輪註冊全新的測試帳號
 │   ├── fixtures.ts             # 注入 Page Objects 與測試帳號
-│   └── support/ui.ts           # 價格解析、提示訊息、排序檢查等工具
+│   └── support/                # 機器人驗證處理、API 登入、價格／提示訊息／排序等工具
 ├── scripts/                    # run-rounds、aggregate、publish、build-site、serve
 └── dashboard/                  # 靜態結果網站（中文／英文）
 ```
@@ -103,6 +105,9 @@ npm run site && npm run serve   # 打開 http://localhost:8080
 
 - 測試目標是 [Practice Software Testing](https://practicesoftwaretesting.com)，專門給自動化測試
   練習的公開示範網站。測試一次只跑一條，避免對網站造成負擔。
+- 這個網站有 Cloudflare 保護。從 GitHub 提供的 CI 主機（雲端 IP）執行時，Cloudflare 可能會把某些整頁載入
+  換成「Performing security verification」驗證頁，例如登入後載入 `/account`（TC09）。測試不會嘗試繞過驗證：
+  該案例會記為略過並附上原因，在儀表板上標示「被擋下」。在一般網路環境執行（`npm test`）可以正常跑完。
 - 公開 repo 如果 60 天沒有任何活動，GitHub 會暫停排程；到 Actions 頁面重新啟用即可。
 - Fork 使用：在 Settings → Pages 把來源設為「GitHub Actions」，再執行一次 workflow 即可，
   `results` 分支會自動建立。

@@ -20,7 +20,7 @@ test.describe('Checkout', () => {
       await checkoutPage.signIn(user.email, user.password);
     });
 
-    await test.step('Billing address is prefilled; continue', async () => {
+    await test.step('Billing address is prefilled and completed by the postcode lookup; continue', async () => {
       await checkoutPage.confirmBillingAddress();
     });
 

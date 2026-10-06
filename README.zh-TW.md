@@ -10,7 +10,7 @@
 
 **結果網站：https://ntcloudy.github.io/playwright-e2e-dashboard/**
 
-![結果網站](docs/dashboard.png)
+![結果網站](docs/dashboard.zh-TW.png)
 
 ## 特色
 

@@ -47,6 +47,9 @@ const entry = {
   commit: summary.commit,
   totals: summary.totals,
   brokenRounds: summary.brokenRounds,
+  caseCount: summary.cases.length,
+  catalogSize: summary.selection?.catalogSize ?? summary.cases.length,
+  customData: summary.cases.some((c) => (c.params ?? []).some((p) => p.value !== p.default)),
 };
 const updated = [entry, ...index.filter((r) => r.id !== summary.id)]
   .sort((a, b) => b.startedAt.localeCompare(a.startedAt))

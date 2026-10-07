@@ -1,0 +1,163 @@
+{
+  "$comment": "Title and description of every test case, shown on the dashboard. Edit them in the dashboard's test console (each save is a commit to this file) or by hand. In a description, {name} shows the value of that test data parameter (config/cases.json). The test code is not affected: steps and checks live in tests/.",
+  "TC01": {
+    "title": {
+      "zh-TW": "首頁正常載入",
+      "en": "Home page loads"
+    },
+    "description": {
+      "zh-TW": "開啟首頁 → 導覽列、搜尋、排序、篩選都可以用，商品列表有商品名稱和價格",
+      "en": "Open the home page → navigation, search, sorting and filters are usable; products with prices are listed"
+    }
+  },
+  "TC02": {
+    "title": {
+      "zh-TW": "從商品頁返回首頁",
+      "en": "Return to the home page from a product page"
+    },
+    "description": {
+      "zh-TW": "首頁 → 打開第 {position} 個商品（商品頁的名稱、價格與首頁一致）→ 點導覽列「Home」→ 回到首頁，商品列表與篩選區重新出現",
+      "en": "Home → open product #{position} (its page shows the same name and price) → click \"Home\" → back on the home page with the product grid and filters"
+    }
+  },
+  "TC03": {
+    "title": {
+      "zh-TW": "瀏覽分類頁",
+      "en": "Browse a category"
+    },
+    "description": {
+      "zh-TW": "Categories → {category} → 標題為「Category: {category}」並列出商品",
+      "en": "Categories → {category} → the title is \"Category: {category}\" and products are listed"
+    }
+  },
+  "TC04": {
+    "title": {
+      "zh-TW": "關鍵字搜尋",
+      "en": "Search by keyword"
+    },
+    "description": {
+      "zh-TW": "搜尋「{keyword}」→ 顯示搜尋字詞；筆數與網站顯示一致；每筆名稱都含「{keyword}」",
+      "en": "Search \"{keyword}\" → the term is shown; the count matches the caption; every name contains \"{keyword}\""
+    }
+  },
+  "TC05": {
+    "title": {
+      "zh-TW": "指定商品可以找到",
+      "en": "Find a specific product"
+    },
+    "description": {
+      "zh-TW": "搜尋「{product}」→ 結果中有這個商品，而且有價格",
+      "en": "Search \"{product}\" → the product is listed with a price"
+    }
+  },
+  "TC06": {
+    "title": {
+      "zh-TW": "搜尋查無結果",
+      "en": "Search with no results"
+    },
+    "description": {
+      "zh-TW": "搜尋不存在的商品「{keyword}」→ 顯示「There are no products found.」，列表為空",
+      "en": "Search \"{keyword}\", which matches nothing → \"There are no products found.\" and an empty grid"
+    }
+  },
+  "TC07": {
+    "title": {
+      "zh-TW": "商品排序",
+      "en": "Sort products"
+    },
+    "description": {
+      "zh-TW": "排序選「{sort}」→ 商品依照這個順序排列",
+      "en": "Sort by \"{sort}\" → the products are listed in that order"
+    }
+  },
+  "TC08": {
+    "title": {
+      "zh-TW": "商品詳情與搜尋結果一致",
+      "en": "Product details match the search result"
+    },
+    "description": {
+      "zh-TW": "搜尋「{keyword}」→ 從結果點「{product}」→ 商品頁名稱、價格與列表一致；數量與加入購物車可以用",
+      "en": "Search \"{keyword}\" → open \"{product}\" from the results → name and price match; quantity and \"Add to cart\" are usable"
+    }
+  },
+  "TC09": {
+    "title": {
+      "zh-TW": "登入成功",
+      "en": "Sign in with a valid account"
+    },
+    "description": {
+      "zh-TW": "用本輪自動註冊的測試帳號登入 → 進入 My account，導覽列顯示使用者名稱",
+      "en": "Sign in with the account registered for this round → \"My account\" and the user name in the navigation bar"
+    }
+  },
+  "TC10": {
+    "title": {
+      "zh-TW": "不存在的帳號無法登入",
+      "en": "Sign in with an unknown account is rejected"
+    },
+    "description": {
+      "zh-TW": "用不存在的帳號登入 → 顯示「Invalid email or password」，維持未登入",
+      "en": "Sign in with an unknown account → \"Invalid email or password\"; still signed out"
+    }
+  },
+  "TC11": {
+    "title": {
+      "zh-TW": "加入購物車",
+      "en": "Add a product to the cart"
+    },
+    "description": {
+      "zh-TW": "打開「{product}」，數量設為 {quantity}，點「Add to cart」→ 出現成功提示，購物車圖示數量為 {quantity}",
+      "en": "Open \"{product}\", set the quantity to {quantity} and click \"Add to cart\" → success message; the cart badge shows {quantity}"
+    }
+  },
+  "TC12": {
+    "title": {
+      "zh-TW": "購物車增加數量",
+      "en": "Increase quantity in the cart"
+    },
+    "description": {
+      "zh-TW": "購物車裡的「{product}」數量從 1 改成 {quantity} → 小計 = 單價 × {quantity}，總計與購物車圖示同步更新",
+      "en": "Change the quantity of \"{product}\" in the cart from 1 to {quantity} → line total = unit price × {quantity}; cart total and badge are updated"
+    }
+  },
+  "TC13": {
+    "title": {
+      "zh-TW": "購物車減少數量",
+      "en": "Decrease quantity in the cart"
+    },
+    "description": {
+      "zh-TW": "購物車裡的「{product}」數量從 {from} 改成 {to} → 小計 = 單價 × {to}，總計與購物車圖示同步更新",
+      "en": "Change the quantity of \"{product}\" in the cart from {from} to {to} → line total = unit price × {to}; cart total and badge are updated"
+    }
+  },
+  "TC14": {
+    "title": {
+      "zh-TW": "從購物車刪除商品",
+      "en": "Remove products from the cart"
+    },
+    "description": {
+      "zh-TW": "購物車有「{first}」和「{second}」：刪除「{first}」→ 總計重算；再刪除「{second}」→ 購物車清空",
+      "en": "\"{first}\" and \"{second}\" in the cart: remove \"{first}\" → the total is recalculated; remove \"{second}\" → the cart is empty"
+    }
+  },
+  "TC15": {
+    "title": {
+      "zh-TW": "登出",
+      "en": "Sign out"
+    },
+    "description": {
+      "zh-TW": "先透過 API 登入（登入表單由 TC09 驗證），再從使用者選單登出 → 「Sign in」重新出現、登入 token 已清除，也無法再進入帳戶頁（會被導回登入頁）",
+      "en": "Signed in through the API (TC09 covers the sign-in form) → sign out from the user menu → \"Sign in\" is back, the stored token is cleared, and the account page redirects to sign-in"
+    }
+  },
+  "TC16": {
+    "title": {
+      "zh-TW": "完整結帳（貨到付款）",
+      "en": "Complete checkout (Cash on Delivery)"
+    },
+    "description": {
+      "zh-TW": "「{product}」× {quantity} 放進購物車 → 登入 → 帳單地址（等郵遞區號自動帶入完成）→ 貨到付款 → 訂單建立成功並顯示訂單編號（不使用信用卡）",
+      "en": "\"{product}\" × {quantity} in the cart → sign in → billing address (after the postcode auto-fill completes) → Cash on Delivery → the order is created and an invoice number is shown (no card data)"
+    }
+  }
+}

@@ -1,18 +1,20 @@
 import { expect, test } from '../src/fixtures';
 
-const PRODUCT = 'Claw Hammer';
-
 test.describe('Checkout', () => {
   // Payment is always "Cash on Delivery" on a demo site: no card data is ever entered.
-  test('TC16 Complete checkout (Cash on Delivery)', async ({ home, nav, cartPage, checkoutPage, user }) => {
-    await test.step(`Cart: "${PRODUCT}" x1, proceed to checkout`, async () => {
+  test('TC16 Complete checkout (Cash on Delivery)', async ({ home, nav, cartPage, checkoutPage, user, data }) => {
+    const product = data.text('product');
+    const quantity = data.number('quantity');
+
+    await test.step(`Cart: "${product}" x${quantity}, proceed to checkout`, async () => {
       await home.open();
-      const product = await home.findAndOpenProduct(PRODUCT);
-      const unitPrice = await product.getUnitPrice();
-      await product.addToCart();
+      const productPage = await home.findAndOpenProduct(product);
+      const unitPrice = await productPage.getUnitPrice();
+      await productPage.increaseQuantityTo(quantity);
+      await productPage.addToCart();
       await nav.openCart();
       await cartPage.verifyLoaded();
-      await cartPage.verifyLine(PRODUCT, 1, unitPrice);
+      await cartPage.verifyLine(product, quantity, unitPrice);
       await cartPage.proceed();
     });
 

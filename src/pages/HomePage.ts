@@ -76,10 +76,16 @@ export class HomePage {
     return Number(match[1]);
   }
 
-  /** Selects a sort option. Callers should still poll for the expected order. */
-  async sortBy(label: string): Promise<void> {
-    await this.sort.selectOption({ label });
+  /** Selects a sort option by value (e.g. "price,asc"). Callers should still poll for the expected order. */
+  async sortBy(value: string): Promise<void> {
+    await this.sort.selectOption(value);
+    await expect(this.sort).toHaveValue(value);
     await expect(this.sortingCompleted).toBeAttached();
+  }
+
+  /** Text of the selected sort option, e.g. "Price (Low - High)". */
+  selectedSortOption(): Locator {
+    return this.sort.locator('option:checked');
   }
 
   async productNameList(): Promise<string[]> {
@@ -100,6 +106,19 @@ export class HomePage {
     const productPage = new ProductPage(this.page);
     await productPage.verifyLoaded(name);
     return productPage;
+  }
+
+  /**
+   * Opens the product at a 1-based position of the grid and returns its name.
+   * Only the name and price are checked: the product may be out of stock.
+   */
+  async openProductAt(position: number): Promise<string> {
+    const card = this.productCards.nth(position - 1);
+    await expect(card, `product #${position} on the page`).toBeVisible();
+    const name = (await card.getByTestId('product-name').innerText()).trim();
+    await card.click();
+    await new ProductPage(this.page).verifyDetails(name);
+    return name;
   }
 
   /** Searches for an exact product name and opens its detail page. */

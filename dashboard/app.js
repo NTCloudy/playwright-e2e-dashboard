@@ -1,43 +1,38 @@
-import { CASE_INFO, LANGUAGES, MODULE_NAMES, STRINGS } from './i18n.js';
+// Results dashboard: run history, one run's "test case x round" matrix, and
+// the test console (console.js) where the owner picks cases and starts runs.
+import {
+  ICON,
+  REPO_URL,
+  caseDescription,
+  caseTitle,
+  catalogCase,
+  esc,
+  fmtDate,
+  fmtDuration,
+  fmtSeconds,
+  loadCatalog,
+  loadRuns,
+  loadSummary,
+  localized,
+  moduleName,
+  paramText,
+  pct,
+  rateClass,
+  runLabel,
+  runPath,
+  saveLanguage,
+  state,
+  t,
+  triggerName,
+} from './core.js';
+import { afterConsoleRender, initTracker, refreshCaseTexts, renderConsole, syncRunIndicator, trackedRun } from './console.js';
+import { isEditing, refreshDescriptions } from './editor.js';
+import { LANGUAGES } from './i18n.js';
 
-const REPO_URL = 'https://github.com/NTCloudy/playwright-e2e-dashboard';
-const WORKFLOW_URL = `${REPO_URL}/actions/workflows/e2e.yml`;
-const DATA_DIR = 'data';
-const LANG_KEY = 'e2e-dashboard-lang';
 const TREND_SIZE = 30;
 
-const state = {
-  lang: pickLanguage(),
-  runs: null,
-  summaries: new Map(),
-  openCell: null, // { runId, caseId, round } while the detail dialog is open
-  renderToken: 0,
-};
-
-// ---------------------------------------------------------------- i18n
-
-/** ?lang= in the URL wins (shared links), then the saved choice, then the browser language. */
-function pickLanguage() {
-  const codes = LANGUAGES.map((l) => l.code);
-  const fromUrl = new URLSearchParams(location.search).get('lang');
-  if (codes.includes(fromUrl)) return fromUrl;
-  try {
-    const saved = localStorage.getItem(LANG_KEY);
-    if (codes.includes(saved)) return saved;
-  } catch {
-    /* storage can be blocked; fall through */
-  }
-  const browser = (navigator.languages?.[0] ?? navigator.language ?? '').toLowerCase();
-  return browser.startsWith('zh') ? 'zh-TW' : 'en';
-}
-
 function setLanguage(code) {
-  state.lang = code;
-  try {
-    localStorage.setItem(LANG_KEY, code);
-  } catch {
-    /* ignore */
-  }
+  saveLanguage(code);
   // Keep the language in the URL so a copied link opens in the same language.
   const url = new URL(location.href);
   url.searchParams.set('lang', code);
@@ -45,69 +40,9 @@ function setLanguage(code) {
   render();
 }
 
-function t(key, vars = {}) {
-  const value = STRINGS[state.lang]?.[key] ?? STRINGS.en[key] ?? key;
-  return typeof value === 'string' ? value.replace(/\{(\w+)\}/g, (_, name) => String(vars[name] ?? '')) : value;
-}
-
-const caseTitle = (c) => CASE_INFO[c.id]?.[state.lang]?.title ?? c.title;
-const caseChecks = (id) => CASE_INFO[id]?.[state.lang]?.checks ?? CASE_INFO[id]?.en?.checks ?? '';
-const moduleName = (m) => MODULE_NAMES[m]?.[state.lang] ?? m;
-const triggerName = (trigger) => t(`trigger_${trigger}`);
-
-// ---------------------------------------------------------------- formatting
-
-const esc = (value) =>
-  String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-
-// 24-hour clock: zh-TW's 12-hour format adds day periods such as "清晨".
-const fmtDate = (iso) =>
-  new Intl.DateTimeFormat(state.lang, { dateStyle: 'medium', timeStyle: 'short', hourCycle: 'h23' }).format(new Date(iso));
-
-function fmtDuration(ms) {
-  const total = Math.max(0, Math.round((ms ?? 0) / 1000));
-  const h = Math.floor(total / 3600);
-  const m = Math.floor((total % 3600) / 60);
-  const s = total % 60;
-  if (h) return t('durHM', { h, m });
-  if (m) return t('durMS', { m, s });
-  return t('durS', { s });
-}
-
-const fmtSeconds = (ms) => t('durS', { s: ((ms ?? 0) / 1000).toFixed(1) });
-
-const pct = (v) => (v === null || v === undefined ? '—' : `${(v * 100).toFixed(v === 0 || v === 1 ? 0 : 1)}%`);
-
-const rateClass = (v) => (v === null || v === undefined ? 'na' : v >= 0.95 ? 'good' : v >= 0.8 ? 'warn' : 'bad');
-
-const runLabel = (run) => (run.runNumber ? t('runTitle', { n: run.runNumber }) : t('runLocalTitle'));
-
-const runPath = (runId, rel) => `${DATA_DIR}/runs/${encodeURIComponent(runId)}/${rel}`;
-
-const ICON = { passed: '✓', failed: '✕', skipped: '–', none: '·' };
-
-// ---------------------------------------------------------------- data
-
-async function getJson(path) {
-  // GitHub Pages caches for 10 minutes; revalidate so a new run shows up right away.
-  const response = await fetch(path, { cache: 'no-cache' });
-  if (!response.ok) {
-    const error = new Error(`HTTP ${response.status} (${path})`);
-    error.status = response.status;
-    throw error;
-  }
-  return response.json();
-}
-
-async function loadRuns() {
-  state.runs ??= await getJson(`${DATA_DIR}/runs.json`);
-  return state.runs;
-}
-
-async function loadSummary(id) {
-  if (!state.summaries.has(id)) state.summaries.set(id, await getJson(runPath(id, 'summary.json')));
-  return state.summaries.get(id);
-}
+/** Test data of one case in one run: { key: value }. */
+const runValues = (c) => Object.fromEntries((c.params ?? []).map((p) => [p.key, p.value]));
+const customParams = (c) => (c.params ?? []).filter((p) => p.value !== p.default);
 
 // ---------------------------------------------------------------- chrome (header + footer)
 
@@ -119,7 +54,8 @@ function renderHeader() {
         <span>${esc(t('appTitle'))}</span>
       </a>
       <div class="header-actions">
-        <a class="btn btn-primary" href="${WORKFLOW_URL}" target="_blank" rel="noopener" title="${esc(t('runTestsHint'))}">▶ ${esc(t('runTests'))}</a>
+        <a class="btn btn-primary" href="#/console" title="${esc(t('runTestsHint'))}">▶ ${esc(t('runTests'))}
+          <span id="run-indicator" class="run-dot" hidden>${esc(t('running'))}</span></a>
         <a class="btn" href="${REPO_URL}" target="_blank" rel="noopener">${esc(t('sourceCode'))}</a>
         <button type="button" class="btn" id="share-btn">${esc(t('share'))}</button>
         <div class="lang-switch" role="group" aria-label="${esc(t('language'))}">
@@ -127,6 +63,7 @@ function renderHeader() {
         </div>
       </div>
     </div>`;
+  syncRunIndicator();
 }
 
 function renderFooter() {
@@ -140,25 +77,37 @@ function renderFooter() {
 
 // ---------------------------------------------------------------- home view
 
+function renderRunningBanner() {
+  const run = trackedRun();
+  if (!run || run.done) return '';
+  return `
+    <a class="card running-banner" href="#/console">
+      <span class="spinner" aria-hidden="true"></span>
+      <span>${esc(t('runningBanner', { cases: run.caseCount, rounds: run.rounds }))}</span>
+      <span class="running-banner-link">${esc(t('viewProgress'))} →</span>
+    </a>`;
+}
+
 function renderHome(runs) {
   const intro = `
     <section class="hero">
       <h1>${esc(t('appTitle'))}</h1>
       <p class="lead">${esc(t('appSubtitle'))}</p>
-    </section>`;
+    </section>
+    ${renderRunningBanner()}`;
 
   if (!runs.length) {
     return `${intro}
       <section class="card empty">
         <h2>${esc(t('emptyTitle'))}</h2>
         <p>${esc(t('emptyBody'))}</p>
-        <a class="btn btn-primary" href="${WORKFLOW_URL}" target="_blank" rel="noopener">▶ ${esc(t('runTests'))}</a>
+        <a class="btn btn-primary" href="#/console">▶ ${esc(t('runTests'))}</a>
       </section>`;
   }
 
   const latest = runs[0];
   const executed = latest.totals.passed + latest.totals.failed;
-  const caseCount = latest.rounds ? Math.round(latest.totals.total / latest.rounds) : '—';
+  const catalogSize = state.catalog?.cases.length ?? latest.catalogSize ?? (latest.rounds ? Math.round(latest.totals.total / latest.rounds) : '—');
   const trend = runs.slice(0, TREND_SIZE).reverse();
 
   return `${intro}
@@ -178,11 +127,11 @@ function renderHome(runs) {
         <div class="kpi-value">${runs.length}</div>
         <div class="kpi-sub">${esc(t('keepNote'))}</div>
       </div>
-      <div class="card kpi">
+      <a class="card kpi" href="#/console">
         <div class="kpi-label">${esc(t('kpiCases'))}</div>
-        <div class="kpi-value">${caseCount}</div>
-        <div class="kpi-sub">Chromium · Playwright</div>
-      </div>
+        <div class="kpi-value">${catalogSize}</div>
+        <div class="kpi-sub">Chromium · Playwright · ${esc(t('kpiCasesLink'))} →</div>
+      </a>
     </section>
 
     <section class="card">
@@ -211,6 +160,7 @@ function renderHome(runs) {
               <th>${esc(t('colRun'))}</th>
               <th>${esc(t('colStarted'))}</th>
               <th>${esc(t('colTrigger'))}</th>
+              <th class="num">${esc(t('colCases'))}</th>
               <th class="num">${esc(t('colRounds'))}</th>
               <th>${esc(t('colPassRate'))}</th>
               <th class="num">${esc(t('colResults'))}</th>
@@ -228,11 +178,16 @@ function renderHome(runs) {
 function renderRunRow(run) {
   const href = `#/run/${encodeURIComponent(run.id)}`;
   const broken = run.brokenRounds ? ` <span class="tag tag-bad" title="${esc(t('roundBroken'))}">⚠ ${run.brokenRounds}</span>` : '';
+  // Runs recorded before case selection existed always ran every case.
+  const caseCount = run.caseCount ?? (run.rounds ? Math.round(run.totals.total / run.rounds) : '—');
+  const cases = run.catalogSize && run.catalogSize !== caseCount ? `${caseCount}/${run.catalogSize}` : `${caseCount}`;
+  const custom = run.customData ? ` <span class="tag tag-custom" title="${esc(t('customDataHint'))}">${esc(t('custom'))}</span>` : '';
   return `
     <tr class="clickable" data-href="${href}">
       <td><a href="${href}">${esc(runLabel(run))}</a>${broken}</td>
       <td>${esc(fmtDate(run.startedAt))}</td>
       <td><span class="tag tag-${esc(run.trigger)}">${esc(triggerName(run.trigger))}</span></td>
+      <td class="num">${esc(cases)}${custom}</td>
       <td class="num">${run.rounds}</td>
       <td>
         <div class="rate">
@@ -261,11 +216,15 @@ function renderRun(summary) {
   const rounds = summary.roundSummaries;
   const executed = summary.totals.passed + summary.totals.failed;
   const commitUrl = summary.repoUrl && summary.commit ? `${summary.repoUrl}/commit/${summary.commit}` : null;
+  const catalogSize = summary.selection?.catalogSize ?? summary.cases.length;
+  const customCases = summary.cases.filter((c) => customParams(c).length).length;
 
   const meta = [
     [t('started'), esc(fmtDate(summary.startedAt))],
     [t('duration'), esc(fmtDuration(summary.durationMs))],
     [t('rounds'), summary.rounds],
+    [t('casesRun'), esc(summary.cases.length === catalogSize ? t('casesAll', { n: catalogSize }) : `${summary.cases.length} / ${catalogSize}`)],
+    [t('testData'), esc(customCases ? t('testDataCustom', { n: customCases }) : t('testDataDefault'))],
     [t('trigger'), esc(triggerName(summary.trigger))],
     [t('browser'), `Chromium · Playwright ${esc(summary.playwrightVersion)}`],
     [t('target'), `<a href="${esc(summary.baseURL)}" target="_blank" rel="noopener">${esc(new URL(summary.baseURL).host)}</a>`],
@@ -307,7 +266,7 @@ function renderRun(summary) {
     .map(
       ([module, cases]) => `
         <tr class="module-row"><th colspan="${rounds.length + 2}" scope="colgroup">${esc(moduleName(module))}</th></tr>
-        ${cases.map((c) => renderCaseRow(summary, c, rounds)).join('')}`,
+        ${cases.map((c) => renderCaseRow(c, rounds)).join('')}`,
     )
     .join('');
 
@@ -353,10 +312,11 @@ function renderRun(summary) {
     </section>`;
 }
 
-function renderCaseRow(summary, c, rounds) {
+function renderCaseRow(c, rounds) {
   const statuses = c.results.map((r) => r.status);
   const flaky = statuses.includes('passed') && statuses.includes('failed');
   const blocked = c.results.some((r) => r.blocked);
+  const custom = customParams(c);
   const cells = rounds
     .map((round) => {
       const result = c.results.find((r) => r.round === round.round);
@@ -365,11 +325,13 @@ function renderCaseRow(summary, c, rounds) {
       return `<td><button type="button" class="cell cell-${result.status}" data-case="${esc(c.id)}" data-round="${round.round}" title="${esc(label)}" aria-label="${esc(label)}">${ICON[result.status]}</button></td>`;
     })
     .join('');
+  const customTitle = custom.map((p) => `${paramLabel(c.id, p.key)}: ${paramValueText(c.id, p.key, p.value)}`).join(' · ');
   return `
     <tr>
       <th class="case-col" scope="row">
         <span class="case-id">${esc(c.id)}</span>
-        <span class="case-title" title="${esc(caseChecks(c.id))}">${esc(caseTitle(c))}</span>
+        <span class="case-title" title="${esc(caseDescription(c.id, runValues(c)))}">${esc(caseTitle(c.id, c.title))}</span>
+        ${custom.length ? `<span class="tag tag-custom" title="${esc(customTitle)}">${esc(t('custom'))}</span>` : ''}
       </th>
       ${cells}
       <td class="num">
@@ -382,11 +344,26 @@ function renderCaseRow(summary, c, rounds) {
 
 // ---------------------------------------------------------------- detail dialog
 
+const paramLabel = (caseId, key) => localized(catalogCase(caseId)?.params?.[key]?.label) || key;
+const paramValueText = (caseId, key, value) => paramText(catalogCase(caseId)?.params?.[key], value);
+
 function resultNote(result) {
   if (result.status === 'passed') return t('passedNote');
   if (result.status !== 'skipped') return null;
   if (result.blocked) return t('blockedNote');
   return result.skipReason ? `${t('skippedNote')} ${t('skipReason', { reason: result.skipReason })}` : t('skippedNote');
+}
+
+function renderTestData(c) {
+  if (!c.params?.length) return '';
+  const rows = c.params
+    .map((p) => {
+      const custom = p.value !== p.default;
+      const note = custom ? ` <span class="tag tag-custom">${esc(t('custom'))}</span> <span class="muted">${esc(t('defaultIs', { value: paramValueText(c.id, p.key, p.default) }))}</span>` : '';
+      return `<div><dt>${esc(paramLabel(c.id, p.key))}</dt><dd>${esc(paramValueText(c.id, p.key, p.value))}${note}</dd></div>`;
+    })
+    .join('');
+  return `<section><h4>${esc(t('testDataUsed'))}</h4><dl class="data-list">${rows}</dl></section>`;
 }
 
 function renderDetail() {
@@ -398,12 +375,13 @@ function renderDetail() {
   if (!result) return;
 
   const note = resultNote(result);
+  const description = caseDescription(c.id, runValues(c), { html: true });
   dialog.innerHTML = `
     <div class="dialog-inner">
       <header class="dialog-head">
         <div>
           <div class="muted">${esc(c.id)} · ${esc(moduleName(c.module))}</div>
-          <h3>${esc(caseTitle(c))}</h3>
+          <h3>${esc(caseTitle(c.id, c.title))}</h3>
           <div>
             ${esc(t('roundN', { n: round }))} ·
             <span class="status status-${result.status}">${ICON[result.status]} ${esc(t(result.status))}</span>
@@ -413,7 +391,8 @@ function renderDetail() {
         </div>
         <button type="button" class="btn-close" data-close aria-label="${esc(t('close'))}">✕</button>
       </header>
-      ${caseChecks(c.id) ? `<section><h4>${esc(t('verifies'))}</h4><p>${esc(caseChecks(c.id))}</p></section>` : ''}
+      ${description ? `<section><h4>${esc(t('verifies'))}</h4><p>${description}</p></section>` : ''}
+      ${renderTestData(c)}
       ${note ? `<p class="muted">${esc(note)}</p>` : ''}
       ${result.error ? `<section><h4>${esc(t('error'))}</h4><pre class="error">${esc(result.error)}</pre></section>` : ''}
       ${
@@ -426,6 +405,7 @@ function renderDetail() {
       }
       <div class="dialog-actions">
         <a class="btn btn-primary" href="${runPath(runId, result.reportLink)}" target="_blank" rel="noopener">${esc(t('openInReport'))} ↗</a>
+        ${catalogCase(c.id) ? `<a class="btn" href="#/console/${encodeURIComponent(c.id)}">${esc(t('openInConsole'))}</a>` : ''}
         <button type="button" class="btn" data-close>${esc(t('close'))}</button>
       </div>
     </div>`;
@@ -441,8 +421,21 @@ function closeDetail() {
 // ---------------------------------------------------------------- routing + rendering
 
 function currentRoute() {
-  const match = /^#\/run\/([^/?]+)$/.exec(location.hash);
-  return match ? { view: 'run', id: decodeURIComponent(match[1]) } : { view: 'home' };
+  const run = /^#\/run\/([^/?]+)$/.exec(location.hash);
+  if (run) return { view: 'run', id: decodeURIComponent(run[1]) };
+  const consoleRoute = /^#\/console(?:\/(TC\d{2}))?$/.exec(location.hash);
+  if (consoleRoute) return { view: 'console', focus: consoleRoute[1] ?? null };
+  return { view: 'home' };
+}
+
+function renderNotPublished(run) {
+  return `
+    <a class="back" href="#/">${esc(t('back'))}</a>
+    <section class="card empty">
+      <h2>${esc(run.runNumber ? t('runTitle', { n: run.runNumber }) : t('runThis'))}</h2>
+      <p>${esc(t('notPublishedYet'))}</p>
+      <a class="btn btn-primary" href="#/console">${esc(t('viewProgress'))} →</a>
+    </section>`;
 }
 
 async function render() {
@@ -453,25 +446,40 @@ async function render() {
 
   const app = document.getElementById('app');
   const route = currentRoute();
-  const cached = route.view === 'run' ? state.summaries.has(route.id) : state.runs !== null;
+  const cached = route.view === 'run' ? state.summaries.has(route.id) : route.view === 'console' ? state.catalog !== null : state.runs !== null;
   if (!cached) app.innerHTML = `<p class="muted loading">${esc(t('loading'))}</p>`;
 
   try {
-    if (route.view === 'run') {
-      const summary = await loadSummary(route.id);
+    if (route.view === 'console') {
+      await loadCatalog();
       if (token !== state.renderToken) return;
-      app.innerHTML = renderRun(summary);
-      document.title = `${runLabel(summary)} · ${t('appTitle')}`;
+      app.innerHTML = renderConsole(route.focus);
+      document.title = `${t('consoleTitle')} · ${t('appTitle')}`;
+      afterConsoleRender(route.focus);
     } else {
-      const runs = await loadRuns();
-      if (token !== state.renderToken) return;
-      app.innerHTML = renderHome(runs);
-      document.title = t('appTitle');
+      // Titles and descriptions come from the catalog; older deploys without one fall back to the code titles.
+      const catalog = loadCatalog().catch(() => null);
+      if (route.view === 'run') {
+        const [summary] = await Promise.all([loadSummary(route.id), catalog]);
+        if (token !== state.renderToken) return;
+        app.innerHTML = renderRun(summary);
+        document.title = `${runLabel(summary)} · ${t('appTitle')}`;
+      } else {
+        const [runs] = await Promise.all([loadRuns(), catalog]);
+        if (token !== state.renderToken) return;
+        app.innerHTML = renderHome(runs);
+        document.title = t('appTitle');
+      }
     }
   } catch (error) {
     if (token !== state.renderToken) return;
-    const message = route.view === 'run' && error.status === 404 ? t('notFound') : t('loadError', { msg: error.message });
-    app.innerHTML = `<a class="back" href="#/">${esc(t('back'))}</a><section class="card empty"><p class="ko">${esc(message)}</p></section>`;
+    const tracked = trackedRun();
+    if (route.view === 'run' && error.status === 404 && tracked?.id === route.id && tracked.outcome !== 'published') {
+      app.innerHTML = renderNotPublished(tracked);
+    } else {
+      const message = route.view === 'run' && error.status === 404 ? t('notFound') : t('loadError', { msg: error.message });
+      app.innerHTML = `<a class="back" href="#/">${esc(t('back'))}</a><section class="card empty"><p class="ko">${esc(message)}</p></section>`;
+    }
     document.title = t('appTitle');
   }
 
@@ -520,4 +528,19 @@ window.addEventListener('hashchange', () => {
   window.scrollTo(0, 0);
 });
 
+initTracker({
+  // A run started from the console was published: the history now includes it.
+  onPublished: () => {
+    state.runs = null;
+    if (currentRoute().view === 'home') render();
+  },
+});
+
 render();
+
+// catalog.json holds the descriptions of the last deploy; edits made since then come from GitHub.
+refreshDescriptions().then((changed) => {
+  if (!changed || isEditing()) return;
+  if (currentRoute().view === 'console') refreshCaseTexts();
+  else render();
+});

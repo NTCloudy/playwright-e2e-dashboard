@@ -7,6 +7,7 @@ import { HomePage } from './pages/HomePage';
 import { NavBar } from './pages/NavBar';
 import { BotCheck } from './support/botCheck';
 import { Session } from './support/session';
+import { TestData } from './support/testData';
 
 type PageFixtures = {
   home: HomePage;
@@ -21,6 +22,8 @@ type PageFixtures = {
   botCheck: BotCheck;
   /** Test account for the current round; the source is recorded as an annotation. */
   user: TestUser;
+  /** Test data of the current case (config/cases.json + per-run overrides), recorded as an annotation. */
+  data: TestData;
 };
 
 type WorkerFixtures = {
@@ -47,6 +50,12 @@ export const test = base.extend<PageFixtures, WorkerFixtures>({
           : `Fallback to public demo account: ${registeredUser.note}`,
     });
     await use(registeredUser);
+  },
+
+  data: async ({}, use, testInfo) => {
+    const data = TestData.forTest(testInfo.title);
+    testInfo.annotations.push({ type: 'test data', description: data.describe() });
+    await use(data);
   },
 
   home: async ({ page }, use) => use(new HomePage(page)),

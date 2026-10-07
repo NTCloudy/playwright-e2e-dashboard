@@ -1,14 +1,30 @@
 name: E2E tests
+run-name: >-
+  ${{ github.event_name == 'schedule' && 'Weekly run' || 'Manual run' }}
+  · ${{ inputs.rounds || '3' }} round(s)
+  · ${{ inputs.cases || 'all cases' }}${{ inputs.params && ' · custom test data' || '' }}
 
+# Manual runs usually come from the dashboard's test console, which calls the
+# workflow_dispatch API with these inputs. The GitHub "Run workflow" form works too.
 on:
   workflow_dispatch:
     inputs:
       rounds:
-        description: 'Number of rounds (each round runs every test case once)'
+        description: 'Number of rounds (each round runs every selected test case once)'
         type: choice
         required: true
         default: '3'
         options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+      cases:
+        description: 'Test cases to run, comma-separated (e.g. TC04,TC12). Empty = all cases.'
+        type: string
+        required: false
+        default: ''
+      params:
+        description: 'Test data overrides as JSON, e.g. {"TC04":{"keyword":"pliers"}}. Empty = defaults from config/cases.json.'
+        type: string
+        required: false
+        default: ''
   schedule:
     # Every Monday 01:00 UTC = 09:00 Taiwan time (UTC+8).
     - cron: '0 1 * * 1'
@@ -51,9 +67,13 @@ jobs:
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 
+      # Inputs are passed as environment variables (never pasted into the script)
+      # and validated by run-rounds.mjs before any test runs.
       - name: Run tests
         env:
           ROUNDS: ${{ inputs.rounds || '3' }}
+          CASES: ${{ inputs.cases }}
+          CASE_PARAMS: ${{ inputs.params }}
         run: node scripts/run-rounds.mjs
 
       - name: Aggregate results

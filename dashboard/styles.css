@@ -14,6 +14,7 @@
   --bad-bg: #ffe5e3;
   --skip: #6e7781;
   --skip-bg: #eaeef2;
+  --custom: #0e7c86;
   --radius: 12px;
   --shadow: 0 1px 2px rgb(31 35 40 / 6%), 0 1px 8px rgb(31 35 40 / 4%);
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
@@ -38,6 +39,7 @@
     --bad-bg: #4a1517;
     --skip: #8b949e;
     --skip-bg: #262c34;
+    --custom: #39c5cf;
     --shadow: none;
   }
 }
@@ -46,8 +48,18 @@
   box-sizing: border-box;
 }
 
+/* Classes below set `display`, which would otherwise override the hidden attribute. */
+[hidden] {
+  display: none !important;
+}
+
 body {
   margin: 0;
+}
+
+/* Elements scrolled into view (run panel, #/console/TC04) stay clear of the sticky header. */
+html {
+  scroll-padding-top: 84px;
 }
 
 a {
@@ -161,6 +173,47 @@ code {
   filter: brightness(1.08);
   border-color: var(--primary);
 }
+.btn-sm {
+  padding: 3px 10px;
+  font-size: 0.82rem;
+}
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  filter: none;
+}
+.btn-link {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--primary);
+  font: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+/* "Running" badge on the header's Run button while a run started here is in progress. */
+.run-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 7px;
+  border-radius: 99px;
+  background: rgb(255 255 255 / 22%);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.run-dot::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse 1.2s ease-in-out infinite;
+}
 
 .lang-switch {
   display: inline-flex;
@@ -186,10 +239,59 @@ code {
   font-weight: 600;
 }
 
+input:not([type='checkbox']):not([type='radio']),
+select,
+textarea {
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  min-width: 0;
+}
+textarea {
+  width: 100%;
+  resize: vertical;
+  line-height: 1.5;
+}
+input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+[aria-invalid='true'] {
+  border-color: var(--bad) !important;
+  box-shadow: 0 0 0 1px var(--bad);
+}
+
 button:focus-visible,
-a:focus-visible {
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--primary) 55%, transparent);
   outline-offset: 2px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.25;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spinner,
+  .run-dot::before {
+    animation-duration: 3s !important;
+  }
 }
 
 /* ------------------------------------------------------------ layout */
@@ -419,6 +521,11 @@ tr.clickable:hover td {
   color: var(--bad);
 }
 .tag-blocked {
+  margin-left: 6px;
+}
+.tag-custom {
+  background: color-mix(in srgb, var(--custom) 14%, transparent);
+  color: var(--custom);
   margin-left: 6px;
 }
 
@@ -684,6 +791,473 @@ pre.error {
   border: 1px solid var(--border);
   border-radius: 8px;
 }
+.data-list {
+  margin: 0;
+  display: grid;
+  gap: 6px;
+}
+.data-list > div {
+  display: flex;
+  gap: 4px 12px;
+  flex-wrap: wrap;
+}
+.data-list dt {
+  color: var(--muted);
+  min-width: 150px;
+}
+.data-list dd {
+  margin: 0;
+  font-weight: 500;
+}
+.param-value {
+  font-weight: 600;
+  color: var(--text);
+  background: color-mix(in srgb, var(--custom) 13%, transparent);
+  padding: 0 3px;
+  border-radius: 4px;
+}
+
+/* ------------------------------------------------------------ home: run in progress */
+
+.running-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: inherit;
+  border-left: 4px solid var(--primary);
+  padding: 14px 18px;
+}
+.running-banner:hover {
+  text-decoration: none;
+  border-color: var(--primary);
+}
+.running-banner-link {
+  margin-left: auto;
+  color: var(--primary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.spinner {
+  display: inline-block;
+  flex: none;
+  width: 0.95em;
+  height: 0.95em;
+  border: 2px solid color-mix(in srgb, var(--primary) 25%, transparent);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* ------------------------------------------------------------ test console */
+
+#console-root > section,
+#run-panel > section {
+  margin-bottom: 20px;
+}
+.small {
+  font-size: 0.85rem;
+}
+.console-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.console-row-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.field-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+.token-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+.token-line .tag-warn {
+  margin-left: 0;
+}
+
+.module-block + .module-block {
+  margin-top: 22px;
+}
+.module-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 6px 8px;
+  border-bottom: 2px solid var(--border);
+}
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.module-name {
+  font-weight: 700;
+}
+.case-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.case-item + .case-item {
+  border-top: 1px solid var(--border);
+}
+.case-item.open {
+  background: color-mix(in srgb, var(--primary) 4%, transparent);
+}
+.case-line {
+  display: flex;
+  align-items: center;
+  gap: 6px 8px;
+  padding: 9px 6px;
+}
+.case-check {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.case-check .case-id {
+  min-width: 40px;
+}
+.case-name {
+  font-weight: 500;
+}
+.case-line .tag {
+  margin-left: 0;
+}
+.case-toggle {
+  white-space: nowrap;
+}
+.case-body {
+  display: grid;
+  gap: 10px;
+  padding: 2px 6px 18px 30px;
+}
+.desc-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+}
+.desc-view {
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+}
+.case-checks {
+  margin: 0;
+  white-space: pre-line;
+}
+.save-notice {
+  margin: 4px 0 0;
+  color: var(--good);
+  font-size: 0.85rem;
+}
+.param-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px 18px;
+}
+.param {
+  display: grid;
+  gap: 4px;
+  align-content: start;
+}
+.param > label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.param-control {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.param-control input,
+.param-control select {
+  flex: 1;
+}
+.param small {
+  font-size: 0.78rem;
+}
+.param-warn {
+  color: var(--warn);
+}
+.param-error {
+  color: var(--bad);
+  font-weight: 600;
+}
+p.param-error {
+  font-size: 0.9rem;
+}
+.no-params {
+  margin: 0;
+  font-size: 0.9rem;
+}
+.case-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  font-size: 0.875rem;
+}
+.console-foot {
+  margin: 16px 0 0;
+  font-size: 0.875rem;
+}
+
+/* Run bar: stays at the bottom of the window while the case list scrolls. */
+.console-bar {
+  position: sticky;
+  bottom: 12px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  padding: 12px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 24px rgb(31 35 40 / 16%);
+}
+.console-summary {
+  font-size: 0.9rem;
+}
+.btn-run {
+  padding: 9px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------ run progress panel */
+
+.run-panel {
+  border-left: 4px solid var(--primary);
+}
+.run-panel-done {
+  border-left-color: var(--good);
+}
+.run-panel-bad {
+  border-left-color: var(--bad);
+}
+.run-panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-bottom: 4px;
+}
+.run-panel-head h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.15rem;
+}
+.run-panel p {
+  margin: 4px 0;
+}
+.run-panel-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.phases {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin: 14px 0 6px;
+  padding: 0;
+}
+.phase {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+}
+.phase-dot {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.phase-done {
+  color: var(--text);
+}
+.phase-done .phase-dot {
+  background: var(--good);
+  border-color: var(--good);
+  color: #fff;
+}
+.phase-active {
+  color: var(--text);
+  font-weight: 600;
+}
+.phase-active .phase-dot {
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 22%, transparent);
+}
+.run-result {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin: 6px 0;
+}
+.result-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 8px 3px 6px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: inherit;
+}
+.chip:hover {
+  border-color: var(--primary);
+  text-decoration: none;
+}
+.chip .case-id {
+  min-width: 0;
+  margin-right: 3px;
+}
+.cell-xs {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  font-size: 0.62rem;
+  cursor: inherit;
+}
+
+/* ------------------------------------------------------------ title and description editor */
+
+.desc-editor {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid color-mix(in srgb, var(--primary) 45%, var(--border));
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--primary) 4%, var(--card));
+}
+.desc-editor p {
+  margin: 0;
+}
+.desc-editor-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+}
+.desc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+.desc-lang {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  margin: 0;
+  padding: 8px 12px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+}
+.desc-lang legend {
+  padding: 0 4px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.desc-lang label {
+  margin-top: 4px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+.desc-lang input {
+  width: 100%;
+}
+.desc-count {
+  justify-self: end;
+  font-size: 0.75rem;
+}
+.desc-preview {
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: var(--bg);
+  font-size: 0.85rem;
+  white-space: pre-line;
+}
+.ph-chip {
+  padding: 0 6px;
+  border: 1px dashed var(--primary);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--primary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.ph-chip:hover {
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+}
+.desc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ------------------------------------------------------------ token dialog */
+
+.token-dialog {
+  width: min(620px, calc(100vw - 32px));
+}
+.token-steps {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 22px;
+}
+.field-label {
+  margin-bottom: -10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.token-input {
+  width: 100%;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace !important;
+}
+.token-remember {
+  margin-bottom: -10px;
+}
 
 /* ------------------------------------------------------------ footer */
 
@@ -729,5 +1303,15 @@ pre.error {
   }
   .matrix .case-col {
     min-width: 200px;
+  }
+  .case-body {
+    padding-left: 6px;
+  }
+  .console-bar {
+    bottom: 0;
+  }
+  .btn-run {
+    width: 100%;
+    justify-content: center;
   }
 }

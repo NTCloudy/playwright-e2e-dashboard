@@ -1,5 +1,10 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+/** "Hand Tools" -> "hand-tools", as used in the category URL and the menu's data-test ids. */
+export function categorySlug(name: string): string {
+  return name.toLowerCase().replace(/\s+/g, '-');
+}
+
 /** Top navigation bar, shared by every page. */
 export class NavBar {
   readonly home: Locator;
@@ -35,7 +40,7 @@ export class NavBar {
   /** Opens the "Categories" dropdown and clicks the given category. */
   async openCategory(name: string): Promise<void> {
     await this.categories.click();
-    const link = this.page.getByTestId(`nav-${name.toLowerCase().replace(/\s+/g, '-')}`);
+    const link = this.page.getByTestId(`nav-${categorySlug(name)}`);
     await expect(link).toBeVisible();
     await link.click();
   }

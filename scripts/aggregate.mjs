@@ -2,7 +2,8 @@
 /**
  * Builds <RUN_DIR>/summary.json from the per-round Playwright JSON reports.
  *
- * - One entry per test case (TCxx), with the result of every round.
+ * - One entry per test case (TCxx), with the result of every round and the
+ *   test data it used (defaults from config/cases.json + this run's overrides).
  * - Failure screenshots are copied next to the round report so the dashboard
  *   can show them inline.
  * - In GitHub Actions it also writes step outputs (failed/total) and a
@@ -10,6 +11,8 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { caseIds, paramEntries, resolveCase } from '../shared/case-params.mjs';
+import { loadConfig } from './lib/catalog.mjs';
 
 const runDir = path.resolve(process.env.RUN_DIR ?? 'test-output/run');
 const metaPath = path.join(runDir, 'run-meta.json');
@@ -19,6 +22,9 @@ if (!fs.existsSync(metaPath)) {
 }
 const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
 const pkg = JSON.parse(fs.readFileSync(path.resolve('package.json'), 'utf8'));
+const config = loadConfig();
+// Runs recorded before case selection existed ran every case with the defaults.
+const selection = meta.selection ?? { all: true, cases: caseIds(config), params: {} };
 
 const ANSI = /\u001b\[[0-9;]*m/g;
 const CASE_TITLE = /^(TC\d{2})\s+(.+)$/;
@@ -121,6 +127,9 @@ const caseList = [...cases.values()].sort((a, b) => a.id.localeCompare(b.id));
 for (const c of caseList) {
   const executed = c.results.filter((r) => r.status !== 'skipped');
   c.passRate = executed.length ? executed.filter((r) => r.status === 'passed').length / executed.length : null;
+  // The defaults are stored too, so the dashboard can mark custom values even after config/cases.json changes.
+  const { values } = resolveCase(config, c.id, selection.params?.[c.id] ?? {});
+  c.params = paramEntries(config, c.id).map(([key, def]) => ({ key, value: values[key], default: def.default }));
 }
 
 const totals = roundSummaries.reduce(
@@ -134,12 +143,13 @@ totals.passRate = executedTotal ? totals.passed / executedTotal : null;
 const brokenRounds = roundSummaries.filter((r) => r.passed + r.failed + r.skipped === 0).length;
 
 const summary = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   ...runInfo(),
   startedAt: meta.startedAt,
   finishedAt: meta.finishedAt,
   durationMs: new Date(meta.finishedAt) - new Date(meta.startedAt),
   rounds: meta.rounds,
+  selection: { all: selection.all, cases: selection.cases, catalogSize: caseIds(config).length },
   browser: 'chromium',
   playwrightVersion: pkg.devDependencies['@playwright/test'],
   baseURL: process.env.BASE_URL ?? 'https://practicesoftwaretesting.com',
@@ -165,8 +175,14 @@ if (process.env.GITHUB_STEP_SUMMARY) {
     .join('\n');
   const anyBlocked = caseList.some((c) => c.results.some((r) => r.blocked));
   const legend = anyBlocked ? `\n${icon.blocked} Skipped: blocked by the site's Cloudflare bot check on the CI runner (not a product failure).\n` : '';
+  const scope = selection.all
+    ? `Cases: all ${summary.selection.catalogSize}`
+    : `Cases: ${caseList.length} of ${summary.selection.catalogSize} (${caseList.map((c) => c.id).join(', ')})`;
+  // Values only contain letters, digits, spaces and . , ' & ( ) / + - (shared/case-params.mjs), so code spans are safe.
+  const custom = caseList.flatMap((c) => c.params.filter((p) => p.value !== p.default).map((p) => `\`${c.id}.${p.key} = ${JSON.stringify(p.value)}\``));
+  const data = custom.length ? `Custom test data: ${custom.join(', ')}` : 'Test data: defaults from config/cases.json';
   fs.appendFileSync(
     process.env.GITHUB_STEP_SUMMARY,
-    `## E2E results: ${pct(totals.passRate)} passed (${totals.passed}/${executedTotal})\n\n${header}${rows}\n${legend}`,
+    `## E2E results: ${pct(totals.passRate)} passed (${totals.passed}/${executedTotal})\n\n${scope}  \n${data}\n\n${header}${rows}\n${legend}`,
   );
 }

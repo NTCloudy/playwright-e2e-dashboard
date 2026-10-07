@@ -21,6 +21,11 @@ export function toast(page: Page, message: string): Locator {
   return page.locator('#toast-container').getByText(message, { exact: true }).first();
 }
 
-export function isSorted(values: number[], direction: 'asc' | 'desc'): boolean {
-  return values.every((v, i) => i === 0 || (direction === 'asc' ? values[i - 1] <= v : values[i - 1] >= v));
+const nameCollator = new Intl.Collator('en', { sensitivity: 'base' });
+
+/** True when the values are in order. Names are compared case-insensitively, like the site sorts them. */
+export function isSorted(values: readonly number[] | readonly string[], direction: 'asc' | 'desc'): boolean {
+  const compare = (a: number | string, b: number | string): number =>
+    typeof a === 'number' && typeof b === 'number' ? a - b : nameCollator.compare(String(a), String(b));
+  return values.every((v, i) => i === 0 || (direction === 'asc' ? compare(values[i - 1], v) <= 0 : compare(values[i - 1], v) >= 0));
 }

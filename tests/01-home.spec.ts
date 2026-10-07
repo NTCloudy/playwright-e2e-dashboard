@@ -1,4 +1,5 @@
 import { expect, test } from '../src/fixtures';
+import { categorySlug } from '../src/pages/NavBar';
 
 test.describe('Home', () => {
   test('TC01 Home page loads', async ({ home }) => {
@@ -15,11 +16,14 @@ test.describe('Home', () => {
     });
   });
 
-  test('TC02 Return to the home page from a product page', async ({ page, home, nav }) => {
-    await test.step('Open the home page and click the first product', async () => {
+  test('TC02 Return to the home page from a product page', async ({ page, home, nav, data }) => {
+    const position = data.number('position');
+
+    await test.step(`Open the home page and click product #${position}`, async () => {
       await home.open();
-      const name = (await home.productNames.first().innerText()).trim();
-      await home.openProduct(name);
+      // openProductAt checks that the product page shows the card's name and price.
+      const name = await home.openProductAt(position);
+      test.info().annotations.push({ type: 'product', description: name });
     });
 
     await test.step('Click "Home" in the navigation bar', async () => {
@@ -33,15 +37,17 @@ test.describe('Home', () => {
     });
   });
 
-  test('TC03 Browse a category', async ({ page, home, nav }) => {
-    await test.step('Open Categories > Hand Tools', async () => {
+  test('TC03 Browse a category', async ({ page, home, nav, data }) => {
+    const category = data.text('category');
+
+    await test.step(`Open Categories > ${category}`, async () => {
       await home.open();
-      await nav.openCategory('Hand Tools');
+      await nav.openCategory(category);
     });
 
     await test.step('Category title and its products are shown', async () => {
-      await expect(page).toHaveURL(/\/category\/hand-tools$/);
-      await expect(home.pageTitle).toHaveText('Category: Hand Tools');
+      await expect(page).toHaveURL(new RegExp(`/category/${categorySlug(category)}$`));
+      await expect(home.pageTitle).toHaveText(`Category: ${category}`);
       await expect.poll(() => home.productCards.count(), { message: 'products in the category' }).toBeGreaterThan(0);
     });
   });

@@ -1,0 +1,259 @@
+{
+  "$comment": "Test data for every test case. These defaults are used by the weekly schedule and by a plain `npx playwright test`. The dashboard's test console (or the `params` input of the workflow) can override them for one run. Parameter types: text, integer, select. Rules across parameters: lessThan, different, onePerCart (the site allows only one of each product in lists.onePerCart per cart). Validation: shared/case-params.mjs.",
+  "lists": {
+    "products": [
+      "Adjustable Wrench",
+      "Angled Spanner",
+      "Belt Sander",
+      "Bolt Cutters",
+      "Chisels Set",
+      "Circular Saw",
+      "Claw Hammer",
+      "Claw Hammer with Fiberglass Handle",
+      "Claw Hammer with Shock Reduction Grip",
+      "Combination Pliers",
+      "Construction Helmet",
+      "Cordless Drill 12V",
+      "Cordless Drill 18V",
+      "Cordless Drill 20V",
+      "Cordless Drill 24V",
+      "Court Hammer",
+      "Cross-head screws",
+      "Drawer Tool Cabinet",
+      "Ear Protection",
+      "Flat-Head Wood Screws",
+      "Hammer",
+      "Leather toolbelt",
+      "M4 Nuts",
+      "Measuring Tape",
+      "Mini Screwdriver",
+      "Nuts and bolts",
+      "Open-end Spanners (Set)",
+      "Phillips Screwdriver",
+      "Pliers",
+      "Protective Gloves",
+      "Random Orbit Sander",
+      "Safety Goggles",
+      "Safety Helmet Face Shield",
+      "Screws",
+      "Sheet Sander",
+      "Sledgehammer",
+      "Slip Joint Pliers",
+      "Square Ruler",
+      "Super-thin Protection Gloves",
+      "Swiss Woodcarving Chisels",
+      "Tape Measure 5m",
+      "Tape Measure 7.5m",
+      "Thor Hammer",
+      "Tool Cabinet",
+      "Washers",
+      "Wood Carving Chisels",
+      "Wood Saw",
+      "Wooden Workbench",
+      "Workbench with Drawers"
+    ],
+    "onePerCart": ["Thor Hammer"]
+  },
+  "cases": {
+    "TC01": {},
+    "TC02": {
+      "params": {
+        "position": {
+          "type": "integer",
+          "default": 1,
+          "min": 1,
+          "max": 9,
+          "label": { "zh-TW": "首頁第幾個商品", "en": "Product position on the home page" },
+          "hint": { "zh-TW": "首頁第一頁有 9 個商品", "en": "The first page shows 9 products" }
+        }
+      }
+    },
+    "TC03": {
+      "params": {
+        "category": {
+          "type": "select",
+          "default": "Hand Tools",
+          "label": { "zh-TW": "分類", "en": "Category" },
+          "options": [
+            { "value": "Hand Tools", "label": { "zh-TW": "Hand Tools", "en": "Hand Tools" } },
+            { "value": "Power Tools", "label": { "zh-TW": "Power Tools", "en": "Power Tools" } },
+            { "value": "Other", "label": { "zh-TW": "Other", "en": "Other" } }
+          ]
+        }
+      }
+    },
+    "TC04": {
+      "params": {
+        "keyword": {
+          "type": "text",
+          "default": "hammer",
+          "maxLength": 40,
+          "label": { "zh-TW": "關鍵字", "en": "Keyword" },
+          "hint": { "zh-TW": "要能搜尋到商品的字詞", "en": "A term that matches at least one product" }
+        }
+      }
+    },
+    "TC05": {
+      "params": {
+        "product": {
+          "type": "text",
+          "default": "Claw Hammer",
+          "suggestions": "products",
+          "label": { "zh-TW": "商品名稱", "en": "Product name" },
+          "hint": { "zh-TW": "完整的商品名稱", "en": "The full product name" }
+        }
+      }
+    },
+    "TC06": {
+      "params": {
+        "keyword": {
+          "type": "text",
+          "default": "NoSuchTool12345",
+          "maxLength": 40,
+          "label": { "zh-TW": "不存在的關鍵字", "en": "Keyword with no match" },
+          "hint": { "zh-TW": "不會搜尋到任何商品的字詞", "en": "A term that matches no product" }
+        }
+      }
+    },
+    "TC07": {
+      "params": {
+        "sort": {
+          "type": "select",
+          "default": "price,asc",
+          "label": { "zh-TW": "排序方式", "en": "Sort order" },
+          "options": [
+            { "value": "price,asc", "label": { "zh-TW": "價格低→高", "en": "Price (low to high)" } },
+            { "value": "price,desc", "label": { "zh-TW": "價格高→低", "en": "Price (high to low)" } },
+            { "value": "name,asc", "label": { "zh-TW": "名稱 A→Z", "en": "Name (A to Z)" } },
+            { "value": "name,desc", "label": { "zh-TW": "名稱 Z→A", "en": "Name (Z to A)" } }
+          ]
+        }
+      }
+    },
+    "TC08": {
+      "params": {
+        "keyword": {
+          "type": "text",
+          "default": "hammer",
+          "maxLength": 40,
+          "label": { "zh-TW": "搜尋關鍵字", "en": "Search keyword" }
+        },
+        "product": {
+          "type": "text",
+          "default": "Thor Hammer",
+          "suggestions": "products",
+          "label": { "zh-TW": "要打開的商品", "en": "Product to open" },
+          "hint": { "zh-TW": "必須出現在這個關鍵字的搜尋結果第一頁", "en": "Must be on the first page of results for the keyword" }
+        }
+      }
+    },
+    "TC09": {},
+    "TC10": {},
+    "TC11": {
+      "params": {
+        "product": {
+          "type": "text",
+          "default": "Claw Hammer",
+          "suggestions": "products",
+          "label": { "zh-TW": "商品", "en": "Product" },
+          "hint": { "zh-TW": "有庫存的商品", "en": "An in-stock product" }
+        },
+        "quantity": {
+          "type": "integer",
+          "default": 1,
+          "min": 1,
+          "max": 10,
+          "label": { "zh-TW": "數量", "en": "Quantity" }
+        }
+      },
+      "rules": [{ "type": "onePerCart", "product": "product", "quantity": "quantity" }]
+    },
+    "TC12": {
+      "params": {
+        "product": {
+          "type": "text",
+          "default": "Claw Hammer",
+          "suggestions": "products",
+          "label": { "zh-TW": "商品", "en": "Product" },
+          "hint": { "zh-TW": "有庫存的商品", "en": "An in-stock product" }
+        },
+        "quantity": {
+          "type": "integer",
+          "default": 3,
+          "min": 2,
+          "max": 10,
+          "label": { "zh-TW": "數量改成", "en": "New quantity" }
+        }
+      },
+      "rules": [{ "type": "onePerCart", "product": "product", "quantity": "quantity" }]
+    },
+    "TC13": {
+      "params": {
+        "product": {
+          "type": "text",
+          "default": "Claw Hammer",
+          "suggestions": "products",
+          "label": { "zh-TW": "商品", "en": "Product" },
+          "hint": { "zh-TW": "有庫存的商品", "en": "An in-stock product" }
+        },
+        "from": {
+          "type": "integer",
+          "default": 3,
+          "min": 2,
+          "max": 10,
+          "label": { "zh-TW": "原本的數量", "en": "Starting quantity" }
+        },
+        "to": {
+          "type": "integer",
+          "default": 1,
+          "min": 1,
+          "max": 9,
+          "label": { "zh-TW": "數量改成", "en": "New quantity" }
+        }
+      },
+      "rules": [
+        { "type": "lessThan", "param": "to", "than": "from" },
+        { "type": "onePerCart", "product": "product", "quantity": "from" }
+      ]
+    },
+    "TC14": {
+      "params": {
+        "first": {
+          "type": "text",
+          "default": "Claw Hammer",
+          "suggestions": "products",
+          "label": { "zh-TW": "第一個商品", "en": "First product" },
+          "hint": { "zh-TW": "有庫存的商品", "en": "An in-stock product" }
+        },
+        "second": {
+          "type": "text",
+          "default": "Thor Hammer",
+          "suggestions": "products",
+          "label": { "zh-TW": "第二個商品", "en": "Second product" },
+          "hint": { "zh-TW": "有庫存的商品", "en": "An in-stock product" }
+        }
+      },
+      "rules": [{ "type": "different", "params": ["first", "second"] }]
+    },
+    "TC15": {},
+    "TC16": {
+      "params": {
+        "product": {
+          "type": "text",
+          "default": "Claw Hammer",
+          "suggestions": "products",
+          "label": { "zh-TW": "商品", "en": "Product" },
+          "hint": { "zh-TW": "有庫存的商品", "en": "An in-stock product" }
+        },
+        "quantity": {
+          "type": "integer",
+          "default": 1,
+          "min": 1,
+          "max": 10,
+          "label": { "zh-TW": "數量", "en": "Quantity" }
+        }
+      },
+      "rules": [{ "type": "onePerCart", "product": "product", "quantity": "quantity" }]
+    }
+  }
+}

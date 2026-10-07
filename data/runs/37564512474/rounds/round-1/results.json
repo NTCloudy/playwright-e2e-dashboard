@@ -1,0 +1,338 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/24.21.0/x64/bin/node",
+      "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/node_modules/.bin/playwright",
+      "test",
+      "--grep",
+      "(^|\\s)(TC04|TC07|TC12)(\\s|$)"
+    ],
+    "configFile": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/playwright.config.ts",
+    "rootDir": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/NTCloudy/playwright-e2e-dashboard/commit/88e464cb1f519b358865968e5de6bca0f02394da",
+        "commitHash": "88e464cb1f519b358865968e5de6bca0f02394da",
+        "buildHref": "https://github.com/NTCloudy/playwright-e2e-dashboard/actions/runs/37564512474"
+      },
+      "gitCommit": {
+        "shortHash": "88e464c",
+        "hash": "88e464cb1f519b358865968e5de6bca0f02394da",
+        "subject": "Run tests from the dashboard: pick cases, adjust test data, edit descriptions",
+        "body": "Run tests from the dashboard: pick cases, adjust test data, edit descriptions\n\n- New \"Run tests\" page (#/console): tick the test cases, choose 1-10 rounds\n  and change the test data for this run. \"Run\" starts the workflow through\n  the GitHub API with the owner's fine-grained token (kept in the browser\n  only), then shows the progress, lets you cancel, and shows the result.\n- Workflow inputs `cases` and `params`. run-rounds.mjs checks them with\n  shared/case-params.mjs (the same rules the console uses) and runs only the\n  chosen cases; aggregate.mjs records the selection and the test data used.\n- Default test data and its rules live in config/cases.json; the tests read\n  it through the `data` fixture, so a run can override any value.\n- Titles and descriptions (zh-TW / EN) live in config/descriptions.json and\n  can be edited on the dashboard (each save is a commit through the contents\n  API). {param} placeholders show the test data a run used. The test code is\n  never changed by these edits.\n",
+        "author": {
+          "name": "NTCloudy",
+          "email": "210337045+NTCloudy@users.noreply.github.com",
+          "time": 1791341623000
+        },
+        "committer": {
+          "name": "NTCloudy",
+          "email": "210337045+NTCloudy@users.noreply.github.com",
+          "time": 1791341623000
+        },
+        "branch": "main"
+      },
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/test-output/run/rounds/round-1/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/NTCloudy/playwright-e2e-dashboard/commit/88e464cb1f519b358865968e5de6bca0f02394da",
+            "commitHash": "88e464cb1f519b358865968e5de6bca0f02394da",
+            "buildHref": "https://github.com/NTCloudy/playwright-e2e-dashboard/actions/runs/37564512474"
+          },
+          "gitCommit": {
+            "shortHash": "88e464c",
+            "hash": "88e464cb1f519b358865968e5de6bca0f02394da",
+            "subject": "Run tests from the dashboard: pick cases, adjust test data, edit descriptions",
+            "body": "Run tests from the dashboard: pick cases, adjust test data, edit descriptions\n\n- New \"Run tests\" page (#/console): tick the test cases, choose 1-10 rounds\n  and change the test data for this run. \"Run\" starts the workflow through\n  the GitHub API with the owner's fine-grained token (kept in the browser\n  only), then shows the progress, lets you cancel, and shows the result.\n- Workflow inputs `cases` and `params`. run-rounds.mjs checks them with\n  shared/case-params.mjs (the same rules the console uses) and runs only the\n  chosen cases; aggregate.mjs records the selection and the test data used.\n- Default test data and its rules live in config/cases.json; the tests read\n  it through the `data` fixture, so a run can override any value.\n- Titles and descriptions (zh-TW / EN) live in config/descriptions.json and\n  can be edited on the dashboard (each save is a commit through the contents\n  API). {param} placeholders show the test data a run used. The test code is\n  never changed by these edits.\n",
+            "author": {
+              "name": "NTCloudy",
+              "email": "210337045+NTCloudy@users.noreply.github.com",
+              "time": 1791341623000
+            },
+            "committer": {
+              "name": "NTCloudy",
+              "email": "210337045+NTCloudy@users.noreply.github.com",
+              "time": 1791341623000
+            },
+            "branch": "main"
+          },
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "line",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/test-output/run/rounds/round-1/results.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/test-output/run/rounds/round-1/report",
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "02-search.spec.ts",
+      "file": "02-search.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Search",
+          "file": "02-search.spec.ts",
+          "line": 15,
+          "column": 6,
+          "specs": [
+            {
+              "title": "TC04 Search by keyword",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "keyword = \"pliers\" (custom; default \"hammer\")"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4864,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Search for \"pliers\"",
+                          "duration": 4526
+                        },
+                        {
+                          "title": "The search term is shown and every result name contains \"pliers\"",
+                          "duration": 41
+                        }
+                      ],
+                      "startTime": "2026-10-07T02:58:50.664Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "keyword = \"pliers\" (custom; default \"hammer\")"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "dcea8af15a48fefe4e67-39fe02b6f4c2a7a98929",
+              "file": "02-search.spec.ts",
+              "line": 16,
+              "column": 7
+            },
+            {
+              "title": "TC07 Sort products",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "sort = \"price,desc\" (custom; default \"price,asc\")"
+                    },
+                    {
+                      "type": "prices",
+                      "description": "89.55, 86.71, 80.19, 73.59, 66.54, 61.16, 58.48, 48.41, 46.5"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1773,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Choose \"Price (High - Low)\"",
+                          "duration": 1496
+                        },
+                        {
+                          "title": "Products are sorted by price, descending",
+                          "duration": 43
+                        }
+                      ],
+                      "startTime": "2026-10-07T02:58:55.781Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "sort = \"price,desc\" (custom; default \"price,asc\")"
+                        },
+                        {
+                          "type": "prices",
+                          "description": "89.55, 86.71, 80.19, 73.59, 66.54, 61.16, 58.48, 48.41, 46.5"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "dcea8af15a48fefe4e67-c43a4eaf8304a34db29a",
+              "file": "02-search.spec.ts",
+              "line": 65,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "04-cart.spec.ts",
+      "file": "04-cart.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Cart",
+          "file": "04-cart.spec.ts",
+          "line": 4,
+          "column": 6,
+          "specs": [
+            {
+              "title": "TC12 Increase quantity in the cart",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "product = \"Claw Hammer\" (default); quantity = 3 (default)"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5474,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Precondition: \"Claw Hammer\" x1 in the cart",
+                          "duration": 4310
+                        },
+                        {
+                          "title": "Change the quantity to 3",
+                          "duration": 879
+                        },
+                        {
+                          "title": "Line total = unit price x 3; cart total and badge are updated",
+                          "duration": 83
+                        }
+                      ],
+                      "startTime": "2026-10-07T02:58:57.573Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "product = \"Claw Hammer\" (default); quantity = 3 (default)"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5f513903b8063c1b134f-a87fdab5e8b66a81d855",
+              "file": "04-cart.spec.ts",
+              "line": 22,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-07T02:58:50.173Z",
+    "duration": 12956.752,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

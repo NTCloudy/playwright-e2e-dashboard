@@ -1,0 +1,641 @@
+{
+  "schemaVersion": 3,
+  "id": "37592092423",
+  "runNumber": 11,
+  "trigger": "manual",
+  "commit": "0a35cdf",
+  "repoUrl": "https://github.com/NTCloudy/playwright-e2e-dashboard",
+  "workflowRunUrl": "https://github.com/NTCloudy/playwright-e2e-dashboard/actions/runs/37592092423",
+  "startedAt": "2026-10-07T08:12:48.259Z",
+  "finishedAt": "2026-10-07T08:17:47.529Z",
+  "durationMs": 299270,
+  "rounds": 1,
+  "target": "with-bugs",
+  "selection": {
+    "all": true,
+    "cases": [
+      "TC01",
+      "TC02",
+      "TC03",
+      "TC04",
+      "TC05",
+      "TC06",
+      "TC07",
+      "TC08",
+      "TC09",
+      "TC10",
+      "TC11",
+      "TC12",
+      "TC13",
+      "TC14",
+      "TC15",
+      "TC16",
+      "TC17",
+      "TC18",
+      "TC19",
+      "TC20"
+    ],
+    "catalogSize": 20,
+    "applicable": 20
+  },
+  "browser": "chromium",
+  "playwrightVersion": "1.62.1",
+  "baseURL": "https://with-bugs.practicesoftwaretesting.com",
+  "apiURL": "https://api-with-bugs.practicesoftwaretesting.com",
+  "totals": {
+    "passed": 6,
+    "failed": 14,
+    "skipped": 0,
+    "total": 20,
+    "passRate": 0.3
+  },
+  "brokenRounds": 0,
+  "roundSummaries": [
+    {
+      "round": 1,
+      "startedAt": "2026-10-07T08:12:48.260Z",
+      "durationMs": 299269,
+      "passed": 6,
+      "failed": 14,
+      "skipped": 0,
+      "report": "rounds/round-1/report/index.html",
+      "error": null
+    }
+  ],
+  "cases": [
+    {
+      "id": "TC01",
+      "module": "Home",
+      "title": "Home page loads",
+      "file": "01-home.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 1617,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=c4396361884a96dbe527-29134c1b8e5f013f312d"
+        }
+      ],
+      "passRate": 1,
+      "params": []
+    },
+    {
+      "id": "TC02",
+      "module": "Home",
+      "title": "Return to the home page from a product page",
+      "file": "01-home.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "failed",
+          "durationMs": 13024,
+          "error": "Error: expect(page).toHaveURL(expected) failed\n\nExpected pattern: /\\/$/\nReceived string:  \"https://with-bugs.practicesoftwaretesting.com/#/contact\"\nTimeout: 10000ms\n\nCall log:\n  - Expect \"toHaveURL\" with timeout 10000ms\n    24 × locator resolved to <html lang=\"en\" data-beasties-container=\"\">…</html>\n       - unexpected value \"https://with-bugs.practicesoftwaretesting.com/#/contact\"\n",
+          "errors": [
+            "Error: expect(page).toHaveURL(expected) failed\n\nExpected pattern: /\\/$/\nReceived string:  \"https://with-bugs.practicesoftwaretesting.com/#/contact\"\nTimeout: 10000ms\n\nCall log:\n  - Expect \"toHaveURL\" with timeout 10000ms\n    24 × locator resolved to <html lang=\"en\" data-beasties-container=\"\">…</html>\n       - unexpected value \"https://with-bugs.practicesoftwaretesting.com/#/contact\"\n\n\n  33 |\n  34 |     await test.step('Back on the home page: product grid and filters are shown again', async () => {\n> 35 |       await expect(page).toHaveURL(/\\/$/);\n     |                          ^\n  36 |       await home.verifyLoaded();\n  37 |       await expect(home.searchInput).toHaveValue('');\n  38 |     });\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/01-home.spec.ts:35:26\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/01-home.spec.ts:34:5"
+          ],
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": "rounds/round-1/shots/TC02.png",
+          "reportLink": "rounds/round-1/report/index.html#?testId=c4396361884a96dbe527-5791a0265f4fc32772f2"
+        }
+      ],
+      "passRate": 0,
+      "params": [
+        {
+          "key": "position",
+          "value": 1,
+          "default": 1
+        }
+      ]
+    },
+    {
+      "id": "TC03",
+      "module": "Home",
+      "title": "Browse a category",
+      "file": "01-home.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 1993,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=c4396361884a96dbe527-ac5643ac60809f1bf890"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "category",
+          "value": "Hand Tools",
+          "default": "Hand Tools"
+        }
+      ]
+    },
+    {
+      "id": "TC04",
+      "module": "Search",
+      "title": "Search by keyword",
+      "file": "02-search.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 2655,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=dcea8af15a48fefe4e67-39fe02b6f4c2a7a98929"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "keyword",
+          "value": "hammer",
+          "default": "hammer"
+        }
+      ]
+    },
+    {
+      "id": "TC05",
+      "module": "Search",
+      "title": "Find a specific product",
+      "file": "02-search.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 2658,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=dcea8af15a48fefe4e67-e13b5d48181219545c13"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "product",
+          "value": "Claw Hammer",
+          "default": "Claw Hammer"
+        }
+      ]
+    },
+    {
+      "id": "TC06",
+      "module": "Search",
+      "title": "Search with no results",
+      "file": "02-search.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "failed",
+          "durationMs": 12859,
+          "error": "Error: expect(locator).toHaveText(expected) failed\n\nLocator: getByTestId('no-results')\nExpected: \"There are no products found.\"\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toHaveText\" with timeout 10000ms\n  - waiting for getByTestId('no-results')\n",
+          "errors": [
+            "Error: expect(locator).toHaveText(expected) failed\n\nLocator: getByTestId('no-results')\nExpected: \"There are no products found.\"\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toHaveText\" with timeout 10000ms\n  - waiting for getByTestId('no-results')\n\n\n  65 |\n  66 |     await test.step('A \"no products found\" message is shown and the grid is empty', async () => {\n> 67 |       await expect(home.noResults).toHaveText('There are no products found.');\n     |                                    ^\n  68 |       await expect(home.productCards).toHaveCount(0);\n  69 |       expect(await home.reportedResultCount(), 'number of products found').toBe(0);\n  70 |     });\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/02-search.spec.ts:67:36\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/02-search.spec.ts:66:5"
+          ],
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": "rounds/round-1/shots/TC06.png",
+          "reportLink": "rounds/round-1/report/index.html#?testId=dcea8af15a48fefe4e67-f87d0de4115730e2e48f"
+        }
+      ],
+      "passRate": 0,
+      "params": [
+        {
+          "key": "keyword",
+          "value": "NoSuchTool12345",
+          "default": "NoSuchTool12345"
+        }
+      ]
+    },
+    {
+      "id": "TC07",
+      "module": "Search",
+      "title": "Sort products",
+      "file": "02-search.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "failed",
+          "durationMs": 12643,
+          "error": "Error: expect(locator).toHaveText(expected) failed\n\nLocator:  getByTestId('sort').locator('option:checked')\nExpected: \"Price (Low - High)\"\nReceived: \"Price (High - Low)\"\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveText\" with timeout 10000ms\n  - waiting for getByTestId('sort').locator('option:checked')\n    24 × locator resolved to <option value=\"price,asc\" _ngcontent-ng-c3849666243=\"\">Price (High - Low)</option>\n       - unexpected value \"Price (High - Low)\"\n",
+          "errors": [
+            "Error: expect(locator).toHaveText(expected) failed\n\nLocator:  getByTestId('sort').locator('option:checked')\nExpected: \"Price (Low - High)\"\nReceived: \"Price (High - Low)\"\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveText\" with timeout 10000ms\n  - waiting for getByTestId('sort').locator('option:checked')\n    24 × locator resolved to <option value=\"price,asc\" _ngcontent-ng-c3849666243=\"\">Price (High - Low)</option>\n       - unexpected value \"Price (High - Low)\"\n\n\n  79 |       await home.open();\n  80 |       await home.sortBy(sort);\n> 81 |       await expect(home.selectedSortOption()).toHaveText(label);\n     |                                               ^\n  82 |     });\n  83 |\n  84 |     await test.step(`Products are sorted by ${field}, ${DIRECTION_NAMES[direction]}`, async () => {\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/02-search.spec.ts:81:47\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/02-search.spec.ts:78:5"
+          ],
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": "rounds/round-1/shots/TC07.png",
+          "reportLink": "rounds/round-1/report/index.html#?testId=dcea8af15a48fefe4e67-c43a4eaf8304a34db29a"
+        }
+      ],
+      "passRate": 0,
+      "params": [
+        {
+          "key": "sort",
+          "value": "price,asc",
+          "default": "price,asc"
+        }
+      ]
+    },
+    {
+      "id": "TC08",
+      "module": "Search",
+      "title": "Product details match the search result",
+      "file": "02-search.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 3163,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=dcea8af15a48fefe4e67-58f43b7350a2ca17db16"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "keyword",
+          "value": "hammer",
+          "default": "hammer"
+        },
+        {
+          "key": "product",
+          "value": "Thor Hammer",
+          "default": "Thor Hammer"
+        }
+      ]
+    },
+    {
+      "id": "TC09",
+      "module": "Account",
+      "title": "Sign in with a valid account",
+      "file": "03-account.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "failed",
+          "durationMs": 13373,
+          "error": "Error: expect(locator).toHaveText(expected) failed\n\nLocator:  getByTestId('nav-menu').or(getByTestId('nav-user-menu'))\nExpected: \"Playwright Tester\"\nReceived: \" User Data not found \"\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveText\" with timeout 10000ms\n  - waiting for getByTestId('nav-menu').or(getByTestId('nav-user-menu'))\n    24 × locator resolved to <a href=\"#\" role=\"button\" id=\"user-menu\" aria-expanded=\"false\" data-test=\"nav-user-menu\" data-bs-toggle=\"dropdown\" _ngcontent-ng-c2781432996=\"\" class=\"nav-link dropdown-toggle\"> User Data not found </a>\n       - unexpected value \" User Data not found \"\n",
+          "errors": [
+            "Error: expect(locator).toHaveText(expected) failed\n\nLocator:  getByTestId('nav-menu').or(getByTestId('nav-user-menu'))\nExpected: \"Playwright Tester\"\nReceived: \" User Data not found \"\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveText\" with timeout 10000ms\n  - waiting for getByTestId('nav-menu').or(getByTestId('nav-user-menu'))\n    24 × locator resolved to <a href=\"#\" role=\"button\" id=\"user-menu\" aria-expanded=\"false\" data-test=\"nav-user-menu\" data-bs-toggle=\"dropdown\" _ngcontent-ng-c2781432996=\"\" class=\"nav-link dropdown-toggle\"> User Data not found </a>\n       - unexpected value \" User Data not found \"\n\n\n   at ../src/pages/NavBar.ts:75\n\n  73 |\n  74 |   async verifySignedInAs(fullName: string): Promise<void> {\n> 75 |     await expect(this.userMenu).toHaveText(fullName);\n     |                                 ^\n  76 |     await expect(this.signIn).toHaveCount(0);\n  77 |   }\n  78 |\n    at NavBar.verifySignedInAs (/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/src/pages/NavBar.ts:75:33)\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/03-account.spec.ts:16:17\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/03-account.spec.ts:12:5"
+          ],
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": "rounds/round-1/shots/TC09.png",
+          "reportLink": "rounds/round-1/report/index.html#?testId=264985d381f77363394a-3517e4007e818f4f65d9"
+        }
+      ],
+      "passRate": 0,
+      "params": []
+    },
+    {
+      "id": "TC10",
+      "module": "Account",
+      "title": "Sign in with an unknown account is rejected",
+      "file": "03-account.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 2224,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=264985d381f77363394a-69544e9f7583417d33e5"
+        }
+      ],
+      "passRate": 1,
+      "params": []
+    },
+    {
+      "id": "TC11",
+      "module": "Cart",
+      "title": "Add a product to the cart",
+      "file": "04-cart.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "failed",
+          "durationMs": 13258,
+          "error": "Error: expect(locator).toBeVisible() failed\n\nLocator: locator('#toast-container').getByText('Product added to shopping cart.', { exact: true }).first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" with timeout 10000ms\n  - waiting for locator('#toast-container').getByText('Product added to shopping cart.', { exact: true }).first()\n",
+          "errors": [
+            "Error: expect(locator).toBeVisible() failed\n\nLocator: locator('#toast-container').getByText('Product added to shopping cart.', { exact: true }).first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" with timeout 10000ms\n  - waiting for locator('#toast-container').getByText('Product added to shopping cart.', { exact: true }).first()\n\n\n   at ../src/pages/ProductPage.ts:63\n\n  61 |   async addToCart(): Promise<void> {\n  62 |     await this.addToCartButton.click();\n> 63 |     await expect(toast(this.page, 'Product added to shopping cart.')).toBeVisible();\n     |                                                                       ^\n  64 |   }\n  65 |\n  66 |   /**\n    at ProductPage.addToCart (/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/src/pages/ProductPage.ts:63:71)\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/04-cart.spec.ts:22:7\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/04-cart.spec.ts:17:5"
+          ],
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": "rounds/round-1/shots/TC11.png",
+          "reportLink": "rounds/round-1/report/index.html#?testId=5f513903b8063c1b134f-81348e9c1139cfaa1a01"
+        }
+      ],
+      "passRate": 0,
+      "params": [
+        {
+          "key": "product",
+          "value": "Claw Hammer",
+          "default": "Claw Hammer"
+        },
+        {
+          "key": "quantity",
+          "value": 1,
+          "default": 1
+        }
+      ]
+    },
+    {
+      "id": "TC12",
+      "module": "Cart",
+      "title": "Increase quantity in the cart",
+      "file": "04-cart.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "failed",
+          "durationMs": 13242,
+          "error": "Error: expect(locator).toBeVisible() failed\n\nLocator: locator('#toast-container').getByText('Product added to shopping cart.', { exact: true }).first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" with timeout 10000ms\n  - waiting for locator('#toast-container').getByText('Product added to shopping cart.', { exact: true }).first()\n",
+          "errors": [
+            "Error: expect(locator).toBeVisible() failed\n\nLocator: locator('#toast-container').getByText('Product added to shopping cart.', { exact: true }).first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" with timeout 10000ms\n  - waiting for locator('#toast-container').getByText('Product added to shopping cart.', { exact: true }).first()\n\n\n   at ../src/pages/ProductPage.ts:63\n\n  61 |   async addToCart(): Promise<void> {\n  62 |     await this.addToCartButton.click();\n> 63 |     await expect(toast(this.page, 'Product added to shopping cart.')).toBeVisible();\n     |                                                                       ^\n  64 |   }\n  65 |\n  66 |   /**\n    at ProductPage.addToCart (/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/src/pages/ProductPage.ts:63:71)\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/04-cart.spec.ts:39:7\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/04-cart.spec.ts:35:5"
+          ],
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": "rounds/round-1/shots/TC12.png",
+          "reportLink": "rounds/round-1/report/index.html#?testId=5f513903b8063c1b134f-a87fdab5e8b66a81d855"
+        }
+      ],
+      "passRate": 0,
+      "params": [
+        {
+          "key": "product",
+          "value": "Claw Hammer",
+          "default": "Claw Hammer"
+        },
+        {
+          "key": "quantity",
+          "value": 3,
+          "default": 3
+        }
+      ]
+    },
+    {
+      "id": "TC13",
+      "module": "Cart",
+      "title": "Decrease quantity in the cart",
+      "file": "04-cart.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "failed",
+          "durationMs": 13218,
+          "error": "Error: expect(locator).toHaveValue(expected) failed\n\nLocator:  getByTestId('quantity')\nExpected: \"3\"\nReceived: \"1\"\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveValue\" with timeout 10000ms\n  - waiting for getByTestId('quantity')\n    24 × locator resolved to <input min=\"1\" max=\"99\" type=\"number\" data-test=\"quantity\" _ngcontent-ng-c3647752369=\"\" class=\"form-control ng-untouched ng-pristine ng-valid\"/>\n       - unexpected value \"1\"\n",
+          "errors": [
+            "Error: expect(locator).toHaveValue(expected) failed\n\nLocator:  getByTestId('quantity')\nExpected: \"3\"\nReceived: \"1\"\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveValue\" with timeout 10000ms\n  - waiting for getByTestId('quantity')\n    24 × locator resolved to <input min=\"1\" max=\"99\" type=\"number\" data-test=\"quantity\" _ngcontent-ng-c3647752369=\"\" class=\"form-control ng-untouched ng-pristine ng-valid\"/>\n       - unexpected value \"1\"\n\n\n   at ../src/pages/ProductPage.ts:58\n\n  56 |     const current = Number(await this.quantity.inputValue());\n  57 |     for (let q = current; q < quantity; q++) await this.increaseQuantity.click();\n> 58 |     await expect(this.quantity).toHaveValue(String(quantity));\n     |                                 ^\n  59 |   }\n  60 |\n  61 |   async addToCart(): Promise<void> {\n    at ProductPage.increaseQuantityTo (/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/src/pages/ProductPage.ts:58:33)\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/04-cart.spec.ts:65:7\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/04-cart.spec.ts:61:5"
+          ],
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": "rounds/round-1/shots/TC13.png",
+          "reportLink": "rounds/round-1/report/index.html#?testId=5f513903b8063c1b134f-9d12e61560faa8d06d3d"
+        }
+      ],
+      "passRate": 0,
+      "params": [
+        {
+          "key": "product",
+          "value": "Claw Hammer",
+          "default": "Claw Hammer"
+        },
+        {
+          "key": "from",
+          "value": 3,
+          "default": 3
+        },
+        {
+          "key": "to",
+          "value": 1,
+          "default": 1
+        }
+      ]
+    },
+    {
+      "id": "TC14",
+      "module": "Cart",
+      "title": "Remove products from the cart",
+      "file": "04-cart.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "failed",
+          "durationMs": 13367,
+          "error": "Error: expect(locator).toBeVisible() failed\n\nLocator: locator('#toast-container').getByText('Product added to shopping cart.', { exact: true }).first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" with timeout 10000ms\n  - waiting for locator('#toast-container').getByText('Product added to shopping cart.', { exact: true }).first()\n",
+          "errors": [
+            "Error: expect(locator).toBeVisible() failed\n\nLocator: locator('#toast-container').getByText('Product added to shopping cart.', { exact: true }).first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" with timeout 10000ms\n  - waiting for locator('#toast-container').getByText('Product added to shopping cart.', { exact: true }).first()\n\n\n   at ../src/pages/ProductPage.ts:63\n\n  61 |   async addToCart(): Promise<void> {\n  62 |     await this.addToCartButton.click();\n> 63 |     await expect(toast(this.page, 'Product added to shopping cart.')).toBeVisible();\n     |                                                                       ^\n  64 |   }\n  65 |\n  66 |   /**\n    at ProductPage.addToCart (/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/src/pages/ProductPage.ts:63:71)\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/04-cart.spec.ts:93:7\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/04-cart.spec.ts:89:5"
+          ],
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": "rounds/round-1/shots/TC14.png",
+          "reportLink": "rounds/round-1/report/index.html#?testId=5f513903b8063c1b134f-8e1f506d25b7b5d621cf"
+        }
+      ],
+      "passRate": 0,
+      "params": [
+        {
+          "key": "first",
+          "value": "Claw Hammer",
+          "default": "Claw Hammer"
+        },
+        {
+          "key": "second",
+          "value": "Thor Hammer",
+          "default": "Thor Hammer"
+        }
+      ]
+    },
+    {
+      "id": "TC15",
+      "module": "Account",
+      "title": "Sign out",
+      "file": "03-account.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "failed",
+          "durationMs": 12883,
+          "error": "Error: expect(locator).toHaveText(expected) failed\n\nLocator:  getByTestId('nav-menu').or(getByTestId('nav-user-menu'))\nExpected: \"Playwright Tester\"\nReceived: \" User Data not found \"\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveText\" with timeout 10000ms\n  - waiting for getByTestId('nav-menu').or(getByTestId('nav-user-menu'))\n    24 × locator resolved to <a href=\"#\" role=\"button\" id=\"user-menu\" aria-expanded=\"false\" data-test=\"nav-user-menu\" data-bs-toggle=\"dropdown\" _ngcontent-ng-c2781432996=\"\" class=\"nav-link dropdown-toggle\"> User Data not found </a>\n       - unexpected value \" User Data not found \"\n",
+          "errors": [
+            "Error: expect(locator).toHaveText(expected) failed\n\nLocator:  getByTestId('nav-menu').or(getByTestId('nav-user-menu'))\nExpected: \"Playwright Tester\"\nReceived: \" User Data not found \"\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveText\" with timeout 10000ms\n  - waiting for getByTestId('nav-menu').or(getByTestId('nav-user-menu'))\n    24 × locator resolved to <a href=\"#\" role=\"button\" id=\"user-menu\" aria-expanded=\"false\" data-test=\"nav-user-menu\" data-bs-toggle=\"dropdown\" _ngcontent-ng-c2781432996=\"\" class=\"nav-link dropdown-toggle\"> User Data not found </a>\n       - unexpected value \" User Data not found \"\n\n\n   at ../src/pages/NavBar.ts:75\n\n  73 |\n  74 |   async verifySignedInAs(fullName: string): Promise<void> {\n> 75 |     await expect(this.userMenu).toHaveText(fullName);\n     |                                 ^\n  76 |     await expect(this.signIn).toHaveCount(0);\n  77 |   }\n  78 |\n    at NavBar.verifySignedInAs (/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/src/pages/NavBar.ts:75:33)\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/03-account.spec.ts:42:17\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/03-account.spec.ts:39:5"
+          ],
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": "rounds/round-1/shots/TC15.png",
+          "reportLink": "rounds/round-1/report/index.html#?testId=264985d381f77363394a-b2246baf2fb3e089ec60"
+        }
+      ],
+      "passRate": 0,
+      "params": []
+    },
+    {
+      "id": "TC16",
+      "module": "Checkout",
+      "title": "Complete checkout (Cash on Delivery)",
+      "file": "05-checkout.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "failed",
+          "durationMs": 13179,
+          "error": "Error: expect(locator).toBeVisible() failed\n\nLocator: locator('#toast-container').getByText('Product added to shopping cart.', { exact: true }).first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" with timeout 10000ms\n  - waiting for locator('#toast-container').getByText('Product added to shopping cart.', { exact: true }).first()\n",
+          "errors": [
+            "Error: expect(locator).toBeVisible() failed\n\nLocator: locator('#toast-container').getByText('Product added to shopping cart.', { exact: true }).first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" with timeout 10000ms\n  - waiting for locator('#toast-container').getByText('Product added to shopping cart.', { exact: true }).first()\n\n\n   at ../src/pages/ProductPage.ts:63\n\n  61 |   async addToCart(): Promise<void> {\n  62 |     await this.addToCartButton.click();\n> 63 |     await expect(toast(this.page, 'Product added to shopping cart.')).toBeVisible();\n     |                                                                       ^\n  64 |   }\n  65 |\n  66 |   /**\n    at ProductPage.addToCart (/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/src/pages/ProductPage.ts:63:71)\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/05-checkout.spec.ts:14:7\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/05-checkout.spec.ts:9:5"
+          ],
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": "rounds/round-1/shots/TC16.png",
+          "reportLink": "rounds/round-1/report/index.html#?testId=d86ddf78af31f4d55a78-37f7725a8ed6312a9deb"
+        }
+      ],
+      "passRate": 0,
+      "params": [
+        {
+          "key": "product",
+          "value": "Claw Hammer",
+          "default": "Claw Hammer"
+        },
+        {
+          "key": "quantity",
+          "value": 1,
+          "default": 1
+        }
+      ]
+    },
+    {
+      "id": "TC17",
+      "module": "Home",
+      "title": "Page text and images",
+      "file": "01-home.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "failed",
+          "durationMs": 73006,
+          "error": "Error: [TC17 logo] The Toolshop logo must load (no broken image)\n\n[TC17 logo] The Toolshop logo must load (no broken image)\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  - 1\n+ Received  + 3\n\n- Array []\n+ Array [\n+   \"broken.png\",\n+ ]\n\nCall Log:\n- Timeout 10000ms exceeded while waiting on the predicate",
+          "errors": [
+            "Error: [TC17 logo] The Toolshop logo must load (no broken image)\n\n[TC17 logo] The Toolshop logo must load (no broken image)\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  - 1\n+ Received  + 3\n\n- Array []\n+ Array [\n+   \"broken.png\",\n+ ]\n\nCall Log:\n- Timeout 10000ms exceeded while waiting on the predicate\n\n  67 |       await softExpect\n  68 |         .poll(() => imagesNotShown(nav.brand), { message: '[TC17 logo] The Toolshop logo must load (no broken image)' })\n> 69 |         .toEqual([]);\n     |          ^\n  70 |       await softExpect\n  71 |         .poll(() => labelsOf(nav.links), { message: '[TC17 nav-labels] The navigation links must read \"Home\", \"Categories\", \"Contact\"' })\n  72 |         .toEqual(['Home', 'Categories', 'Contact']);\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/01-home.spec.ts:69:10\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/01-home.spec.ts:65:5",
+            "Error: [TC17 nav-labels] The navigation links must read \"Home\", \"Categories\", \"Contact\"\n\n[TC17 nav-labels] The navigation links must read \"Home\", \"Categories\", \"Contact\"\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  - 1\n+ Received  + 1\n\n  Array [\n    \"Home\",\n    \"Categories\",\n-   \"Contact\",\n+   \"Contakt\",\n  ]\n\nCall Log:\n- Timeout 10000ms exceeded while waiting on the predicate\n\n  70 |       await softExpect\n  71 |         .poll(() => labelsOf(nav.links), { message: '[TC17 nav-labels] The navigation links must read \"Home\", \"Categories\", \"Contact\"' })\n> 72 |         .toEqual(['Home', 'Categories', 'Contact']);\n     |          ^\n  73 |       await softExpect\n  74 |         .poll(() => labelsOf(home.sidebarHeadings), {\n  75 |           message: '[TC17 sidebar-headings] The sidebar headings must read \"Sort\", \"Price Range\", \"Search\", \"Filters\"',\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/01-home.spec.ts:72:10\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/01-home.spec.ts:65:5",
+            "Error: [TC17 sidebar-headings] The sidebar headings must read \"Sort\", \"Price Range\", \"Search\", \"Filters\"\n\n[TC17 sidebar-headings] The sidebar headings must read \"Sort\", \"Price Range\", \"Search\", \"Filters\"\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  - 1\n+ Received  + 1\n\n  Array [\n-   \"Sort\",\n+   \"Sorth\",\n    \"Price Range\",\n    \"Search\",\n    \"Filters\",\n  ]\n\nCall Log:\n- Timeout 10000ms exceeded while waiting on the predicate\n\n  75 |           message: '[TC17 sidebar-headings] The sidebar headings must read \"Sort\", \"Price Range\", \"Search\", \"Filters\"',\n  76 |         })\n> 77 |         .toEqual(['Sort', 'Price Range', 'Search', 'Filters']);\n     |          ^\n  78 |       await softExpect\n  79 |         .poll(() => imagesNotShown(home.searchHeading), {\n  80 |           message: '[TC17 search-icon] The icon of the \"Search\" heading must load (no broken image)',\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/01-home.spec.ts:77:10\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/01-home.spec.ts:65:5",
+            "Error: [TC17 search-icon] The icon of the \"Search\" heading must load (no broken image)\n\n[TC17 search-icon] The icon of the \"Search\" heading must load (no broken image)\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  - 1\n+ Received  + 3\n\n- Array []\n+ Array [\n+   \"broken.png\",\n+ ]\n\nCall Log:\n- Timeout 10000ms exceeded while waiting on the predicate\n\n  80 |           message: '[TC17 search-icon] The icon of the \"Search\" heading must load (no broken image)',\n  81 |         })\n> 82 |         .toEqual([]);\n     |          ^\n  83 |       await expect.soft(home.searchSubmit, '[TC17 search-button] The search button must read \"Search\"').toHaveText('Search');\n  84 |       await softExpect\n  85 |         .poll(() => home.productsWithoutImage(), { message: '[TC17 product-images] Every product card must show its image' })\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/01-home.spec.ts:82:10\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/01-home.spec.ts:65:5",
+            "Error: [TC17 search-button] The search button must read \"Search\"\n\nexpect(locator).toHaveText(expected) failed\n\nLocator:  getByTestId('search-submit')\nExpected: \"Search\"\nReceived: \" Serch\"\nTimeout:  10000ms\n\nCall log:\n  - [TC17 search-button] The search button must read \"Search\" with timeout 10000ms\n  - waiting for getByTestId('search-submit')\n    24 × locator resolved to <button type=\"submit\" data-test=\"search-submit\" class=\"btn btn-secondary\" _ngcontent-ng-c3849666243=\"\"> Serch</button>\n       - unexpected value \" Serch\"\n\n\n  81 |         })\n  82 |         .toEqual([]);\n> 83 |       await expect.soft(home.searchSubmit, '[TC17 search-button] The search button must read \"Search\"').toHaveText('Search');\n     |                                                                                                         ^\n  84 |       await softExpect\n  85 |         .poll(() => home.productsWithoutImage(), { message: '[TC17 product-images] Every product card must show its image' })\n  86 |         .toEqual([]);\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/01-home.spec.ts:83:105\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/01-home.spec.ts:65:5",
+            "Error: [TC17 product-images] Every product card must show its image\n\n[TC17 product-images] Every product card must show its image\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  - 1\n+ Received  + 3\n\n- Array []\n+ Array [\n+   \"Slip Joint Pliers\",\n+ ]\n\nCall Log:\n- Timeout 10000ms exceeded while waiting on the predicate\n\n  84 |       await softExpect\n  85 |         .poll(() => home.productsWithoutImage(), { message: '[TC17 product-images] Every product card must show its image' })\n> 86 |         .toEqual([]);\n     |          ^\n  87 |     });\n  88 |\n  89 |     await test.step('Open the first product: the related products heading', async () => {\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/01-home.spec.ts:86:10\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/01-home.spec.ts:65:5",
+            "Error: [TC17 related-heading] The product page must show the heading \"Related products\"\n\nexpect(locator).toHaveText(expected) failed\n\nLocator:  locator('hr + .row > :is(h1, h2)')\nExpected: \"Related products\"\nReceived: \"Reltded products\"\nTimeout:  10000ms\n\nCall log:\n  - [TC17 related-heading] The product page must show the heading \"Related products\" with timeout 10000ms\n  - waiting for locator('hr + .row > :is(h1, h2)')\n    24 × locator resolved to <h1 _ngcontent-ng-c3647752369=\"\">Reltded products</h1>\n       - unexpected value \"Reltded products\"\n\n\n  92 |       await expect\n  93 |         .soft(productPage.relatedHeading, '[TC17 related-heading] The product page must show the heading \"Related products\"')\n> 94 |         .toHaveText('Related products');\n     |          ^\n  95 |     });\n  96 |   });\n  97 | });\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/01-home.spec.ts:94:10\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/01-home.spec.ts:89:5"
+          ],
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": "rounds/round-1/shots/TC17.png",
+          "reportLink": "rounds/round-1/report/index.html#?testId=c4396361884a96dbe527-e73c62823dea6f6a8164"
+        }
+      ],
+      "passRate": 0,
+      "params": []
+    },
+    {
+      "id": "TC18",
+      "module": "Cart",
+      "title": "Purchase quantity upper limit",
+      "file": "04-cart.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "failed",
+          "durationMs": 41771,
+          "error": "Error: [TC18 qty-11] A quantity of 11 must be accepted (the limit is 99)\n\n[TC18 qty-11] A quantity of 11 must be accepted (the limit is 99)\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  - 2\n+ Received  + 2\n\n  Object {\n-   \"quantity\": 11,\n-   \"total\": \"126.28\",\n+   \"quantity\": 10,\n+   \"total\": \"114.80\",\n  }\n\nCall Log:\n- Timeout 10000ms exceeded while waiting on the predicate",
+          "errors": [
+            "Error: [TC18 qty-11] A quantity of 11 must be accepted (the limit is 99)\n\n[TC18 qty-11] A quantity of 11 must be accepted (the limit is 99)\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  - 2\n+ Received  + 2\n\n  Object {\n-   \"quantity\": 11,\n-   \"total\": \"126.28\",\n+   \"quantity\": 10,\n+   \"total\": \"114.80\",\n  }\n\nCall Log:\n- Timeout 10000ms exceeded while waiting on the predicate\n\n  149 |             message: `[TC18 qty-${quantity}] A quantity of ${quantity} must be accepted (the limit is ${MAX_QUANTITY})`,\n  150 |           })\n> 151 |           .toEqual(cartWith(quantity));\n      |            ^\n  152 |       });\n  153 |     }\n  154 |\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/04-cart.spec.ts:151:12\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/04-cart.spec.ts:145:7",
+            "Error: [TC18 qty-99] A quantity of 99 must be accepted (the limit is 99)\n\n[TC18 qty-99] A quantity of 99 must be accepted (the limit is 99)\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  - 2\n+ Received  + 2\n\n  Object {\n-   \"quantity\": 99,\n-   \"total\": \"1136.52\",\n+   \"quantity\": 10,\n+   \"total\": \"114.80\",\n  }\n\nCall Log:\n- Timeout 10000ms exceeded while waiting on the predicate\n\n  149 |             message: `[TC18 qty-${quantity}] A quantity of ${quantity} must be accepted (the limit is ${MAX_QUANTITY})`,\n  150 |           })\n> 151 |           .toEqual(cartWith(quantity));\n      |            ^\n  152 |       });\n  153 |     }\n  154 |\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/04-cart.spec.ts:151:12\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/04-cart.spec.ts:145:7",
+            "Error: [TC18 qty-100-warning] A warning must explain the limit of 99\n\nexpect(locator).toBeVisible() failed\n\nLocator: locator('#toast-container').getByText('You can order at most 99 of this product.', { exact: true }).first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n  - [TC18 qty-100-warning] A warning must explain the limit of 99 with timeout 10000ms\n  - waiting for locator('#toast-container').getByText('You can order at most 99 of this product.', { exact: true }).first()\n\n\n  161 |           `[TC18 qty-${MAX_QUANTITY + 1}-warning] A warning must explain the limit of ${MAX_QUANTITY}`,\n  162 |         )\n> 163 |         .toBeVisible();\n      |          ^\n  164 |       await softExpect\n  165 |         .poll(() => cartPage.quantityAndTotal(product), {\n  166 |           message: `[TC18 qty-${MAX_QUANTITY + 1}] A quantity of ${MAX_QUANTITY + 1} must be reduced to the limit of ${MAX_QUANTITY}`,\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/04-cart.spec.ts:163:10\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/04-cart.spec.ts:155:5",
+            "Error: [TC18 qty-100] A quantity of 100 must be reduced to the limit of 99\n\n[TC18 qty-100] A quantity of 100 must be reduced to the limit of 99\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  - 2\n+ Received  + 2\n\n  Object {\n-   \"quantity\": 99,\n-   \"total\": \"1136.52\",\n+   \"quantity\": 10,\n+   \"total\": \"114.80\",\n  }\n\nCall Log:\n- Timeout 10000ms exceeded while waiting on the predicate\n\n  166 |           message: `[TC18 qty-${MAX_QUANTITY + 1}] A quantity of ${MAX_QUANTITY + 1} must be reduced to the limit of ${MAX_QUANTITY}`,\n  167 |         })\n> 168 |         .toEqual(cartWith(MAX_QUANTITY));\n      |          ^\n  169 |     });\n  170 |   });\n  171 | });\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/04-cart.spec.ts:168:10\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/04-cart.spec.ts:155:5"
+          ],
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": "rounds/round-1/shots/TC18.png",
+          "reportLink": "rounds/round-1/report/index.html#?testId=5f513903b8063c1b134f-e38916f11d463e29b1e6"
+        }
+      ],
+      "passRate": 0,
+      "params": [
+        {
+          "key": "product",
+          "value": "Claw Hammer",
+          "default": "Claw Hammer"
+        }
+      ]
+    },
+    {
+      "id": "TC19",
+      "module": "Contact",
+      "title": "Contact form attachment (US6100)",
+      "file": "06-contact.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "failed",
+          "durationMs": 11109,
+          "error": "Error: [TC19 pdf-accepted] A 1 KB PDF file must be sent (US6100 ACC2)\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  - 2\n+ Received  + 2\n\n  Object {\n-   \"error\": \"\",\n-   \"sent\": true,\n+   \"error\": \"The file extension is incorrect, we only accept txt files.\",\n+   \"sent\": false,\n  }",
+          "errors": [
+            "Error: [TC19 pdf-accepted] A 1 KB PDF file must be sent (US6100 ACC2)\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  - 2\n+ Received  + 2\n\n  Object {\n-   \"error\": \"\",\n-   \"sent\": true,\n+   \"error\": \"The file extension is incorrect, we only accept txt files.\",\n+   \"sent\": false,\n  }\n\n  87 |     for (const { check, requirement, file } of MUST_BE_ACCEPTED) {\n  88 |       await test.step(`Send with ${file.name}: the message is sent`, async () => {\n> 89 |         expect.soft(await sendWith(file), `[TC19 ${check}] ${requirement}`).toEqual({ sent: true, error: '' });\n     |                                                                             ^\n  90 |       });\n  91 |     }\n  92 |\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/06-contact.spec.ts:89:77\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/06-contact.spec.ts:88:7",
+            "Error: [TC19 jpg-accepted] A 1 KB JPG file must be sent (US6100 ACC2)\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  - 2\n+ Received  + 2\n\n  Object {\n-   \"error\": \"\",\n-   \"sent\": true,\n+   \"error\": \"The file extension is incorrect, we only accept txt files.\",\n+   \"sent\": false,\n  }\n\n  87 |     for (const { check, requirement, file } of MUST_BE_ACCEPTED) {\n  88 |       await test.step(`Send with ${file.name}: the message is sent`, async () => {\n> 89 |         expect.soft(await sendWith(file), `[TC19 ${check}] ${requirement}`).toEqual({ sent: true, error: '' });\n     |                                                                             ^\n  90 |       });\n  91 |     }\n  92 |\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/06-contact.spec.ts:89:77\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/06-contact.spec.ts:88:7",
+            "Error: [TC19 empty-rejected] An empty (0 KB) TXT file must be refused with an error about its size (US6100 ACC4, ACC5)\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  - 2\n+ Received  + 2\n\n  Object {\n-   \"error\": StringMatching /empty|size|0 ?kb/i,\n-   \"sent\": false,\n+   \"error\": \"\",\n+   \"sent\": true,\n  }\n\n   95 |         expect\n   96 |           .soft(await sendWith(file), `[TC19 ${check}] ${requirement}`)\n>  97 |           .toEqual({ sent: false, error: expect.stringMatching(problem) });\n      |            ^\n   98 |       });\n   99 |     }\n  100 |\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/06-contact.spec.ts:97:12\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/06-contact.spec.ts:94:7",
+            "Error: [TC19 oversize-rejected] A 501 KB TXT file must be refused with an error about its size (US6100 ACC4, ACC5)\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  - 2\n+ Received  + 2\n\n  Object {\n-   \"error\": StringMatching /500 ?kb|size|large/i,\n-   \"sent\": false,\n+   \"error\": \"\",\n+   \"sent\": true,\n  }\n\n   95 |         expect\n   96 |           .soft(await sendWith(file), `[TC19 ${check}] ${requirement}`)\n>  97 |           .toEqual({ sent: false, error: expect.stringMatching(problem) });\n      |            ^\n   98 |       });\n   99 |     }\n  100 |\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/06-contact.spec.ts:97:12\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/06-contact.spec.ts:94:7",
+            "Error: [TC19 accept-filter] The file dialog must offer only txt, pdf and jpg files (US6100 ACC3)\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  - 3\n+ Received  + 1\n\n  Array [\n-   \"jpg\",\n-   \"pdf\",\n-   \"txt\",\n+   \"any file\",\n  ]\n\n  103 |       expect\n  104 |         .soft(await contactPage.dialogFileTypes(), '[TC19 accept-filter] The file dialog must offer only txt, pdf and jpg files (US6100 ACC3)')\n> 105 |         .toEqual(['jpg', 'pdf', 'txt']);\n      |          ^\n  106 |     });\n  107 |   });\n  108 | });\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/06-contact.spec.ts:105:10\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/06-contact.spec.ts:101:5"
+          ],
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": "rounds/round-1/shots/TC19.png",
+          "reportLink": "rounds/round-1/report/index.html#?testId=ea75447d77a4e48c9d13-3e29293df7ec09215bee"
+        }
+      ],
+      "passRate": 0,
+      "params": []
+    },
+    {
+      "id": "TC20",
+      "module": "Search",
+      "title": "Filter by price range",
+      "file": "02-search.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "failed",
+          "durationMs": 13190,
+          "error": "Error: [TC20 within-range] Every listed product must cost between $1 and $30\n\n[TC20 within-range] Every listed product must cost between $1 and $30\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  - 1\n+ Received  + 3\n\n- Array []\n+ Array [\n+   \"Bolt Cutters $48.41\",\n+ ]\n\nCall Log:\n- Timeout 10000ms exceeded while waiting on the predicate",
+          "errors": [
+            "Error: [TC20 within-range] Every listed product must cost between $1 and $30\n\n[TC20 within-range] Every listed product must cost between $1 and $30\n\nexpect(received).toEqual(expected) // deep equality\n\n- Expected  - 1\n+ Received  + 3\n\n- Array []\n+ Array [\n+   \"Bolt Cutters $48.41\",\n+ ]\n\nCall Log:\n- Timeout 10000ms exceeded while waiting on the predicate\n\n  133 |           message: `[TC20 within-range] Every listed product must cost between $${range.min} and $${range.max}`,\n  134 |         })\n> 135 |         .toEqual([]);\n      |          ^\n  136 |       await expect.soft(home.productCards.first(), '[TC20 results-listed] Products in the range must be listed').toBeVisible();\n  137 |     });\n  138 |   });\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/02-search.spec.ts:135:10\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/02-search.spec.ts:129:5"
+          ],
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": "rounds/round-1/shots/TC20.png",
+          "reportLink": "rounds/round-1/report/index.html#?testId=dcea8af15a48fefe4e67-a29b0b93b1b6f69133f8"
+        }
+      ],
+      "passRate": 0,
+      "params": [
+        {
+          "key": "max",
+          "value": 30,
+          "default": 30
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 2,
+  "id": "37564512474",
+  "runNumber": 5,
+  "trigger": "manual",
+  "commit": "88e464c",
+  "repoUrl": "https://github.com/NTCloudy/playwright-e2e-dashboard",
+  "workflowRunUrl": "https://github.com/NTCloudy/playwright-e2e-dashboard/actions/runs/37564512474",
+  "startedAt": "2026-10-07T02:58:49.406Z",
+  "finishedAt": "2026-10-07T02:59:03.179Z",
+  "durationMs": 13773,
+  "rounds": 1,
+  "selection": {
+    "all": false,
+    "cases": [
+      "TC04",
+      "TC07",
+      "TC12"
+    ],
+    "catalogSize": 16
+  },
+  "browser": "chromium",
+  "playwrightVersion": "1.62.1",
+  "baseURL": "https://practicesoftwaretesting.com",
+  "totals": {
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "total": 3,
+    "passRate": 1
+  },
+  "brokenRounds": 0,
+  "roundSummaries": [
+    {
+      "round": 1,
+      "startedAt": "2026-10-07T02:58:49.406Z",
+      "durationMs": 13773,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "report": "rounds/round-1/report/index.html",
+      "error": null
+    }
+  ],
+  "cases": [
+    {
+      "id": "TC04",
+      "module": "Search",
+      "title": "Search by keyword",
+      "file": "02-search.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 4864,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=dcea8af15a48fefe4e67-39fe02b6f4c2a7a98929"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "keyword",
+          "value": "pliers",
+          "default": "hammer"
+        }
+      ]
+    },
+    {
+      "id": "TC07",
+      "module": "Search",
+      "title": "Sort products",
+      "file": "02-search.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 1773,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=dcea8af15a48fefe4e67-c43a4eaf8304a34db29a"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "sort",
+          "value": "price,desc",
+          "default": "price,asc"
+        }
+      ]
+    },
+    {
+      "id": "TC12",
+      "module": "Cart",
+      "title": "Increase quantity in the cart",
+      "file": "04-cart.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 5474,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=5f513903b8063c1b134f-a87fdab5e8b66a81d855"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "product",
+          "value": "Claw Hammer",
+          "default": "Claw Hammer"
+        },
+        {
+          "key": "quantity",
+          "value": 3,
+          "default": 3
+        }
+      ]
+    }
+  ]
+}

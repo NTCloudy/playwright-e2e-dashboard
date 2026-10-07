@@ -1,0 +1,197 @@
+[
+  {
+    "id": "37616686148",
+    "runNumber": 15,
+    "trigger": "manual",
+    "startedAt": "2026-10-07T11:50:09.135Z",
+    "durationMs": 48327,
+    "rounds": 1,
+    "commit": "35089b7",
+    "target": "production",
+    "baseURL": "https://practicesoftwaretesting.com",
+    "selection": [
+      "TC01",
+      "TC02",
+      "TC03",
+      "TC11",
+      "TC12",
+      "TC13",
+      "TC14",
+      "TC16"
+    ],
+    "totals": {
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0,
+      "total": 8,
+      "passRate": 1
+    },
+    "brokenRounds": 0,
+    "caseCount": 8,
+    "catalogSize": 20,
+    "customData": false
+  },
+  {
+    "id": "37615569211",
+    "runNumber": 14,
+    "trigger": "manual",
+    "startedAt": "2026-10-07T11:40:12.364Z",
+    "durationMs": 276717,
+    "rounds": 3,
+    "commit": "35089b7",
+    "target": "production",
+    "baseURL": "https://practicesoftwaretesting.com",
+    "selection": "all",
+    "totals": {
+      "passed": 51,
+      "failed": 0,
+      "skipped": 6,
+      "total": 57,
+      "passRate": 1
+    },
+    "brokenRounds": 0,
+    "caseCount": 19,
+    "catalogSize": 20,
+    "customData": false
+  },
+  {
+    "id": "37595015153",
+    "runNumber": 13,
+    "trigger": "manual",
+    "startedAt": "2026-10-07T08:38:27.941Z",
+    "durationMs": 133010,
+    "rounds": 1,
+    "commit": "35089b7",
+    "target": "production",
+    "baseURL": "https://practicesoftwaretesting.com",
+    "selection": "all",
+    "totals": {
+      "passed": 17,
+      "failed": 0,
+      "skipped": 2,
+      "total": 19,
+      "passRate": 1
+    },
+    "brokenRounds": 0,
+    "caseCount": 19,
+    "catalogSize": 20,
+    "customData": false
+  },
+  {
+    "id": "37592092423",
+    "runNumber": 11,
+    "trigger": "manual",
+    "startedAt": "2026-10-07T08:12:48.259Z",
+    "durationMs": 299270,
+    "rounds": 1,
+    "commit": "0a35cdf",
+    "target": "with-bugs",
+    "baseURL": "https://with-bugs.practicesoftwaretesting.com",
+    "selection": "all",
+    "totals": {
+      "passed": 6,
+      "failed": 14,
+      "skipped": 0,
+      "total": 20,
+      "passRate": 0.3
+    },
+    "brokenRounds": 0,
+    "caseCount": 20,
+    "catalogSize": 20,
+    "customData": false
+  },
+  {
+    "id": "37565353099",
+    "runNumber": 6,
+    "trigger": "manual",
+    "startedAt": "2026-10-07T03:09:01.463Z",
+    "durationMs": 42557,
+    "rounds": 1,
+    "commit": "88e464c",
+    "totals": {
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0,
+      "total": 8,
+      "passRate": 1
+    },
+    "brokenRounds": 0,
+    "caseCount": 8,
+    "catalogSize": 16,
+    "customData": false
+  },
+  {
+    "id": "37564512474",
+    "runNumber": 5,
+    "trigger": "manual",
+    "startedAt": "2026-10-07T02:58:49.406Z",
+    "durationMs": 13773,
+    "rounds": 1,
+    "commit": "88e464c",
+    "totals": {
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "total": 3,
+      "passRate": 1
+    },
+    "brokenRounds": 0,
+    "caseCount": 3,
+    "catalogSize": 16,
+    "customData": true
+  },
+  {
+    "id": "37564282238",
+    "runNumber": 4,
+    "trigger": "manual",
+    "startedAt": "2026-10-07T02:55:41.942Z",
+    "durationMs": 77810,
+    "rounds": 1,
+    "commit": "88e464c",
+    "totals": {
+      "passed": 14,
+      "failed": 0,
+      "skipped": 2,
+      "total": 16,
+      "passRate": 1
+    },
+    "brokenRounds": 0,
+    "caseCount": 16,
+    "catalogSize": 16,
+    "customData": false
+  },
+  {
+    "id": "37435362061",
+    "runNumber": 3,
+    "trigger": "manual",
+    "startedAt": "2026-10-06T08:20:11.760Z",
+    "durationMs": 203856,
+    "rounds": 3,
+    "commit": "9f2ce4d",
+    "totals": {
+      "passed": 42,
+      "failed": 0,
+      "skipped": 6,
+      "total": 48,
+      "passRate": 1
+    },
+    "brokenRounds": 0
+  },
+  {
+    "id": "37434596358",
+    "runNumber": 2,
+    "trigger": "manual",
+    "startedAt": "2026-10-06T08:13:18.305Z",
+    "durationMs": 221816,
+    "rounds": 3,
+    "commit": "0c61d00",
+    "totals": {
+      "passed": 42,
+      "failed": 0,
+      "skipped": 6,
+      "total": 48,
+      "passRate": 1
+    },
+    "brokenRounds": 0
+  }
+]

@@ -1,0 +1,1413 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/24.21.0/x64/bin/node",
+      "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/node_modules/.bin/playwright",
+      "test",
+      "--grep",
+      "(^|\\s)(TC01|TC02|TC03|TC04|TC05|TC06|TC07|TC08|TC09|TC10|TC11|TC12|TC13|TC14|TC15|TC16|TC17|TC18|TC20)(\\s|$)"
+    ],
+    "configFile": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/playwright.config.ts",
+    "rootDir": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/NTCloudy/playwright-e2e-dashboard/commit/35089b7c08776753e4e68392c8b1b151c1891bc7",
+        "commitHash": "35089b7c08776753e4e68392c8b1b151c1891bc7",
+        "buildHref": "https://github.com/NTCloudy/playwright-e2e-dashboard/actions/runs/37615569211"
+      },
+      "gitCommit": {
+        "shortHash": "35089b7",
+        "hash": "35089b7c08776753e4e68392c8b1b151c1891bc7",
+        "subject": "Ignore Cloudflare-challenged product images in HomePage.productsWithoutImage",
+        "body": "Ignore Cloudflare-challenged product images in HomePage.productsWithoutImage\n",
+        "author": {
+          "name": "NTCloudy",
+          "email": "210337045+NTCloudy@users.noreply.github.com",
+          "time": 1791362250000
+        },
+        "committer": {
+          "name": "NTCloudy",
+          "email": "210337045+NTCloudy@users.noreply.github.com",
+          "time": 1791362250000
+        },
+        "branch": "main"
+      },
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/test-output/run/rounds/round-3/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/NTCloudy/playwright-e2e-dashboard/commit/35089b7c08776753e4e68392c8b1b151c1891bc7",
+            "commitHash": "35089b7c08776753e4e68392c8b1b151c1891bc7",
+            "buildHref": "https://github.com/NTCloudy/playwright-e2e-dashboard/actions/runs/37615569211"
+          },
+          "gitCommit": {
+            "shortHash": "35089b7",
+            "hash": "35089b7c08776753e4e68392c8b1b151c1891bc7",
+            "subject": "Ignore Cloudflare-challenged product images in HomePage.productsWithoutImage",
+            "body": "Ignore Cloudflare-challenged product images in HomePage.productsWithoutImage\n",
+            "author": {
+              "name": "NTCloudy",
+              "email": "210337045+NTCloudy@users.noreply.github.com",
+              "time": 1791362250000
+            },
+            "committer": {
+              "name": "NTCloudy",
+              "email": "210337045+NTCloudy@users.noreply.github.com",
+              "time": 1791362250000
+            },
+            "branch": "main"
+          },
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "line",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/test-output/run/rounds/round-3/results.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/test-output/run/rounds/round-3/report",
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "01-home.spec.ts",
+      "file": "01-home.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Home",
+          "file": "01-home.spec.ts",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "TC01 Home page loads",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1853,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Open the home page",
+                          "duration": 1631
+                        },
+                        {
+                          "title": "Navigation, search, sorting and filters are usable; products are listed",
+                          "duration": 19
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:43:18.596Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c4396361884a96dbe527-29134c1b8e5f013f312d",
+              "file": "01-home.spec.ts",
+              "line": 6,
+              "column": 7
+            },
+            {
+              "title": "TC02 Return to the home page from a product page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "position = 1 (default)"
+                    },
+                    {
+                      "type": "product",
+                      "description": "Combination Pliers"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2874,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Open the home page and click product #1",
+                          "duration": 2131
+                        },
+                        {
+                          "title": "Click \"Home\" in the navigation bar",
+                          "duration": 74
+                        },
+                        {
+                          "title": "Back on the home page: product grid and filters are shown again",
+                          "duration": 513
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:43:20.531Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "position = 1 (default)"
+                        },
+                        {
+                          "type": "product",
+                          "description": "Combination Pliers"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c4396361884a96dbe527-5791a0265f4fc32772f2",
+              "file": "01-home.spec.ts",
+              "line": 20,
+              "column": 7
+            },
+            {
+              "title": "TC03 Browse a category",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "category = \"Hand Tools\" (default)"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2146,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Open Categories > Hand Tools",
+                          "duration": 1655
+                        },
+                        {
+                          "title": "Category title and its products are shown",
+                          "duration": 387
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:43:23.413Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "category = \"Hand Tools\" (default)"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c4396361884a96dbe527-ac5643ac60809f1bf890",
+              "file": "01-home.spec.ts",
+              "line": 41,
+              "column": 7
+            },
+            {
+              "title": "TC17 Page text and images",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [
+                    {
+                      "type": "slow",
+                      "location": {
+                        "file": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/01-home.spec.ts",
+                        "line": 59,
+                        "column": 10
+                      }
+                    },
+                    {
+                      "type": "product",
+                      "description": "Combination Pliers"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2000,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Open the home page",
+                          "duration": 1386
+                        },
+                        {
+                          "title": "Home page: logo, navigation, sidebar headings, search button and product images",
+                          "duration": 45
+                        },
+                        {
+                          "title": "Open the first product: the related products heading",
+                          "duration": 439
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:43:25.567Z",
+                      "annotations": [
+                        {
+                          "type": "slow",
+                          "location": {
+                            "file": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/01-home.spec.ts",
+                            "line": 59,
+                            "column": 10
+                          }
+                        },
+                        {
+                          "type": "product",
+                          "description": "Combination Pliers"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c4396361884a96dbe527-e73c62823dea6f6a8164",
+              "file": "01-home.spec.ts",
+              "line": 57,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "02-search.spec.ts",
+      "file": "02-search.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Search",
+          "file": "02-search.spec.ts",
+          "line": 23,
+          "column": 6,
+          "specs": [
+            {
+              "title": "TC04 Search by keyword",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "keyword = \"hammer\" (default)"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2599,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Search for \"hammer\"",
+                          "duration": 2413
+                        },
+                        {
+                          "title": "The search term is shown and every result name contains \"hammer\"",
+                          "duration": 18
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:43:27.579Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "keyword = \"hammer\" (default)"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "dcea8af15a48fefe4e67-39fe02b6f4c2a7a98929",
+              "file": "02-search.spec.ts",
+              "line": 24,
+              "column": 7
+            },
+            {
+              "title": "TC05 Find a specific product",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "product = \"Claw Hammer\" (default)"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1950,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Search for \"Claw Hammer\"",
+                          "duration": 1780
+                        },
+                        {
+                          "title": "The product is in the results with a price",
+                          "duration": 16
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:43:30.183Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "product = \"Claw Hammer\" (default)"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "dcea8af15a48fefe4e67-e13b5d48181219545c13",
+              "file": "02-search.spec.ts",
+              "line": 42,
+              "column": 7
+            },
+            {
+              "title": "TC06 Search with no results",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "keyword = \"NoSuchTool12345\" (default)"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2064,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Search for \"NoSuchTool12345\"",
+                          "duration": 1898
+                        },
+                        {
+                          "title": "A \"no products found\" message is shown and the grid is empty",
+                          "duration": 12
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:43:32.141Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "keyword = \"NoSuchTool12345\" (default)"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "dcea8af15a48fefe4e67-f87d0de4115730e2e48f",
+              "file": "02-search.spec.ts",
+              "line": 58,
+              "column": 7
+            },
+            {
+              "title": "TC07 Sort products",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "sort = \"price,asc\" (default)"
+                    },
+                    {
+                      "type": "prices",
+                      "description": "3.55, 3.95, 4.65, 4.92, 5.55, 6.25, 7.23, 7.99, 9.17"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1887,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Choose \"Price (Low - High)\"",
+                          "duration": 1702
+                        },
+                        {
+                          "title": "Products are sorted by price, ascending",
+                          "duration": 23
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:43:34.214Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "sort = \"price,asc\" (default)"
+                        },
+                        {
+                          "type": "prices",
+                          "description": "3.55, 3.95, 4.65, 4.92, 5.55, 6.25, 7.23, 7.99, 9.17"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "dcea8af15a48fefe4e67-c43a4eaf8304a34db29a",
+              "file": "02-search.spec.ts",
+              "line": 73,
+              "column": 7
+            },
+            {
+              "title": "TC08 Product details match the search result",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "keyword = \"hammer\" (default); product = \"Thor Hammer\" (default)"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3176,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Search for \"hammer\" and note the price of \"Thor Hammer\"",
+                          "duration": 2596
+                        },
+                        {
+                          "title": "Open the product: name and price match; quantity and \"Add to cart\" are usable",
+                          "duration": 443
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:43:36.106Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "keyword = \"hammer\" (default); product = \"Thor Hammer\" (default)"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "dcea8af15a48fefe4e67-58f43b7350a2ca17db16",
+              "file": "02-search.spec.ts",
+              "line": 99,
+              "column": 7
+            },
+            {
+              "title": "TC20 Filter by price range",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "max = 30 (default)"
+                    },
+                    {
+                      "type": "price range",
+                      "description": "1 - 30"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2635,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Move the upper handle of \"Price Range\" down to 30",
+                          "duration": 2094
+                        },
+                        {
+                          "title": "Every listed product costs between 1 and 30",
+                          "duration": 379
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:43:39.291Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "max = 30 (default)"
+                        },
+                        {
+                          "type": "price range",
+                          "description": "1 - 30"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "dcea8af15a48fefe4e67-a29b0b93b1b6f69133f8",
+              "file": "02-search.spec.ts",
+              "line": 118,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "03-account.spec.ts",
+      "file": "03-account.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Account",
+          "file": "03-account.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "TC09 Sign in with a valid account",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test account",
+                      "description": "Fresh account registered via API for this round (e2e.1791373421968239@example.com)"
+                    },
+                    {
+                      "type": "blocked",
+                      "description": "Cloudflare challenge instead of https://practicesoftwaretesting.com/account"
+                    },
+                    {
+                      "type": "skip",
+                      "description": "Blocked by the site's Cloudflare bot check (common for cloud/CI IP addresses). Not a product failure: the case runs normally from a regular network.",
+                      "location": {
+                        "file": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/src/support/botCheck.ts",
+                        "line": 35,
+                        "column": 14
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "skipped",
+                      "duration": 11792,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Sign in with the test account",
+                          "duration": 1495
+                        },
+                        {
+                          "title": "\"My account\" is shown and the navigation bar shows the user name",
+                          "duration": 10006,
+                          "error": {
+                            "message": "Error: Test is skipped: Blocked by the site's Cloudflare bot check (common for cloud/CI IP addresses). Not a product failure: the case runs normally from a regular network.",
+                            "stack": "Error: Test is skipped: Blocked by the site's Cloudflare bot check (common for cloud/CI IP addresses). Not a product failure: the case runs normally from a regular network.\n    at BotCheck.waitFor (/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/src/support/botCheck.ts:35:14)\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/03-account.spec.ts:14:7\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/03-account.spec.ts:12:5",
+                            "location": {
+                              "file": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/src/support/botCheck.ts",
+                              "column": 14,
+                              "line": 35
+                            },
+                            "snippet": "   at ../src/support/botCheck.ts:35\n\n\u001b[0m \u001b[90m 33 |\u001b[39m         })\u001b[33m;\u001b[39m\n \u001b[90m 34 |\u001b[39m         \u001b[90m// eslint-disable-next-line playwright/no-skipped-test -- a confirmed bot check is reported as skipped, never as a pass or a product failure\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 35 |\u001b[39m         test\u001b[33m.\u001b[39mskip(\u001b[36mtrue\u001b[39m\u001b[33m,\u001b[39m \u001b[33mBOT_CHECK_SKIP_REASON\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 36 |\u001b[39m       }\n \u001b[90m 37 |\u001b[39m       \u001b[36mthrow\u001b[39m error\u001b[33m;\u001b[39m\n \u001b[90m 38 |\u001b[39m     }\u001b[0m"
+                          }
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:43:41.935Z",
+                      "annotations": [
+                        {
+                          "type": "test account",
+                          "description": "Fresh account registered via API for this round (e2e.1791373421968239@example.com)"
+                        },
+                        {
+                          "type": "blocked",
+                          "description": "Cloudflare challenge instead of https://practicesoftwaretesting.com/account"
+                        },
+                        {
+                          "type": "skip",
+                          "description": "Blocked by the site's Cloudflare bot check (common for cloud/CI IP addresses). Not a product failure: the case runs normally from a regular network.",
+                          "location": {
+                            "file": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/src/support/botCheck.ts",
+                            "line": 35,
+                            "column": 14
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "264985d381f77363394a-3517e4007e818f4f65d9",
+              "file": "03-account.spec.ts",
+              "line": 4,
+              "column": 7
+            },
+            {
+              "title": "TC10 Sign in with an unknown account is rejected",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2726,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Sign in with an account that does not exist",
+                          "duration": 1810
+                        },
+                        {
+                          "title": "An error is shown and the user stays signed out",
+                          "duration": 811
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:43:54.490Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "264985d381f77363394a-69544e9f7583417d33e5",
+              "file": "03-account.spec.ts",
+              "line": 20,
+              "column": 7
+            },
+            {
+              "title": "TC15 Sign out",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test account",
+                      "description": "Fresh account registered via API for this round (e2e.1791373421968239@example.com)"
+                    },
+                    {
+                      "type": "blocked",
+                      "description": "Cloudflare challenge instead of https://practicesoftwaretesting.com/"
+                    },
+                    {
+                      "type": "skip",
+                      "description": "Blocked by the site's Cloudflare bot check (common for cloud/CI IP addresses). Not a product failure: the case runs normally from a regular network.",
+                      "location": {
+                        "file": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/src/support/botCheck.ts",
+                        "line": 35,
+                        "column": 14
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "skipped",
+                      "duration": 12690,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Precondition: signed in (through the API; TC09 covers the sign-in form)",
+                          "duration": 2127
+                        },
+                        {
+                          "title": "User menu > Sign out",
+                          "duration": 235
+                        },
+                        {
+                          "title": "Signed out: \"Sign in\" is back, the user menu is gone and the stored token is cleared",
+                          "duration": 10006,
+                          "error": {
+                            "message": "Error: Test is skipped: Blocked by the site's Cloudflare bot check (common for cloud/CI IP addresses). Not a product failure: the case runs normally from a regular network.",
+                            "stack": "Error: Test is skipped: Blocked by the site's Cloudflare bot check (common for cloud/CI IP addresses). Not a product failure: the case runs normally from a regular network.\n    at BotCheck.waitFor (/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/src/support/botCheck.ts:35:14)\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/03-account.spec.ts:51:7\n    at /home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/03-account.spec.ts:49:5",
+                            "location": {
+                              "file": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/src/support/botCheck.ts",
+                              "column": 14,
+                              "line": 35
+                            },
+                            "snippet": "   at ../src/support/botCheck.ts:35\n\n\u001b[0m \u001b[90m 33 |\u001b[39m         })\u001b[33m;\u001b[39m\n \u001b[90m 34 |\u001b[39m         \u001b[90m// eslint-disable-next-line playwright/no-skipped-test -- a confirmed bot check is reported as skipped, never as a pass or a product failure\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 35 |\u001b[39m         test\u001b[33m.\u001b[39mskip(\u001b[36mtrue\u001b[39m\u001b[33m,\u001b[39m \u001b[33mBOT_CHECK_SKIP_REASON\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 36 |\u001b[39m       }\n \u001b[90m 37 |\u001b[39m       \u001b[36mthrow\u001b[39m error\u001b[33m;\u001b[39m\n \u001b[90m 38 |\u001b[39m     }\u001b[0m"
+                          }
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:43:57.224Z",
+                      "annotations": [
+                        {
+                          "type": "test account",
+                          "description": "Fresh account registered via API for this round (e2e.1791373421968239@example.com)"
+                        },
+                        {
+                          "type": "blocked",
+                          "description": "Cloudflare challenge instead of https://practicesoftwaretesting.com/"
+                        },
+                        {
+                          "type": "skip",
+                          "description": "Blocked by the site's Cloudflare bot check (common for cloud/CI IP addresses). Not a product failure: the case runs normally from a regular network.",
+                          "location": {
+                            "file": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/src/support/botCheck.ts",
+                            "line": 35,
+                            "column": 14
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "264985d381f77363394a-b2246baf2fb3e089ec60",
+              "file": "03-account.spec.ts",
+              "line": 38,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "04-cart.spec.ts",
+      "file": "04-cart.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Cart",
+          "file": "04-cart.spec.ts",
+          "line": 12,
+          "column": 6,
+          "specs": [
+            {
+              "title": "TC11 Add a product to the cart",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "product = \"Claw Hammer\" (default); quantity = 1 (default)"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4469,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Open \"Claw Hammer\", set the quantity to 1 and click \"Add to cart\"",
+                          "duration": 4348
+                        },
+                        {
+                          "title": "The cart badge shows 1",
+                          "duration": 5
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:44:09.926Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "product = \"Claw Hammer\" (default); quantity = 1 (default)"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5f513903b8063c1b134f-81348e9c1139cfaa1a01",
+              "file": "04-cart.spec.ts",
+              "line": 13,
+              "column": 7
+            },
+            {
+              "title": "TC12 Increase quantity in the cart",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "product = \"Claw Hammer\" (default); quantity = 3 (default)"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5261,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Precondition: \"Claw Hammer\" x1 in the cart",
+                          "duration": 4274
+                        },
+                        {
+                          "title": "Change the quantity to 3",
+                          "duration": 833
+                        },
+                        {
+                          "title": "Line total = unit price x 3; cart total and badge are updated",
+                          "duration": 38
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:44:14.404Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "product = \"Claw Hammer\" (default); quantity = 3 (default)"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5f513903b8063c1b134f-a87fdab5e8b66a81d855",
+              "file": "04-cart.spec.ts",
+              "line": 30,
+              "column": 7
+            },
+            {
+              "title": "TC13 Decrease quantity in the cart",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "product = \"Claw Hammer\" (default); from = 3 (default); to = 1 (default)"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4390,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Precondition: \"Claw Hammer\" x3 in the cart",
+                          "duration": 3488
+                        },
+                        {
+                          "title": "Change the quantity to 1",
+                          "duration": 356
+                        },
+                        {
+                          "title": "Line total = unit price x 1; cart total and badge are updated",
+                          "duration": 420
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:44:19.672Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "product = \"Claw Hammer\" (default); from = 3 (default); to = 1 (default)"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5f513903b8063c1b134f-9d12e61560faa8d06d3d",
+              "file": "04-cart.spec.ts",
+              "line": 55,
+              "column": 7
+            },
+            {
+              "title": "TC14 Remove products from the cart",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "first = \"Claw Hammer\" (default); second = \"Thor Hammer\" (default)"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 8905,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Precondition: \"Claw Hammer\" and \"Thor Hammer\" in the cart",
+                          "duration": 7022
+                        },
+                        {
+                          "title": "Remove \"Claw Hammer\": the cart total is recalculated",
+                          "duration": 877
+                        },
+                        {
+                          "title": "Remove \"Thor Hammer\": the cart is empty",
+                          "duration": 892
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:44:24.069Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "first = \"Claw Hammer\" (default); second = \"Thor Hammer\" (default)"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5f513903b8063c1b134f-8e1f506d25b7b5d621cf",
+              "file": "04-cart.spec.ts",
+              "line": 83,
+              "column": 7
+            },
+            {
+              "title": "TC18 Purchase quantity upper limit",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "product = \"Claw Hammer\" (default)"
+                    },
+                    {
+                      "type": "slow",
+                      "location": {
+                        "file": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/04-cart.spec.ts",
+                        "line": 126,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 7288,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Precondition: \"Claw Hammer\" x1 in the cart",
+                          "duration": 4291
+                        },
+                        {
+                          "title": "Change the quantity to 10: accepted, the cart total follows",
+                          "duration": 966
+                        },
+                        {
+                          "title": "Change the quantity to 11: accepted, the cart total follows",
+                          "duration": 926
+                        },
+                        {
+                          "title": "Change the quantity to 99: accepted, the cart total follows",
+                          "duration": 931
+                        },
+                        {
+                          "title": "Change the quantity to 100: reduced to 99 with a warning",
+                          "duration": 63
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:44:32.981Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "product = \"Claw Hammer\" (default)"
+                        },
+                        {
+                          "type": "slow",
+                          "location": {
+                            "file": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests/04-cart.spec.ts",
+                            "line": 126,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5f513903b8063c1b134f-e38916f11d463e29b1e6",
+              "file": "04-cart.spec.ts",
+              "line": 124,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "05-checkout.spec.ts",
+      "file": "05-checkout.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Checkout",
+          "file": "05-checkout.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "TC16 Complete checkout (Cash on Delivery)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test account",
+                      "description": "Fresh account registered via API for this round (e2e.1791373421968239@example.com)"
+                    },
+                    {
+                      "type": "test data",
+                      "description": "product = \"Claw Hammer\" (default); quantity = 1 (default)"
+                    },
+                    {
+                      "type": "invoice",
+                      "description": "INV-2026000014"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 8585,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Cart: \"Claw Hammer\" x1, proceed to checkout",
+                          "duration": 3724
+                        },
+                        {
+                          "title": "Sign in with the test account",
+                          "duration": 947
+                        },
+                        {
+                          "title": "Billing address is prefilled and completed by the postcode lookup; continue",
+                          "duration": 1982
+                        },
+                        {
+                          "title": "Pay with \"Cash on Delivery\" and confirm",
+                          "duration": 1810
+                        },
+                        {
+                          "title": "The order is placed and the cart is empty",
+                          "duration": 12
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:44:40.279Z",
+                      "annotations": [
+                        {
+                          "type": "test account",
+                          "description": "Fresh account registered via API for this round (e2e.1791373421968239@example.com)"
+                        },
+                        {
+                          "type": "test data",
+                          "description": "product = \"Claw Hammer\" (default); quantity = 1 (default)"
+                        },
+                        {
+                          "type": "invoice",
+                          "description": "INV-2026000014"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d86ddf78af31f4d55a78-37f7725a8ed6312a9deb",
+              "file": "05-checkout.spec.ts",
+              "line": 5,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-07T11:43:18.299Z",
+    "duration": 90729.22700000001,
+    "expected": 17,
+    "skipped": 2,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

@@ -1,0 +1,84 @@
+name: Bug report
+description: A bug in the site under test (Toolshop), e.g. one the E2E suite caught on the with-bugs release.
+title: '[Bug] '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for bugs in the **site under test** (the Toolshop demo store). For a problem with this repository's tests or dashboard, open a blank issue instead.
+
+        Bugs on the [official with-bugs list](https://github.com/testsmith-io/practice-software-testing/blob/main/sprint5-with-bugs/testSessions/listOfBugs.md): describe them in your own words and give the bug's ID. Do not paste text from that list; it is not openly licensed.
+
+  - type: input
+    id: summary
+    attributes:
+      label: Summary (one line, Traditional Chinese)
+      description: One sentence in Traditional Chinese (Taiwan) that says what goes wrong. The issue title can be the same sentence in English.
+      placeholder: 例如：加入購物車時跳出錯誤訊息，但商品其實已經加進去
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: The site (production or with-bugs), browser and device.
+      value: |
+        - Site: with-bugs (https://with-bugs.practicesoftwaretesting.com)
+        - Browser: Chromium (Playwright)
+        - OS / screen: GitHub Actions ubuntu-latest, 1280×720
+    validations:
+      required: true
+
+  - type: input
+    id: official-id
+    attributes:
+      label: Official bug ID (optional)
+      description: The bug's number on the official with-bugs list, e.g. 43. Leave empty for a finding that is not on the list.
+      placeholder: '43'
+    validations:
+      required: false
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Start from the home page; one action per line.
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+    validations:
+      required: true
+
+  - type: input
+    id: detected-by
+    attributes:
+      label: Detected by (case ID + run link)
+      description: The test case that caught it and the run on the dashboard. Leave empty if it was found by hand.
+      placeholder: 'TC11 · https://ntcloudy.github.io/playwright-e2e-dashboard/#/run/<run id>'
+    validations:
+      required: false
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Screenshots, the failure message, or a link to the Playwright report (steps, video, trace). You can drag images into this box.
+    validations:
+      required: false

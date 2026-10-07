@@ -1,7 +1,7 @@
-// "Run tests" page: pick test cases, adjust their test data, edit their
-// titles and descriptions, and start a run on GitHub Actions. The run's
-// progress and results are shown on this page.
-import { checkValue, resolveCase, resolveRun } from './case-params.js';
+// "Run tests" page: pick the target site and test cases, adjust their test
+// data, edit their titles and descriptions, and start a run on GitHub
+// Actions. The run's progress and results are shown on this page.
+import { appliesTo, checkValue, resolveCase, resolveRun } from './case-params.js';
 import {
   ICON,
   REPO,
@@ -21,9 +21,11 @@ import {
   state,
   store,
   t,
+  targetTag,
 } from './core.js';
 import { afterEditorRender, configureEditor, refreshDescriptionView, renderDescriptionBlock } from './editor.js';
 import { cancelRun, dispatchRun, getJobs, getRun, tokenStore, verifyToken } from './github.js';
+import { DEFAULT_TARGET, TARGETS, TARGET_NAMES, isTarget } from './targets.js';
 
 const DRAFT_KEY = 'e2e-console-draft';
 const RUN_KEY = 'e2e-console-run';
@@ -42,7 +44,7 @@ const TOKEN_URL = `https://github.com/settings/personal-access-tokens/new?${new 
 })}`;
 
 /** The console's form state; kept in localStorage so the last choice is remembered. */
-const draft = { ready: false, rounds: 3, selected: new Set(), values: {}, expanded: new Set() };
+const draft = { ready: false, rounds: 3, target: DEFAULT_TARGET, selected: new Set(), values: {}, expanded: new Set() };
 const ui = { dispatching: false, barError: null };
 /** The run started from this browser (kept in localStorage while it runs and until dismissed). */
 const tracker = { run: store.get(RUN_KEY), timer: null };
@@ -51,6 +53,9 @@ let onPublished = () => {};
 const config = () => state.catalog.config;
 const allCases = () => state.catalog.cases;
 const findCase = (id) => allCases().find((c) => c.id === id);
+/** Whether a case runs on the chosen target ("targets" in config/cases.json, the same rule as CI). */
+const applies = (c) => appliesTo(config(), c.id, draft.target);
+const applicableCases = () => allCases().filter(applies);
 const isBusy = () => Boolean(tracker.run && !tracker.run.done);
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -62,6 +67,7 @@ function initDraft() {
   const saved = store.get(DRAFT_KEY) ?? {};
   const ids = allCases().map((c) => c.id);
   draft.rounds = Number.isInteger(saved.rounds) && saved.rounds >= 1 && saved.rounds <= MAX_ROUNDS ? saved.rounds : 3;
+  draft.target = isTarget(saved.target) ? saved.target : DEFAULT_TARGET;
   draft.selected = new Set(Array.isArray(saved.selected) ? saved.selected.filter((id) => ids.includes(id)) : ids);
   for (const c of allCases()) {
     draft.values[c.id] = {};
@@ -80,14 +86,19 @@ function saveDraft() {
       if (draft.values[c.id][key] !== def.default) (values[c.id] ??= {})[key] = draft.values[c.id][key];
     }
   }
-  store.set(DRAFT_KEY, { rounds: draft.rounds, selected: [...draft.selected], values });
+  store.set(DRAFT_KEY, { rounds: draft.rounds, target: draft.target, selected: [...draft.selected], values });
 }
 
 const evaluate = (c) => resolveCase(config(), c.id, draft.values[c.id] ?? {});
 
-/** The workflow inputs for the current selection (the same shape the GitHub "Run workflow" form uses). */
+/**
+ * The workflow inputs for the current selection (the same shape the GitHub
+ * "Run workflow" form uses). Ticked cases that do not run on the chosen
+ * target stay ticked in the draft but are left out.
+ */
 function buildRequest() {
-  const selected = allCases().filter((c) => draft.selected.has(c.id));
+  const applicable = applicableCases();
+  const selected = applicable.filter((c) => draft.selected.has(c.id));
   const params = {};
   let invalid = 0;
   for (const c of selected) {
@@ -95,15 +106,18 @@ function buildRequest() {
     invalid += errors.length;
     if (custom.length) params[c.id] = Object.fromEntries(custom.map((key) => [key, values[key]]));
   }
-  const all = selected.length === allCases().length;
+  // Empty = every case that applies to the target (scripts/run-rounds.mjs).
+  const all = selected.length === applicable.length;
   return {
     selected,
+    total: applicable.length,
     invalid,
     customCases: Object.keys(params).length,
     inputs: {
       rounds: String(draft.rounds),
       cases: all ? '' : selected.map((c) => c.id).join(','),
       params: Object.keys(params).length ? JSON.stringify(params) : '',
+      target: draft.target,
     },
   };
 }
@@ -153,6 +167,7 @@ export function renderConsole(focusId = null) {
   const rounds = Array.from({ length: MAX_ROUNDS }, (_, i) => i + 1)
     .map((n) => `<option value="${n}" ${n === draft.rounds ? 'selected' : ''}>${n}</option>`)
     .join('');
+  const targets = TARGET_NAMES.map((name) => `<option value="${esc(name)}" ${name === draft.target ? 'selected' : ''}>${esc(t(`targetOption_${name}`))}</option>`).join('');
   return `
     <div id="console-root">
       <a class="back" href="#/">${esc(t('back'))}</a>
@@ -163,13 +178,17 @@ export function renderConsole(focusId = null) {
       <div id="run-panel">${renderRunPanel()}</div>
       <section class="card console-settings">
         <div class="console-row">
-          <label class="field-inline" for="c-rounds">${esc(t('roundsLabel'))} <select id="c-rounds">${rounds}</select></label>
+          <div class="console-fields">
+            <label class="field-inline" for="c-target">${esc(t('targetLabel'))} <select id="c-target">${targets}</select></label>
+            <label class="field-inline" for="c-rounds">${esc(t('roundsLabel'))} <select id="c-rounds">${rounds}</select></label>
+          </div>
           <div class="console-row-actions">
             <button type="button" class="btn btn-sm" data-act="select-all">${esc(t('selectAll'))}</button>
             <button type="button" class="btn btn-sm" data-act="select-none">${esc(t('selectNone'))}</button>
             <button type="button" class="btn btn-sm" data-act="reset-all">${esc(t('resetAll'))}</button>
           </div>
         </div>
+        <p id="target-note" class="target-note">${renderTargetNote()}</p>
         <div id="token-line" class="token-line">${renderTokenLine()}</div>
       </section>
       <section class="card console-cases">
@@ -210,14 +229,19 @@ function renderModule(module, cases) {
 function renderCaseItem(c) {
   const open = draft.expanded.has(c.id);
   const params = Object.entries(c.params);
+  const ok = applies(c);
+  const only = Array.isArray(c.targets)
+    ? `<span class="tag tag-target-only" id="target-tag-${esc(c.id)}" title="${esc(t('targetOnlyHint'))}">${esc(t('targetOnly', { targets: c.targets.join(', ') }))}</span>`
+    : '';
   return `
-    <li class="case-item${open ? ' open' : ''}" data-case-item="${esc(c.id)}">
+    <li class="case-item${open ? ' open' : ''}${ok ? '' : ' case-na'}" data-case-item="${esc(c.id)}">
       <div class="case-line">
         <label class="check case-check">
-          <input type="checkbox" data-act="toggle-case" data-case="${esc(c.id)}" ${draft.selected.has(c.id) ? 'checked' : ''}>
+          <input type="checkbox" data-act="toggle-case" data-case="${esc(c.id)}" ${ok && draft.selected.has(c.id) ? 'checked' : ''} ${ok ? '' : 'disabled'}${only ? ` aria-describedby="target-tag-${esc(c.id)}"` : ''}>
           <span class="case-id">${esc(c.id)}</span>
           <span class="case-name" data-case-name="${esc(c.id)}">${esc(caseTitle(c.id, c.title))}</span>
         </label>
+        ${only}
         <span class="tag tag-custom" data-custom-tag="${esc(c.id)}" title="${esc(t('customHint'))}" hidden>${esc(t('custom'))}</span>
         <span class="tag tag-bad" data-error-tag="${esc(c.id)}" hidden>${esc(t('needsFix'))}</span>
         <button type="button" class="btn-link case-toggle" data-act="expand" data-case="${esc(c.id)}" aria-expanded="${open}" aria-controls="case-body-${esc(c.id)}">
@@ -301,6 +325,16 @@ function renderTokenLine() {
     <button type="button" class="btn btn-sm" data-act="token-remove">${esc(t('tokenRemove'))}</button>`;
 }
 
+/** What the chosen target is, plus how many cases do not apply to it (their checkboxes are disabled). */
+function renderTargetNote() {
+  const notApplicable = allCases().length - applicableCases().length;
+  const total = state.catalog.knownBugs?.source?.total ?? '';
+  const parts = [`<span>${esc(t(`targetNote_${draft.target}`, { total }))}</span>`];
+  if (TARGETS[draft.target]?.injectedBugs) parts.push(`<a href="#/bugs">${esc(t('navBugs'))} →</a>`);
+  if (notApplicable) parts.push(`<span class="target-note-na">${esc(t('targetDisabled', { n: notApplicable, target: draft.target }))}</span>`);
+  return parts.join(' ');
+}
+
 /** GitHub sends e.g. "2026-12-31 08:00:00 UTC". */
 function parseExpiry(raw) {
   if (!raw) return null;
@@ -314,8 +348,21 @@ function parseExpiry(raw) {
 function refresh() {
   if (!document.getElementById('console-root')) return;
   allCases().forEach(refreshCase);
+  refreshTarget();
   refreshSelection();
   refreshBar();
+}
+
+/** Disables the cases that do not run on the chosen target and updates the note under the target selector. */
+function refreshTarget() {
+  const note = document.getElementById('target-note');
+  if (note) note.innerHTML = renderTargetNote();
+  for (const c of allCases()) {
+    const ok = applies(c);
+    document.querySelector(`[data-case-item="${CSS.escape(c.id)}"]`)?.classList.toggle('case-na', !ok);
+    const box = document.querySelector(`[data-act="toggle-case"][data-case="${CSS.escape(c.id)}"]`);
+    if (box) box.disabled = !ok;
+  }
 }
 
 /** Applies newer titles and descriptions without re-rendering the page (inputs keep their focus). */
@@ -359,17 +406,23 @@ function refreshCase(c) {
 }
 
 function refreshSelection() {
-  for (const [module, cases] of groups()) {
+  for (const [module, all] of groups()) {
+    // Only the cases that run on the chosen target count (and can be ticked).
+    const cases = all.filter(applies);
     const selected = cases.filter((c) => draft.selected.has(c.id)).length;
     const box = [...document.querySelectorAll('[data-act="toggle-module"]')].find((b) => b.dataset.module === module);
     if (box) {
-      box.checked = selected === cases.length;
+      box.disabled = cases.length === 0;
+      box.checked = cases.length > 0 && selected === cases.length;
       box.indeterminate = selected > 0 && selected < cases.length;
     }
     const count = [...document.querySelectorAll('[data-module-count]')].find((el) => el.dataset.moduleCount === module);
     if (count) count.textContent = t('moduleCount', { n: selected, total: cases.length });
   }
-  for (const box of document.querySelectorAll('[data-act="toggle-case"]')) box.checked = draft.selected.has(box.dataset.case);
+  for (const box of document.querySelectorAll('[data-act="toggle-case"]')) {
+    const c = findCase(box.dataset.case);
+    box.checked = Boolean(c && applies(c) && draft.selected.has(c.id));
+  }
 }
 
 function refreshBar() {
@@ -384,10 +437,11 @@ function refreshBar() {
   const info = [
     t('runSummary', {
       cases: request.selected.length,
-      total: allCases().length,
+      total: request.total,
       rounds: draft.rounds,
       min: estimateMinutes(request.selected.length, draft.rounds),
     }),
+    t('summaryTarget', { target: draft.target }),
     request.customCases ? t('customSummary', { n: request.customCases }) : '',
     tokenStore.get()?.token ? '' : t('needTokenShort'),
   ].filter(Boolean);
@@ -484,7 +538,7 @@ async function startRun() {
   const entry = tokenStore.get();
   if (!entry?.token) return openTokenDialog();
   // The same check CI runs (scripts/run-rounds.mjs), so GitHub never gets a request CI would reject.
-  const check = resolveRun(config(), { cases: request.inputs.cases, params: request.inputs.params });
+  const check = resolveRun(config(), { cases: request.inputs.cases, params: request.inputs.params, target: request.inputs.target });
   if (check.errors.length) {
     ui.barError = t('needFix', { n: check.errors.length });
     return refreshBar();
@@ -502,8 +556,9 @@ async function startRun() {
       dispatchedAt: new Date().toISOString(),
       startedAt: null,
       rounds: draft.rounds,
+      target: draft.target,
       caseCount: request.selected.length,
-      total: allCases().length,
+      total: request.total,
       customCases: request.customCases,
       estimate: estimateMinutes(request.selected.length, draft.rounds),
       status: 'queued',
@@ -643,6 +698,7 @@ function renderRunPanel() {
   if (!run) return '';
   const title = run.runNumber ? t('runTitle', { n: run.runNumber }) : t('runThis');
   const scope = t('runScope', { cases: run.caseCount, total: run.total, rounds: run.rounds });
+  const target = isTarget(run.target) ? `${targetTag(run.target)} ` : '';
   const log = run.htmlUrl ? `<a class="btn btn-sm" href="${esc(run.htmlUrl)}" target="_blank" rel="noopener">${esc(t('viewLog'))} ↗</a>` : '';
   const warning = run.error ? `<p class="param-warn">${esc(apiErrorText(run.error))}</p>` : '';
 
@@ -660,7 +716,7 @@ function renderRunPanel() {
           <h2><span class="spinner" aria-hidden="true"></span> ${esc(title)} · ${esc(status)}</h2>
           <span class="muted">${esc(t('elapsed'))} <span data-elapsed>${esc(elapsed)}</span> · ${esc(t('estimate', { min: run.estimate }))}</span>
         </div>
-        <p class="muted">${esc(scope)}</p>
+        <p class="muted">${target}${esc(scope)}</p>
         <ol class="phases">${steps}</ol>
         ${warning}
         <div class="run-panel-actions">
@@ -688,7 +744,7 @@ function renderRunPanel() {
          <div class="score-value rate-text-${rateClass(result.passRate)}">${pct(result.passRate)}</div>
          <div>
            <div><span class="ok">${esc(t('passed'))} ${result.passed}</span> · <span class="${result.failed ? 'ko' : 'muted'}">${esc(t('failed'))} ${result.failed}</span>${result.skipped ? ` · <span class="muted">${esc(t('skipped'))} ${result.skipped}</span>` : ''}</div>
-           <div class="muted">${esc(scope)}</div>
+           <div class="muted">${target}${esc(scope)}</div>
          </div>
        </div>
        ${summary ? `<div class="result-chips">${summary.cases.map((c) => renderChip(run.id, c)).join('')}</div>` : ''}`
@@ -749,7 +805,7 @@ document.addEventListener('click', (event) => {
 
   switch (action.dataset.act) {
     case 'select-all':
-      allCases().forEach((x) => draft.selected.add(x.id));
+      applicableCases().forEach((x) => draft.selected.add(x.id));
       break;
     case 'select-none':
       draft.selected.clear();
@@ -809,12 +865,14 @@ document.addEventListener('change', (event) => {
   if (!target || !target.closest('#console-root')) return;
   if (target.id === 'c-rounds') {
     draft.rounds = Number(target.value);
+  } else if (target.id === 'c-target') {
+    if (isTarget(target.value)) draft.target = target.value;
   } else if (target.dataset.act === 'toggle-case') {
     if (target.checked) draft.selected.add(target.dataset.case);
     else draft.selected.delete(target.dataset.case);
   } else if (target.dataset.act === 'toggle-module') {
     const module = target.dataset.module;
-    for (const c of allCases().filter((x) => x.module === module)) {
+    for (const c of allCases().filter((x) => x.module === module && applies(x))) {
       if (target.checked) draft.selected.add(c.id);
       else draft.selected.delete(c.id);
     }

@@ -4,6 +4,8 @@
  *
  * - One entry per test case (TCxx), with the result of every round and the
  *   test data it used (defaults from config/cases.json + this run's overrides).
+ * - The target site (production or with-bugs, shared/targets.mjs) and whether
+ *   the run covered every case that applies to it.
  * - Failure screenshots are copied next to the round report so the dashboard
  *   can show them inline.
  * - In GitHub Actions it also writes step outputs (failed/total) and a
@@ -11,7 +13,8 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { caseIds, paramEntries, resolveCase } from '../shared/case-params.mjs';
+import { applicableCases, caseIds, paramEntries, resolveCase } from '../shared/case-params.mjs';
+import { DEFAULT_TARGET, resolveTarget, TARGETS } from '../shared/targets.mjs';
 import { loadConfig } from './lib/catalog.mjs';
 
 const runDir = path.resolve(process.env.RUN_DIR ?? 'test-output/run');
@@ -25,13 +28,29 @@ const pkg = JSON.parse(fs.readFileSync(path.resolve('package.json'), 'utf8'));
 const config = loadConfig();
 // Runs recorded before case selection existed ran every case with the defaults.
 const selection = meta.selection ?? { all: true, cases: caseIds(config), params: {} };
+// run-rounds.mjs records the target; runs recorded before targets existed ran on production.
+const resolved = resolveTarget(meta.target);
+if (resolved.error) console.warn(`Warning: run-meta.json: ${resolved.error}; recording the run as ${DEFAULT_TARGET}.`);
+const target = resolved.error ? DEFAULT_TARGET : resolved.name;
+const baseURL = meta.baseURL ?? process.env.BASE_URL ?? TARGETS[target].baseURL;
+const apiURL = meta.apiURL ?? process.env.API_URL ?? TARGETS[target].apiURL;
 
 // eslint-disable-next-line no-control-regex -- strips ANSI colour codes from Playwright error messages
 const ANSI = /\u001b\[[0-9;]*m/g;
 const CASE_TITLE = /^(TC\d{2})\s+(.+)$/;
+const MAX_ERRORS = 10;
+const MAX_ERROR_LENGTH = 2000;
 
 function stripAnsi(text) {
   return (text ?? '').replace(ANSI, '');
+}
+
+/** All failure messages of a Playwright result, cleaned and capped. */
+function errorMessages(result) {
+  const raw = (result?.errors ?? []).map((e) => e.message ?? e.value ?? '');
+  if (!raw.length && result?.error) raw.push(result.error.message ?? result.error.value ?? '');
+  const messages = raw.map((text) => stripAnsi(String(text)).slice(0, MAX_ERROR_LENGTH)).filter(Boolean);
+  return (messages.length ? messages : ['Unknown error']).slice(0, MAX_ERRORS);
 }
 
 /** Walks nested suites and yields { spec, module } pairs. */
@@ -111,7 +130,9 @@ for (const { round, durationMs, startedAt } of meta.roundMeta) {
       round,
       status,
       durationMs: result?.duration ?? 0,
-      error: status === 'failed' ? stripAnsi(result?.error?.message ?? result?.errors?.[0]?.message ?? 'Unknown error').slice(0, 2000) : null,
+      error: status === 'failed' ? stripAnsi(result?.error?.message ?? result?.errors?.[0]?.message ?? 'Unknown error').slice(0, MAX_ERROR_LENGTH) : null,
+      // Every failure message (soft assertions add one each); shared/bug-detection.mjs matches all of them.
+      ...(status === 'failed' ? { errors: errorMessages(result) } : {}),
       skipReason: status === 'skipped' ? (annotations.find((a) => a.type === 'skip')?.description ?? null) : null,
       blocked: status === 'skipped' && annotations.some((a) => a.type === 'blocked'),
       screenshot,
@@ -144,16 +165,20 @@ totals.passRate = executedTotal ? totals.passed / executedTotal : null;
 const brokenRounds = roundSummaries.filter((r) => r.passed + r.failed + r.skipped === 0).length;
 
 const summary = {
-  schemaVersion: 2,
+  schemaVersion: 3,
   ...runInfo(),
   startedAt: meta.startedAt,
   finishedAt: meta.finishedAt,
   durationMs: new Date(meta.finishedAt) - new Date(meta.startedAt),
   rounds: meta.rounds,
-  selection: { all: selection.all, cases: selection.cases, catalogSize: caseIds(config).length },
+  // The site under test (shared/targets.mjs). Summaries without it are production runs.
+  target,
+  // `all`: every case that runs on the target was selected (`applicable` of the `catalogSize` cases).
+  selection: { all: selection.all, cases: selection.cases, catalogSize: caseIds(config).length, applicable: applicableCases(config, target).length },
   browser: 'chromium',
   playwrightVersion: pkg.devDependencies['@playwright/test'],
-  baseURL: process.env.BASE_URL ?? 'https://practicesoftwaretesting.com',
+  baseURL,
+  apiURL,
   totals,
   brokenRounds,
   roundSummaries,
@@ -162,7 +187,9 @@ const summary = {
 fs.writeFileSync(path.join(runDir, 'summary.json'), JSON.stringify(summary, null, 2));
 
 const pct = (v) => (v === null ? 'n/a' : `${(v * 100).toFixed(1)}%`);
-console.log(`Run ${summary.id}: ${totals.passed} passed, ${totals.failed} failed, ${totals.skipped} skipped (${pct(totals.passRate)}) over ${meta.rounds} round(s).`);
+console.log(
+  `Run ${summary.id} on ${target}: ${totals.passed} passed, ${totals.failed} failed, ${totals.skipped} skipped (${pct(totals.passRate)}) over ${meta.rounds} round(s).`,
+);
 
 if (process.env.GITHUB_OUTPUT) {
   fs.appendFileSync(process.env.GITHUB_OUTPUT, `failed=${totals.failed + brokenRounds}\ntotal=${totals.total}\nrun_id=${summary.id}\n`);
@@ -177,13 +204,14 @@ if (process.env.GITHUB_STEP_SUMMARY) {
   const anyBlocked = caseList.some((c) => c.results.some((r) => r.blocked));
   const legend = anyBlocked ? `\n${icon.blocked} Skipped: blocked by the site's Cloudflare bot check on the CI runner (not a product failure).\n` : '';
   const scope = selection.all
-    ? `Cases: all ${summary.selection.catalogSize}`
-    : `Cases: ${caseList.length} of ${summary.selection.catalogSize} (${caseList.map((c) => c.id).join(', ')})`;
+    ? `Cases: all ${summary.selection.applicable}${summary.selection.applicable < summary.selection.catalogSize ? ` that run on ${target}` : ''}`
+    : `Cases: ${caseList.length} of ${summary.selection.applicable} (${caseList.map((c) => c.id).join(', ')})`;
   // Values only contain letters, digits, spaces and . , ' & ( ) / + - (shared/case-params.mjs), so code spans are safe.
   const custom = caseList.flatMap((c) => c.params.filter((p) => p.value !== p.default).map((p) => `\`${c.id}.${p.key} = ${JSON.stringify(p.value)}\``));
   const data = custom.length ? `Custom test data: ${custom.join(', ')}` : 'Test data: defaults from config/cases.json';
+  const site = `Target: ${target} (${baseURL})${TARGETS[target].injectedBugs ? ', a release with intentionally injected bugs: failures are expected (see the verdict below)' : ''}`;
   fs.appendFileSync(
     process.env.GITHUB_STEP_SUMMARY,
-    `## E2E results: ${pct(totals.passRate)} passed (${totals.passed}/${executedTotal})\n\n${scope}  \n${data}\n\n${header}${rows}\n${legend}`,
+    `## E2E results: ${pct(totals.passRate)} passed (${totals.passed}/${executedTotal})\n\n${site}  \n${scope}  \n${data}\n\n${header}${rows}\n${legend}`,
   );
 }

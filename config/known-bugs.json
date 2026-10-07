@@ -1,0 +1,122 @@
+{
+  "$comment": "Bugs of Toolshop's with-bugs release that this suite detects (see shared/bug-detection.mjs). Official bugs are referenced by their id on the official list (source.listUrl); the list is not openly licensed, so its text is not copied here: titles are our own words, and severity is our own rating (the list has none). cases: the cases that detect the bug. match: a JavaScript regular expression matched against each failure message of those cases (summary.json). blocks: cases whose precondition the bug breaks; the same pattern then marks them as blocked instead of failed. issue: GitHub issue number or null. evidence: optional image under docs/bugs/. unlisted: findings that are not on the official list (key instead of id). outOfScope: official ids this suite does not target, with the reason. Checked by npm run check:config.",
+  "source": {
+    "listUrl": "https://github.com/testsmith-io/practice-software-testing/blob/main/sprint5-with-bugs/testSessions/listOfBugs.md",
+    "total": 94
+  },
+  "bugs": [
+    {
+      "id": 2,
+      "severity": "medium",
+      "title": {
+        "zh-TW": "排序選項跟實際排序相反（選「高到低」卻是由低到高）",
+        "en": "Sort options do the opposite of their label (\"High - Low\" sorts low to high)"
+      },
+      "cases": ["TC07"],
+      "match": "getByTestId\\('sort'\\)\\.locator\\('option:checked'\\)",
+      "issue": null
+    },
+    {
+      "id": 29,
+      "severity": "medium",
+      "title": {
+        "zh-TW": "主選單的「Home」連結打開的是聯絡頁",
+        "en": "The Home link in the main menu opens the contact page"
+      },
+      "cases": ["TC02"],
+      "match": "toHaveURL[\\s\\S]*#/contact",
+      "issue": null,
+      "evidence": "docs/bugs/29-home-link.png"
+    },
+    {
+      "id": 32,
+      "severity": "low",
+      "title": {
+        "zh-TW": "登入後選單不顯示使用者名稱，而是一段錯誤文字",
+        "en": "After signing in, the menu shows an error text instead of the user's name"
+      },
+      "cases": ["TC09", "TC15"],
+      "match": "getByTestId\\('nav-menu'\\)|User Data not found",
+      "issue": null,
+      "evidence": "docs/bugs/32-user-menu.png"
+    },
+    {
+      "id": 40,
+      "severity": "medium",
+      "title": {
+        "zh-TW": "商品頁的數量 + / − 按鈕沒有作用",
+        "en": "The + / − quantity buttons on the product page do nothing"
+      },
+      "cases": ["TC13"],
+      "match": "getByTestId\\('quantity'\\)[\\s\\S]*Received: \"1\"",
+      "issue": null
+    },
+    {
+      "id": 43,
+      "severity": "high",
+      "title": {
+        "zh-TW": "加入購物車時跳出錯誤訊息，但商品其實已經加進去",
+        "en": "Add to cart shows an error message although the product is added"
+      },
+      "cases": ["TC11"],
+      "match": "getByText\\('Product added to shopping cart\\.'",
+      "blocks": ["TC12", "TC13", "TC14", "TC16"],
+      "issue": null
+    }
+  ],
+  "unlisted": [
+    {
+      "key": "search-no-results-message",
+      "severity": "low",
+      "title": {
+        "zh-TW": "搜尋不到商品時，頁面沒有任何提示訊息",
+        "en": "A search without results shows no message at all"
+      },
+      "cases": ["TC06"],
+      "match": "getByTestId\\('no-results'\\)",
+      "issue": null
+    }
+  ],
+  "outOfScope": [
+    {
+      "ids": [5, 6, 18, 20, 24, 35, 44, 48, 56, 57, 61, 64, 65],
+      "category": { "zh-TW": "只在 Firefox 或 Edge 出現", "en": "Firefox or Edge only" },
+      "reason": {
+        "zh-TW": "這套測試只用 Chromium 執行。",
+        "en": "The suite runs in Chromium only."
+      }
+    },
+    {
+      "ids": [4, 19, 22, 23, 45, 46, 49, 55, 58, 59, 63, 66, 67],
+      "category": { "zh-TW": "版面與樣式（字型、間距、對齊、寬度、顏色）", "en": "Visual styling (fonts, padding, alignment, widths, colours)" },
+      "reason": {
+        "zh-TW": "功能測試不比對像素層級的樣式，這類問題要靠視覺回歸測試。",
+        "en": "Functional checks do not compare pixel-level styling; that needs visual regression testing."
+      }
+    },
+    {
+      "ids": [71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83],
+      "category": { "zh-TW": "API 安全與 API 行為", "en": "API security and behaviour" },
+      "reason": {
+        "zh-TW": "這套測試透過瀏覽器測網站介面。API 安全需要專門的 API／資安測試，也不該對共用的示範網站做攻擊性的測試。",
+        "en": "The suite tests the web UI through a browser. API security needs dedicated API and security tests, and attack-style tests should not be run against a shared demo site."
+      }
+    },
+    {
+      "ids": [84],
+      "category": { "zh-TW": "電子郵件", "en": "E-mail" },
+      "reason": {
+        "zh-TW": "這套測試不收信。",
+        "en": "The suite does not read e-mail."
+      }
+    },
+    {
+      "ids": [53, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94],
+      "category": { "zh-TW": "無障礙（對比、欄位標籤、Tab 鍵順序）", "en": "Accessibility (contrast, labels, tab order)" },
+      "reason": {
+        "zh-TW": "需要無障礙檢測工具（例如 axe）或人工檢查，不在這套功能測試的範圍內。",
+        "en": "Needs an accessibility checker (such as axe) or a manual review; not part of this functional suite."
+      }
+    }
+  ]
+}

@@ -1,5 +1,19 @@
-// Results dashboard: run history, one run's "test case x round" matrix, and
-// the test console (console.js) where the owner picks cases and starts runs.
+// Results dashboard: run history, one run's "test case x round" matrix, the
+// Bug detection page (bugs.js) and the test console (console.js) where the
+// owner picks cases and starts runs.
+import { messagesOf } from './bug-detection.js';
+import {
+  bugBadges,
+  bugLabel,
+  detectionOf,
+  fillBugTeaser,
+  judgesBugs,
+  loadBugPage,
+  renderBugDetail,
+  renderBugRunNote,
+  renderBugs,
+  renderBugTeaser,
+} from './bugs.js';
 import {
   ICON,
   REPO_URL,
@@ -21,13 +35,16 @@ import {
   runLabel,
   runPath,
   saveLanguage,
+  siteUrl,
   state,
   t,
+  targetTag,
   triggerName,
 } from './core.js';
 import { afterConsoleRender, initTracker, refreshCaseTexts, renderConsole, syncRunIndicator, trackedRun } from './console.js';
 import { isEditing, refreshDescriptions } from './editor.js';
 import { LANGUAGES } from './i18n.js';
+import { DEFAULT_TARGET, isFullRun, targetOf } from './targets.js';
 
 const TREND_SIZE = 30;
 
@@ -47,6 +64,7 @@ const customParams = (c) => (c.params ?? []).filter((p) => p.value !== p.default
 // ---------------------------------------------------------------- chrome (header + footer)
 
 function renderHeader() {
+  const onBugs = currentRoute().view === 'bugs';
   document.getElementById('header').innerHTML = `
     <div class="container header-inner">
       <a class="brand" href="#/">
@@ -54,6 +72,8 @@ function renderHeader() {
         <span>${esc(t('appTitle'))}</span>
       </a>
       <div class="header-actions">
+        <a class="btn nav-link" href="#/bugs" title="${esc(t('navBugsHint'))}"${onBugs ? ' aria-current="page"' : ''}>
+          <span aria-hidden="true">🐞</span> ${esc(t('navBugs'))}</a>
         <a class="btn btn-primary" href="#/console" title="${esc(t('runTestsHint'))}">▶ ${esc(t('runTests'))}
           <span id="run-indicator" class="run-dot" hidden>${esc(t('running'))}</span></a>
         <a class="btn" href="${REPO_URL}" target="_blank" rel="noopener">${esc(t('sourceCode'))}</a>
@@ -80,10 +100,11 @@ function renderFooter() {
 function renderRunningBanner() {
   const run = trackedRun();
   if (!run || run.done) return '';
+  const target = run.target && run.target !== DEFAULT_TARGET ? ` ${targetTag(run.target)}` : '';
   return `
     <a class="card running-banner" href="#/console">
       <span class="spinner" aria-hidden="true"></span>
-      <span>${esc(t('runningBanner', { cases: run.caseCount, rounds: run.rounds }))}</span>
+      <span>${esc(t('runningBanner', { cases: run.caseCount, rounds: run.rounds }))}${target}</span>
       <span class="running-banner-link">${esc(t('viewProgress'))} →</span>
     </a>`;
 }
@@ -102,55 +123,14 @@ function renderHome(runs) {
         <h2>${esc(t('emptyTitle'))}</h2>
         <p>${esc(t('emptyBody'))}</p>
         <a class="btn btn-primary" href="#/console">▶ ${esc(t('runTests'))}</a>
-      </section>`;
+      </section>
+      ${renderBugTeaser()}`;
   }
 
-  const latest = runs[0];
-  const executed = latest.totals.passed + latest.totals.failed;
-  const catalogSize = state.catalog?.cases.length ?? latest.catalogSize ?? (latest.rounds ? Math.round(latest.totals.total / latest.rounds) : '—');
-  const trend = runs.slice(0, TREND_SIZE).reverse();
-
-  return `${intro}
-    <section class="kpis">
-      <a class="card kpi" href="#/run/${encodeURIComponent(latest.id)}">
-        <div class="kpi-label">${esc(t('kpiLatest'))}</div>
-        <div class="kpi-value rate-text-${rateClass(latest.totals.passRate)}">${pct(latest.totals.passRate)}</div>
-        <div class="kpi-sub">${latest.totals.passed} / ${executed} · ${esc(runLabel(latest))}</div>
-      </a>
-      <div class="card kpi">
-        <div class="kpi-label">${esc(t('kpiLastRun'))}</div>
-        <div class="kpi-value kpi-value-sm">${esc(fmtDate(latest.startedAt))}</div>
-        <div class="kpi-sub">${esc(triggerName(latest.trigger))} · ${esc(t('rounds'))} ${latest.rounds}</div>
-      </div>
-      <div class="card kpi">
-        <div class="kpi-label">${esc(t('kpiRuns'))}</div>
-        <div class="kpi-value">${runs.length}</div>
-        <div class="kpi-sub">${esc(t('keepNote'))}</div>
-      </div>
-      <a class="card kpi" href="#/console">
-        <div class="kpi-label">${esc(t('kpiCases'))}</div>
-        <div class="kpi-value">${catalogSize}</div>
-        <div class="kpi-sub">Chromium · Playwright · ${esc(t('kpiCasesLink'))} →</div>
-      </a>
-    </section>
-
-    <section class="card">
-      <div class="section-head">
-        <h2>${esc(t('trendTitle'))}</h2>
-        <span class="muted">${esc(t('trendHint', { n: trend.length }))}</span>
-      </div>
-      <div class="trend" role="list">
-        ${trend
-          .map((run) => {
-            const rate = run.totals.passRate ?? 0;
-            const label = `${runLabel(run)} · ${pct(run.totals.passRate)} · ${fmtDate(run.startedAt)}`;
-            return `<a role="listitem" class="bar bg-${rateClass(run.totals.passRate)}" style="--h:${Math.max(rate * 100, 2)}%"
-                       href="#/run/${encodeURIComponent(run.id)}" title="${esc(label)}" aria-label="${esc(label)}"></a>`;
-          })
-          .join('')}
-      </div>
-    </section>
-
+  // Stats and the trend describe the product: failures on the with-bugs release are expected (#/bugs).
+  const production = runs.filter((run) => targetOf(run) === DEFAULT_TARGET);
+  const otherRuns = runs.length - production.length;
+  const history = `
     <section class="card">
       <div class="section-head"><h2>${esc(t('historyTitle'))}</h2></div>
       <div class="table-wrap">
@@ -173,6 +153,63 @@ function renderHome(runs) {
         </table>
       </div>
     </section>`;
+
+  if (!production.length) {
+    return `${intro}
+      <section class="card empty"><p>${esc(t('noProductionRuns'))}</p></section>
+      ${renderBugTeaser()}
+      ${history}`;
+  }
+
+  const latest = production[0];
+  const executed = latest.totals.passed + latest.totals.failed;
+  const catalogSize = state.catalog?.cases.length ?? latest.catalogSize ?? (latest.rounds ? Math.round(latest.totals.total / latest.rounds) : '—');
+  const trend = production.slice(0, TREND_SIZE).reverse();
+
+  return `${intro}
+    ${otherRuns ? `<p class="muted stats-note">${esc(t('statsProductionOnly'))}</p>` : ''}
+    <section class="kpis">
+      <a class="card kpi" href="#/run/${encodeURIComponent(latest.id)}">
+        <div class="kpi-label">${esc(t('kpiLatest'))}</div>
+        <div class="kpi-value rate-text-${rateClass(latest.totals.passRate)}">${pct(latest.totals.passRate)}</div>
+        <div class="kpi-sub">${latest.totals.passed} / ${executed} · ${esc(runLabel(latest))}</div>
+      </a>
+      <div class="card kpi">
+        <div class="kpi-label">${esc(t('kpiLastRun'))}</div>
+        <div class="kpi-value kpi-value-sm">${esc(fmtDate(latest.startedAt))}</div>
+        <div class="kpi-sub">${esc(triggerName(latest.trigger))} · ${esc(t('rounds'))} ${latest.rounds}</div>
+      </div>
+      <div class="card kpi">
+        <div class="kpi-label">${esc(t('kpiRuns'))}</div>
+        <div class="kpi-value">${production.length}</div>
+        <div class="kpi-sub">${esc(otherRuns ? t('kpiRunsOther', { n: otherRuns }) : t('keepNote'))}</div>
+      </div>
+      <a class="card kpi" href="#/console">
+        <div class="kpi-label">${esc(t('kpiCases'))}</div>
+        <div class="kpi-value">${catalogSize}</div>
+        <div class="kpi-sub">Chromium · Playwright · ${esc(t('kpiCasesLink'))} →</div>
+      </a>
+    </section>
+
+    ${renderBugTeaser()}
+
+    <section class="card">
+      <div class="section-head">
+        <h2>${esc(t('trendTitle'))}</h2>
+        <span class="muted">${esc(t('trendHint', { n: trend.length }))}</span>
+      </div>
+      <div class="trend" role="list">
+        ${trend
+          .map((run) => {
+            const rate = run.totals.passRate ?? 0;
+            const label = `${runLabel(run)} · ${pct(run.totals.passRate)} · ${fmtDate(run.startedAt)}`;
+            return `<a role="listitem" class="bar bg-${rateClass(run.totals.passRate)}" style="--h:${Math.max(rate * 100, 2)}%"
+                       href="#/run/${encodeURIComponent(run.id)}" title="${esc(label)}" aria-label="${esc(label)}"></a>`;
+          })
+          .join('')}
+      </div>
+    </section>
+    ${history}`;
 }
 
 function renderRunRow(run) {
@@ -180,22 +217,25 @@ function renderRunRow(run) {
   const broken = run.brokenRounds ? ` <span class="tag tag-bad" title="${esc(t('roundBroken'))}">⚠ ${run.brokenRounds}</span>` : '';
   // Runs recorded before case selection existed always ran every case.
   const caseCount = run.caseCount ?? (run.rounds ? Math.round(run.totals.total / run.rounds) : '—');
-  const cases = run.catalogSize && run.catalogSize !== caseCount ? `${caseCount}/${run.catalogSize}` : `${caseCount}`;
+  const cases = run.catalogSize && !isFullRun(run) ? `${caseCount}/${run.catalogSize}` : `${caseCount}`;
   const custom = run.customData ? ` <span class="tag tag-custom" title="${esc(t('customDataHint'))}">${esc(t('custom'))}</span>` : '';
+  // Failures on the with-bugs release are expected, so its pass rate is not coloured as good or bad.
+  const bugRun = judgesBugs(run);
+  const rate = bugRun ? 'na' : rateClass(run.totals.passRate);
   return `
     <tr class="clickable" data-href="${href}">
-      <td><a href="${href}">${esc(runLabel(run))}</a>${broken}</td>
+      <td><a href="${href}">${esc(runLabel(run))}</a>${broken}${bugRun ? ` ${targetTag(targetOf(run))}` : ''}</td>
       <td>${esc(fmtDate(run.startedAt))}</td>
       <td><span class="tag tag-${esc(run.trigger)}">${esc(triggerName(run.trigger))}</span></td>
       <td class="num">${esc(cases)}${custom}</td>
       <td class="num">${run.rounds}</td>
       <td>
         <div class="rate">
-          <div class="rate-bar"><span class="bg-${rateClass(run.totals.passRate)}" style="width:${(run.totals.passRate ?? 0) * 100}%"></span></div>
-          <span class="rate-text-${rateClass(run.totals.passRate)}">${pct(run.totals.passRate)}</span>
+          <div class="rate-bar"><span class="bg-${rate}" style="width:${(run.totals.passRate ?? 0) * 100}%"></span></div>
+          <span class="rate-text-${rate}">${pct(run.totals.passRate)}</span>
         </div>
       </td>
-      <td class="num"><span class="ok">${run.totals.passed}</span> / <span class="${run.totals.failed ? 'ko' : 'muted'}">${run.totals.failed}</span></td>
+      <td class="num"><span class="ok">${run.totals.passed}</span> / <span class="${run.totals.failed ? (bugRun ? 'muted' : 'ko') : 'muted'}">${run.totals.failed}</span></td>
       <td class="num">${esc(fmtDuration(run.durationMs))}</td>
     </tr>`;
 }
@@ -217,17 +257,25 @@ function renderRun(summary) {
   const executed = summary.totals.passed + summary.totals.failed;
   const commitUrl = summary.repoUrl && summary.commit ? `${summary.repoUrl}/commit/${summary.commit}` : null;
   const catalogSize = summary.selection?.catalogSize ?? summary.cases.length;
+  // "All" = every case that applies to the run's target (older summaries: every case in the catalog).
+  const allCases = summary.selection?.all ?? summary.cases.length === catalogSize;
+  const applicable = summary.selection?.applicable ?? catalogSize;
   const customCases = summary.cases.filter((c) => customParams(c).length).length;
+  const target = targetOf(summary);
+  const site = siteUrl(summary, target);
+  // with-bugs: every failure is matched to a known bug (null for production runs).
+  const detection = detectionOf(summary);
+  const bugRun = judgesBugs(summary);
 
   const meta = [
     [t('started'), esc(fmtDate(summary.startedAt))],
     [t('duration'), esc(fmtDuration(summary.durationMs))],
     [t('rounds'), summary.rounds],
-    [t('casesRun'), esc(summary.cases.length === catalogSize ? t('casesAll', { n: catalogSize }) : `${summary.cases.length} / ${catalogSize}`)],
+    [t('casesRun'), esc(allCases ? t('casesAll', { n: applicable }) : `${summary.cases.length} / ${applicable}`)],
     [t('testData'), esc(customCases ? t('testDataCustom', { n: customCases }) : t('testDataDefault'))],
     [t('trigger'), esc(triggerName(summary.trigger))],
     [t('browser'), `Chromium · Playwright ${esc(summary.playwrightVersion)}`],
-    [t('target'), `<a href="${esc(summary.baseURL)}" target="_blank" rel="noopener">${esc(new URL(summary.baseURL).host)}</a>`],
+    [t('target'), `<a href="${esc(site)}" target="_blank" rel="noopener">${esc(new URL(site).host)}</a>`],
     commitUrl ? [t('commit'), `<a href="${esc(commitUrl)}" target="_blank" rel="noopener"><code>${esc(summary.commit)}</code></a>`] : null,
     summary.workflowRunUrl ? ['GitHub Actions', `<a href="${esc(summary.workflowRunUrl)}" target="_blank" rel="noopener">${esc(t('workflowLog'))} ↗</a>`] : null,
   ].filter(Boolean);
@@ -266,27 +314,30 @@ function renderRun(summary) {
     .map(
       ([module, cases]) => `
         <tr class="module-row"><th colspan="${rounds.length + 2}" scope="colgroup">${esc(moduleName(module))}</th></tr>
-        ${cases.map((c) => renderCaseRow(c, rounds)).join('')}`,
+        ${cases.map((c) => renderCaseRow(c, rounds, detection?.cases[c.id])).join('')}`,
     )
     .join('');
+  // Failures are expected on the with-bugs release, so its pass rate is not coloured as good or bad.
+  const scoreClass = bugRun ? 'na' : rateClass(summary.totals.passRate);
 
   return `
     <a class="back" href="#/">${esc(t('back'))}</a>
     <section class="card run-head">
       <div>
-        <h1>${esc(runLabel(summary))} <span class="tag tag-${esc(summary.trigger)}">${esc(triggerName(summary.trigger))}</span></h1>
+        <h1>${esc(runLabel(summary))} <span class="tag tag-${esc(summary.trigger)}">${esc(triggerName(summary.trigger))}</span> ${targetTag(target)}</h1>
         <dl class="meta">${meta.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${v}</dd></div>`).join('')}</dl>
       </div>
       <div class="score">
-        <div class="score-value rate-text-${rateClass(summary.totals.passRate)}">${pct(summary.totals.passRate)}</div>
+        <div class="score-value rate-text-${scoreClass}">${pct(summary.totals.passRate)}</div>
         <div class="score-sub">
           <span class="ok">${esc(t('passed'))} ${summary.totals.passed}</span> ·
-          <span class="${summary.totals.failed ? 'ko' : 'muted'}">${esc(t('failed'))} ${summary.totals.failed}</span>
+          <span class="${summary.totals.failed && !bugRun ? 'ko' : 'muted'}">${esc(t('failed'))} ${summary.totals.failed}</span>
           ${summary.totals.skipped ? ` · <span class="muted">${esc(t('skipped'))} ${summary.totals.skipped}</span>` : ''}
         </div>
         <div class="muted">${summary.totals.passed} / ${executed}</div>
       </div>
     </section>
+    ${bugRun ? renderBugRunNote(detection) : ''}
 
     <section>
       <h2 class="section-title">${esc(t('roundsTitle'))}</h2>
@@ -312,16 +363,19 @@ function renderRun(summary) {
     </section>`;
 }
 
-function renderCaseRow(c, rounds) {
+/** One case's row in the matrix. `detected`: its with-bugs classification (bug-detection.js), if any. */
+function renderCaseRow(c, rounds, detected = null) {
   const statuses = c.results.map((r) => r.status);
   const flaky = statuses.includes('passed') && statuses.includes('failed');
   const blocked = c.results.some((r) => r.blocked);
   const custom = customParams(c);
+  const badges = bugBadges(detected);
   const cells = rounds
     .map((round) => {
       const result = c.results.find((r) => r.round === round.round);
       if (!result) return `<td><span class="cell cell-none" title="${esc(t('notRun'))}">${ICON.none}</span></td>`;
-      const label = `${c.id} · ${t('roundN', { n: round.round })} · ${t(result.status)}${result.blocked ? ` (${t('blocked')})` : ''}`;
+      const bug = bugLabel(detected?.rounds.find((r) => r.round === round.round));
+      const label = `${c.id} · ${t('roundN', { n: round.round })} · ${t(result.status)}${result.blocked ? ` (${t('blocked')})` : ''}${bug ? ` · ${bug}` : ''}`;
       return `<td><button type="button" class="cell cell-${result.status}" data-case="${esc(c.id)}" data-round="${round.round}" title="${esc(label)}" aria-label="${esc(label)}">${ICON[result.status]}</button></td>`;
     })
     .join('');
@@ -332,10 +386,11 @@ function renderCaseRow(c, rounds) {
         <span class="case-id">${esc(c.id)}</span>
         <span class="case-title" title="${esc(caseDescription(c.id, runValues(c)))}">${esc(caseTitle(c.id, c.title))}</span>
         ${custom.length ? `<span class="tag tag-custom" title="${esc(customTitle)}">${esc(t('custom'))}</span>` : ''}
+        ${badges ? `<div class="bug-badges">${badges}</div>` : ''}
       </th>
       ${cells}
       <td class="num">
-        <span class="rate-text-${rateClass(c.passRate)}">${pct(c.passRate)}</span>
+        <span class="rate-text-${detected ? 'na' : rateClass(c.passRate)}">${pct(c.passRate)}</span>
         ${flaky ? `<span class="tag tag-warn" title="${esc(t('flakyHint'))}">${esc(t('flaky'))}</span>` : ''}
         ${blocked ? `<span class="tag tag-blocked" title="${esc(t('blockedNote'))}">${esc(t('blocked'))}</span>` : ''}
       </td>
@@ -376,6 +431,9 @@ function renderDetail() {
 
   const note = resultNote(result);
   const description = caseDescription(c.id, runValues(c), { html: true });
+  // Soft assertions report one message each; older summaries kept only the first.
+  const messages = result.status === 'failed' ? messagesOf(result) : [];
+  const detected = detectionOf(summary)?.cases[c.id]?.rounds.find((r) => r.round === round);
   dialog.innerHTML = `
     <div class="dialog-inner">
       <header class="dialog-head">
@@ -394,7 +452,8 @@ function renderDetail() {
       ${description ? `<section><h4>${esc(t('verifies'))}</h4><p>${description}</p></section>` : ''}
       ${renderTestData(c)}
       ${note ? `<p class="muted">${esc(note)}</p>` : ''}
-      ${result.error ? `<section><h4>${esc(t('error'))}</h4><pre class="error">${esc(result.error)}</pre></section>` : ''}
+      ${renderBugDetail(detected)}
+      ${messages.length ? `<section><h4>${esc(t('error'))}</h4>${messages.map((m) => `<pre class="error">${esc(m)}</pre>`).join('')}</section>` : ''}
       ${
         result.screenshot
           ? `<section><h4>${esc(t('screenshot'))}</h4>
@@ -425,6 +484,7 @@ function currentRoute() {
   if (run) return { view: 'run', id: decodeURIComponent(run[1]) };
   const consoleRoute = /^#\/console(?:\/(TC\d{2}))?$/.exec(location.hash);
   if (consoleRoute) return { view: 'console', focus: consoleRoute[1] ?? null };
+  if (/^#\/bugs\/?$/.test(location.hash)) return { view: 'bugs' };
   return { view: 'home' };
 }
 
@@ -456,6 +516,11 @@ async function render() {
       app.innerHTML = renderConsole(route.focus);
       document.title = `${t('consoleTitle')} · ${t('appTitle')}`;
       afterConsoleRender(route.focus);
+    } else if (route.view === 'bugs') {
+      const data = await loadBugPage();
+      if (token !== state.renderToken) return;
+      app.innerHTML = renderBugs(data);
+      document.title = `${t('bugsTitle')} · ${t('appTitle')}`;
     } else {
       // Titles and descriptions come from the catalog; older deploys without one fall back to the code titles.
       const catalog = loadCatalog().catch(() => null);
@@ -469,6 +534,7 @@ async function render() {
         if (token !== state.renderToken) return;
         app.innerHTML = renderHome(runs);
         document.title = t('appTitle');
+        void fillBugTeaser(runs, () => token === state.renderToken);
       }
     }
   } catch (error) {
@@ -529,10 +595,10 @@ window.addEventListener('hashchange', () => {
 });
 
 initTracker({
-  // A run started from the console was published: the history now includes it.
+  // A run started from the console was published: the history (and maybe the Bug page's reference run) now includes it.
   onPublished: () => {
     state.runs = null;
-    if (currentRoute().view === 'home') render();
+    if (['home', 'bugs'].includes(currentRoute().view)) render();
   },
 });
 

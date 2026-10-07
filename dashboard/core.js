@@ -1,6 +1,7 @@
-// Shared state and helpers for the dashboard views (app.js, console.js, editor.js).
+// Shared state and helpers for the dashboard views (app.js, bugs.js, console.js, editor.js).
 import { splitTemplate } from './descriptions.js';
 import { LANGUAGES, MODULE_NAMES, STRINGS } from './i18n.js';
+import { DEFAULT_TARGET, TARGETS } from './targets.js';
 
 export const REPO = { owner: 'NTCloudy', name: 'playwright-e2e-dashboard', branch: 'main' };
 export const REPO_URL = `https://github.com/${REPO.owner}/${REPO.name}`;
@@ -14,7 +15,7 @@ export const state = {
   lang: pickLanguage(),
   runs: null,
   summaries: new Map(),
-  /** catalog.json plus `config`, the same data shaped like config/cases.json for case-params.js. */
+  /** catalog.json plus `config`, the same data shaped like config/cases.json for case-params.js. `knownBugs`: config/known-bugs.json (null on older deploys). */
   catalog: null,
   /** config/descriptions.json: from catalog.json first, then the latest version from GitHub. */
   descriptions: {},
@@ -133,6 +134,13 @@ export const sourceUrl = (c) => `${REPO_URL}/blob/${REPO.branch}/${c.file}#L${c.
 
 export const ICON = { passed: '✓', failed: '✕', skipped: '–', none: '·' };
 
+/** Site URL of a run; summaries and index entries from before targets existed ran on production. */
+export const siteUrl = (run, target) => run?.baseURL ?? TARGETS[target]?.baseURL ?? TARGETS[DEFAULT_TARGET].baseURL;
+
+/** Tag with the target's name ("with-bugs"); the tooltip explains what the target is. */
+export const targetTag = (target) =>
+  `<span class="tag tag-target tag-target-${esc(target)}" title="${esc(t(`targetHint_${target}`))}">${esc(target)}</span>`;
+
 // ---------------------------------------------------------------- storage
 
 const area = (name) => (name === 'session' ? sessionStorage : localStorage);
@@ -192,8 +200,9 @@ export async function loadSummary(id, { fresh = false } = {}) {
 export async function loadCatalog() {
   if (!state.catalog) {
     const catalog = await getJson('catalog.json', { fresh: true });
-    const cases = Object.fromEntries(catalog.cases.map((c) => [c.id, { params: c.params, rules: c.rules }]));
-    state.catalog = { ...catalog, config: { lists: catalog.lists, cases } };
+    // `targets` limits a case to some targets (case-params.js appliesTo); null runs everywhere.
+    const cases = Object.fromEntries(catalog.cases.map((c) => [c.id, { params: c.params, rules: c.rules, targets: c.targets ?? undefined }]));
+    state.catalog = { ...catalog, knownBugs: catalog.knownBugs ?? null, config: { lists: catalog.lists, cases } };
     state.descriptions = catalog.descriptions ?? {};
   }
   return state.catalog;

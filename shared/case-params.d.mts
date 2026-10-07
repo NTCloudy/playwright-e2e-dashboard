@@ -30,6 +30,8 @@ export type CaseRule =
 export interface CaseConfig {
   params?: Record<string, ParamDefinition>;
   rules?: CaseRule[];
+  /** Targets this case runs on (shared/targets.mjs); omitted = every target. */
+  targets?: string[];
 }
 
 export interface CasesConfig {
@@ -43,7 +45,7 @@ export interface ParamError {
   key?: string;
   other?: string;
   limit?: number;
-  value?: string;
+  value?: string | null;
   detail?: string;
   inDefault?: boolean;
 }
@@ -56,6 +58,8 @@ export declare const TEXT_PATTERN: RegExp;
 export declare const LIMITS: { textLength: number; paramsJson: number };
 
 export declare function caseIds(config: CasesConfig): string[];
+export declare function appliesTo(config: CasesConfig, caseId: string, target: string | null | undefined): boolean;
+export declare function applicableCases(config: CasesConfig, target: string | null | undefined): string[];
 export declare function paramEntries(config: CasesConfig, caseId: string): [string, ParamDefinition][];
 export declare function defaultValues(config: CasesConfig, caseId: string): ParamValues;
 export declare function parseCaseList(config: CasesConfig, input: unknown): { cases: string[] | null; errors: ParamError[] };
@@ -71,7 +75,7 @@ export declare function resolveCase(
 ): { values: ParamValues; custom: string[]; errors: ParamError[] };
 export declare function resolveRun(
   config: CasesConfig,
-  request: { cases?: unknown; params?: unknown },
+  request: { cases?: unknown; params?: unknown; target?: string | null },
 ): { all: boolean; cases: string[]; params: Record<string, ParamValues>; errors: ParamError[]; warnings: ParamError[] };
-export declare function checkConfig(config: CasesConfig): ParamError[];
+export declare function checkConfig(config: CasesConfig, options?: { targets?: string[] }): ParamError[];
 export declare function describeError(error: ParamError): string;

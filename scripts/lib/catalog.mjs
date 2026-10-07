@@ -4,19 +4,23 @@
  *
  * Used by run-rounds.mjs (fail fast before a run when the two disagree), by
  * build-site.mjs (catalog.json for the dashboard's test console) and by
- * check-config.mjs (CI).
+ * check-config.mjs (CI). Also loads and checks config/descriptions.json and
+ * config/known-bugs.json against the catalog.
  */
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { caseIds, checkConfig, describeError } from '../../shared/case-params.mjs';
+import { checkKnownBugs, describeBugError } from '../../shared/bug-detection.mjs';
+import { applicableCases, caseIds, checkConfig, describeError } from '../../shared/case-params.mjs';
 import { checkDescriptions, describeDocError } from '../../shared/descriptions.mjs';
+import { TARGET_NAMES, TARGETS } from '../../shared/targets.mjs';
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 export const CONFIG_PATH = path.join(ROOT, 'config', 'cases.json');
 export const DESCRIPTIONS_PATH = path.join(ROOT, 'config', 'descriptions.json');
+export const KNOWN_BUGS_PATH = path.join(ROOT, 'config', 'known-bugs.json');
 const CASE_TITLE = /^(TC\d{2})\s+(.+)$/;
 
 export function loadConfig() {
@@ -44,6 +48,31 @@ export function loadDescriptions(cases) {
     throw error;
   }
   return descriptions;
+}
+
+/**
+ * Reads config/known-bugs.json (or another copy, `file`) and checks it against
+ * config/cases.json: the detecting and blocked cases exist and run on the
+ * with-bugs target, patterns compile, ids are on the official list once, and
+ * evidence files exist. Throws an error with a `problems` list when the file
+ * is invalid.
+ */
+export function loadKnownBugs(config, file = KNOWN_BUGS_PATH) {
+  const name = file === KNOWN_BUGS_PATH ? 'config/known-bugs.json' : file;
+  const knownBugs = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const bugTargets = TARGET_NAMES.filter((target) => TARGETS[target].injectedBugs);
+  const errors = checkKnownBugs(knownBugs, {
+    cases: caseIds(config),
+    runnable: caseIds(config).filter((id) => bugTargets.some((target) => applicableCases(config, target).includes(id))),
+    evidenceExists: (evidence) => fs.existsSync(path.join(ROOT, evidence)),
+  });
+  if (errors.length) {
+    const problems = errors.map(describeBugError);
+    const error = new Error(`${name} has problems:\n- ${problems.join('\n- ')}`);
+    error.problems = problems;
+    throw error;
+  }
+  return knownBugs;
 }
 
 /** Test cases found in the code, without running them. */
@@ -88,7 +117,7 @@ export function loadCatalog() {
   const config = loadConfig();
   const tests = listTestCases();
   const ids = caseIds(config);
-  const problems = checkConfig(config).map(describeError);
+  const problems = checkConfig(config, { targets: TARGET_NAMES }).map(describeError);
 
   for (const test of tests) {
     if (!test.id) problems.push(`${test.file}:${test.line}: the test title "${test.title}" must start with a case id such as "TC17 "`);
@@ -108,7 +137,17 @@ export function loadCatalog() {
   const cases = ids.map((id) => {
     const test = tests.find((t) => t.id === id);
     const entry = config.cases[id];
-    return { id, title: test.title, module: test.module, file: test.file, line: test.line, params: entry.params ?? {}, rules: entry.rules ?? [] };
+    return {
+      id,
+      title: test.title,
+      module: test.module,
+      file: test.file,
+      line: test.line,
+      params: entry.params ?? {},
+      rules: entry.rules ?? [],
+      // null: the case runs on every target.
+      targets: entry.targets ?? null,
+    };
   });
   return { config, cases };
 }

@@ -26,6 +26,21 @@ export function caseIds(config) {
   return Object.keys(config.cases);
 }
 
+/**
+ * Whether a case runs on a target (shared/targets.mjs). A case without
+ * "targets" runs everywhere; `"targets": ["with-bugs"]` limits it to that
+ * target. Without a target (`null`), every case applies.
+ */
+export function appliesTo(config, caseId, target) {
+  const targets = config.cases[caseId]?.targets;
+  return !target || !Array.isArray(targets) || targets.includes(target);
+}
+
+/** Ids of the cases that run on a target, in config order. */
+export function applicableCases(config, target) {
+  return caseIds(config).filter((id) => appliesTo(config, id, target));
+}
+
 /** [key, definition] pairs of a case, in config order. */
 export function paramEntries(config, caseId) {
   return Object.entries(config.cases[caseId]?.params ?? {});
@@ -153,20 +168,31 @@ export function resolveCase(config, caseId, overrides = {}) {
 }
 
 /**
- * Validates a whole run request (the `cases` and `params` workflow inputs).
- * Returns the cases to run, the overrides that differ from the defaults,
- * errors (the run must not start) and warnings (ignored input).
+ * Validates a whole run request (the `cases`, `params` and `target` workflow
+ * inputs). Returns the cases to run, the overrides that differ from the
+ * defaults, errors (the run must not start) and warnings (ignored input).
+ * Cases that do not apply to `target` are never run, also when every case is
+ * selected; `all` is true when every case that applies to the target runs.
  */
 export function resolveRun(config, request) {
+  const target = request?.target || null;
+  const applicable = applicableCases(config, target);
   const selection = parseCaseList(config, request?.cases);
   const parsed = parseOverrides(request?.params);
   const errors = [...selection.errors, ...parsed.errors];
   const warnings = [];
-  const cases = selection.cases ?? caseIds(config);
+  const leftOut = new Set((selection.cases ?? []).filter((id) => !applicable.includes(id)));
+  for (const caseId of leftOut) warnings.push({ code: 'notApplicable', caseId, value: target });
+  const cases = (selection.cases ?? applicable).filter((id) => applicable.includes(id));
+  if (!errors.length && !cases.length) errors.push({ code: 'noApplicableCases', value: target });
   const params = {};
   for (const [caseId, overrides] of Object.entries(parsed.overrides)) {
     if (!config.cases[caseId]) {
       errors.push({ code: 'unknownCase', caseId: caseId.slice(0, 40) });
+      continue;
+    }
+    if (!applicable.includes(caseId)) {
+      if (!leftOut.has(caseId)) warnings.push({ code: 'notApplicable', caseId, value: target });
       continue;
     }
     if (!cases.includes(caseId)) {
@@ -177,17 +203,29 @@ export function resolveRun(config, request) {
     errors.push(...resolved.errors);
     if (resolved.custom.length) params[caseId] = Object.fromEntries(resolved.custom.map((key) => [key, resolved.values[key]]));
   }
-  return { all: cases.length === caseIds(config).length, cases, params, errors, warnings };
+  return { all: cases.length === applicable.length, cases, params, errors, warnings };
 }
 
-/** Checks config/cases.json itself: ids, types and every default against its own rules. */
-export function checkConfig(config) {
+/**
+ * Checks config/cases.json itself: ids, types, every default against its own
+ * rules, and "targets" (names are checked against `options.targets`, the known
+ * target names, when given).
+ */
+export function checkConfig(config, options = {}) {
   if (!isPlainObject(config?.cases)) return [{ code: 'badConfig' }];
   const errors = [];
   for (const caseId of caseIds(config)) {
     if (!CASE_ID.test(caseId)) {
       errors.push({ code: 'badCaseId', value: caseId });
       continue;
+    }
+    const targets = config.cases[caseId]?.targets;
+    if (targets !== undefined) {
+      const valid = Array.isArray(targets) && targets.length > 0 && targets.every((t) => typeof t === 'string') && new Set(targets).size === targets.length;
+      if (!valid) errors.push({ code: 'badTargets', caseId });
+      else if (options.targets) {
+        for (const name of targets.filter((t) => !options.targets.includes(t))) errors.push({ code: 'unknownTarget', caseId, value: name.slice(0, 40) });
+      }
     }
     for (const [key, def] of paramEntries(config, caseId)) {
       const result = checkValue(def, def.default);
@@ -224,6 +262,10 @@ export function describeError(error) {
     mustDiffer: `must be different from "${error.other}"`,
     defaultNotNormalized: 'the default must be written without extra spaces',
     notSelected: 'has test data but is not selected, so the data is ignored',
+    notApplicable: `does not run on "${error.value}" ("targets" in config/cases.json), so it is left out`,
+    noApplicableCases: `none of the selected test cases runs on "${error.value}"`,
+    badTargets: '"targets" must be a non-empty list of different target names, e.g. ["with-bugs"]',
+    unknownTarget: `"${error.value}" in "targets" is not a known target`,
   };
   return where + (messages[error.code] ?? error.code);
 }

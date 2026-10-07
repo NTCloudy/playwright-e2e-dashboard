@@ -23,8 +23,14 @@ export class HomePage {
   readonly searchHeading: Locator;
   readonly priceMin: Locator;
   readonly priceMax: Locator;
+  private readonly challengedUrls = new Set<string>();
 
   constructor(private readonly page: Page) {
+    page.on('response', (response) => {
+      if (response.headers()['cf-mitigated'] === 'challenge') {
+        this.challengedUrls.add(response.url());
+      }
+    });
     this.nav = new NavBar(page);
     this.searchInput = page.getByTestId('search-query');
     this.searchSubmit = page.getByTestId('search-submit');
@@ -140,13 +146,17 @@ export class HomePage {
 
   /** Names of the product cards whose image is not really shown: hidden, still loading or broken. */
   async productsWithoutImage(): Promise<string[]> {
-    return this.productCards.evaluateAll((cards) =>
-      cards
-        .filter((card) => {
-          const image = card.querySelector('img');
-          return !image || !image.checkVisibility() || !image.complete || image.naturalWidth === 0;
-        })
-        .map((card) => card.querySelector('[data-test="product-name"]')?.textContent?.trim() ?? '(no name)'),
+    const challenged = [...this.challengedUrls];
+    return this.productCards.evaluateAll(
+      (cards, challengedUrls) =>
+        cards
+          .filter((card) => {
+            const image = card.querySelector('img');
+            if (!image || !image.checkVisibility() || !image.complete) return true;
+            return image.naturalWidth === 0 && !challengedUrls.includes(image.src);
+          })
+          .map((card) => card.querySelector('[data-test="product-name"]')?.textContent?.trim() ?? '(no name)'),
+      challenged,
     );
   }
 

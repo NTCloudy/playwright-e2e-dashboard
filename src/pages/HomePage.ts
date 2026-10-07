@@ -62,8 +62,8 @@ export class HomePage {
     await expect(this.searchInput).toBeEditable();
     await expect(this.searchSubmit).toBeEnabled();
     await expect(this.sort).toBeEnabled();
-    await expect(this.categoryFilters.first()).toBeVisible();
-    await expect(this.productCards.first()).toBeVisible();
+    await expect(this.categoryFilters.first()).toBeVisible({ timeout: 25_000 });
+    await expect(this.productCards.first()).toBeVisible({ timeout: 25_000 });
   }
 
   /**

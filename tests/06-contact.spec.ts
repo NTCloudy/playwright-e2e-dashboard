@@ -54,16 +54,17 @@ const MUST_BE_REJECTED: RejectedRow[] = [
 ];
 
 test.describe('Contact', () => {
-  test('TC19 Contact form attachment (US6100)', async ({ page, home, nav, contactPage, botCheck }) => {
+  test('TC19 Contact form attachment (US6100)', async ({ page, home, nav, contactPage }) => {
     // eslint-disable-next-line playwright/no-skipped-test -- US6100 is a requirement of the with-bugs release only
     test.skip(currentTarget() !== 'with-bugs', 'US6100 applies to the with-bugs release only; production implements a different upload rule (txt only, empty file)');
-    // One page load and one submission per file.
+    // One submission per file.
     test.slow();
 
-    /** Reloads the page for an empty form (a full page load, see BotCheck). */
+    /** Reopens the contact form via client-side navigation so CI runners do not hit Cloudflare's reload challenge. */
     const freshForm = async (): Promise<void> => {
-      await page.reload({ waitUntil: 'domcontentloaded' });
-      await botCheck.waitFor(contactPage.submit);
+      await nav.openSignIn();
+      await expect(page).toHaveURL(/\/auth\/login$/);
+      await nav.openContact();
       await contactPage.verifyLoaded();
     };
 

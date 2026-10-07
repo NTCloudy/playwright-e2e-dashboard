@@ -1,0 +1,232 @@
+{
+  "schemaVersion": 2,
+  "id": "21000000003",
+  "runNumber": 3,
+  "trigger": "manual",
+  "commit": "abc1234",
+  "repoUrl": "https://github.com/NTCloudy/playwright-e2e-dashboard",
+  "workflowRunUrl": "https://github.com/NTCloudy/playwright-e2e-dashboard/actions/runs/21000000003",
+  "startedAt": "2026-10-05T08:00:00.000Z",
+  "finishedAt": "2026-10-05T08:04:05.000Z",
+  "durationMs": 245000,
+  "rounds": 3,
+  "selection": {
+    "all": false,
+    "cases": ["TC09", "TC11", "TC14", "TC16"],
+    "catalogSize": 16
+  },
+  "browser": "chromium",
+  "playwrightVersion": "1.62.1",
+  "baseURL": "https://practicesoftwaretesting.com",
+  "totals": {
+    "passed": 8,
+    "failed": 1,
+    "skipped": 3,
+    "total": 12,
+    "passRate": 0.8888888888888888
+  },
+  "brokenRounds": 0,
+  "roundSummaries": [
+    {
+      "round": 1,
+      "startedAt": "2026-10-05T08:00:00.000Z",
+      "durationMs": 80000,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 1,
+      "report": "rounds/round-1/report/index.html",
+      "error": null
+    },
+    {
+      "round": 2,
+      "startedAt": "2026-10-05T08:01:20.000Z",
+      "durationMs": 85000,
+      "passed": 2,
+      "failed": 1,
+      "skipped": 1,
+      "report": "rounds/round-2/report/index.html",
+      "error": null
+    },
+    {
+      "round": 3,
+      "startedAt": "2026-10-05T08:02:45.000Z",
+      "durationMs": 80000,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 1,
+      "report": "rounds/round-3/report/index.html",
+      "error": null
+    }
+  ],
+  "cases": [
+    {
+      "id": "TC09",
+      "module": "Account",
+      "title": "Sign in with a valid account",
+      "file": "03-account.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "skipped",
+          "durationMs": 11700,
+          "error": null,
+          "skipReason": "Blocked by the site's Cloudflare bot check (common for cloud/CI IP addresses). Not a product failure: the case runs normally from a regular network.",
+          "blocked": true,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=fixture-tc09"
+        },
+        {
+          "round": 2,
+          "status": "skipped",
+          "durationMs": 11800,
+          "error": null,
+          "skipReason": "Blocked by the site's Cloudflare bot check (common for cloud/CI IP addresses). Not a product failure: the case runs normally from a regular network.",
+          "blocked": true,
+          "screenshot": null,
+          "reportLink": "rounds/round-2/report/index.html#?testId=fixture-tc09"
+        },
+        {
+          "round": 3,
+          "status": "skipped",
+          "durationMs": 11900,
+          "error": null,
+          "skipReason": "Blocked by the site's Cloudflare bot check (common for cloud/CI IP addresses). Not a product failure: the case runs normally from a regular network.",
+          "blocked": true,
+          "screenshot": null,
+          "reportLink": "rounds/round-3/report/index.html#?testId=fixture-tc09"
+        }
+      ],
+      "passRate": null,
+      "params": []
+    },
+    {
+      "id": "TC11",
+      "module": "Cart",
+      "title": "Add a product to the cart",
+      "file": "04-cart.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 6100,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=fixture-tc11"
+        },
+        {
+          "round": 2,
+          "status": "failed",
+          "durationMs": 16300,
+          "error": "Error: expect(locator).toHaveText(expected) failed\n\nLocator: getByTestId('cart-quantity')\nExpected: \"1\"\nReceived: \"0\"\nTimeout: 10000ms",
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": "rounds/round-2/shots/TC11.png",
+          "reportLink": "rounds/round-2/report/index.html#?testId=fixture-tc11"
+        },
+        {
+          "round": 3,
+          "status": "passed",
+          "durationMs": 5900,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-3/report/index.html#?testId=fixture-tc11"
+        }
+      ],
+      "passRate": 0.6666666666666666,
+      "params": [
+        { "key": "product", "value": "Claw Hammer", "default": "Claw Hammer" },
+        { "key": "quantity", "value": 1, "default": 1 }
+      ]
+    },
+    {
+      "id": "TC14",
+      "module": "Cart",
+      "title": "Remove products from the cart",
+      "file": "04-cart.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 9100,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=fixture-tc14"
+        },
+        {
+          "round": 2,
+          "status": "passed",
+          "durationMs": 9300,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-2/report/index.html#?testId=fixture-tc14"
+        },
+        {
+          "round": 3,
+          "status": "passed",
+          "durationMs": 8800,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-3/report/index.html#?testId=fixture-tc14"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        { "key": "first", "value": "Claw Hammer", "default": "Claw Hammer" },
+        { "key": "second", "value": "Thor Hammer", "default": "Thor Hammer" }
+      ]
+    },
+    {
+      "id": "TC16",
+      "module": "Checkout",
+      "title": "Complete checkout (Cash on Delivery)",
+      "file": "05-checkout.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 21000,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=fixture-tc16"
+        },
+        {
+          "round": 2,
+          "status": "passed",
+          "durationMs": 22500,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-2/report/index.html#?testId=fixture-tc16"
+        },
+        {
+          "round": 3,
+          "status": "passed",
+          "durationMs": 20400,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-3/report/index.html#?testId=fixture-tc16"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        { "key": "product", "value": "Claw Hammer", "default": "Claw Hammer" },
+        { "key": "quantity", "value": 1, "default": 1 }
+      ]
+    }
+  ]
+}

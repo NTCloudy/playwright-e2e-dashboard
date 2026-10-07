@@ -7,6 +7,7 @@
   "scripts": {
     "test": "playwright test",
     "test:headed": "playwright test --headed",
+    "test:dashboard": "playwright test -c playwright.dashboard.config.ts",
     "rounds": "node scripts/run-rounds.mjs",
     "aggregate": "node scripts/aggregate.mjs",
     "report": "playwright show-report test-output/local/report",

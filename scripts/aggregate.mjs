@@ -26,6 +26,7 @@ const config = loadConfig();
 // Runs recorded before case selection existed ran every case with the defaults.
 const selection = meta.selection ?? { all: true, cases: caseIds(config), params: {} };
 
+// eslint-disable-next-line no-control-regex -- strips ANSI colour codes from Playwright error messages
 const ANSI = /\u001b\[[0-9;]*m/g;
 const CASE_TITLE = /^(TC\d{2})\s+(.+)$/;
 

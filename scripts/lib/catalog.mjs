@@ -2,8 +2,9 @@
  * The test case catalog: config/cases.json (test data) joined with the test
  * code (title, module, file and line, from `playwright test --list`).
  *
- * Used by run-rounds.mjs (fail fast before a run when the two disagree) and
- * by build-site.mjs (catalog.json for the dashboard's test console).
+ * Used by run-rounds.mjs (fail fast before a run when the two disagree), by
+ * build-site.mjs (catalog.json for the dashboard's test console) and by
+ * check-config.mjs (CI).
  */
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -11,13 +12,38 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { caseIds, checkConfig, describeError } from '../../shared/case-params.mjs';
+import { checkDescriptions, describeDocError } from '../../shared/descriptions.mjs';
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 export const CONFIG_PATH = path.join(ROOT, 'config', 'cases.json');
+export const DESCRIPTIONS_PATH = path.join(ROOT, 'config', 'descriptions.json');
 const CASE_TITLE = /^(TC\d{2})\s+(.+)$/;
 
 export function loadConfig() {
   return JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
+}
+
+/**
+ * Reads config/descriptions.json and checks it against the catalog's cases
+ * (every case has a title and description in each language; placeholders only
+ * use the case's own test data). Prints warnings; throws an error with a
+ * `problems` list when the file is invalid.
+ */
+export function loadDescriptions(cases) {
+  const descriptions = JSON.parse(fs.readFileSync(DESCRIPTIONS_PATH, 'utf8'));
+  const { errors, warnings } = checkDescriptions(
+    descriptions,
+    cases.map((c) => c.id),
+    (id) => Object.keys(cases.find((c) => c.id === id)?.params ?? {}),
+  );
+  for (const warning of warnings) console.warn(`Warning: config/descriptions.json: ${describeDocError(warning)}`);
+  if (errors.length) {
+    const problems = errors.map(describeDocError);
+    const error = new Error(`config/descriptions.json has problems:\n- ${problems.join('\n- ')}`);
+    error.problems = problems;
+    throw error;
+  }
+  return descriptions;
 }
 
 /** Test cases found in the code, without running them. */

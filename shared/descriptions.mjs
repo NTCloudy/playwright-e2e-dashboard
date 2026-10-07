@@ -18,6 +18,7 @@ export const DESCRIPTION_LIMITS = { title: 80, description: 500 };
 const CASE_ID = /^TC\d{2}$/;
 const PLACEHOLDER = /\{(\w+)\}/g;
 // Control characters other than the newline (allowed in descriptions).
+// eslint-disable-next-line no-control-regex -- finding control characters is the point of this pattern
 const CONTROL = /[\u0000-\u0009\u000B-\u001F\u007F]/;
 
 const isPlainObject = (value) => typeof value === 'object' && value !== null && !Array.isArray(value);

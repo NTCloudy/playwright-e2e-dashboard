@@ -31,6 +31,7 @@ export class BotCheck {
           type: 'blocked',
           description: `Cloudflare challenge instead of ${this.challengedUrls.join(', ') || 'the page'}`,
         });
+        // eslint-disable-next-line playwright/no-skipped-test -- a confirmed bot check is reported as skipped, never as a pass or a product failure
         test.skip(true, BOT_CHECK_SKIP_REASON);
       }
       throw error;

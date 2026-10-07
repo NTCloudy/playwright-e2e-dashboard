@@ -16,8 +16,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { checkDescriptions, describeDocError } from '../shared/descriptions.mjs';
-import { loadCatalog, ROOT } from './lib/catalog.mjs';
+import { loadCatalog, loadDescriptions, ROOT } from './lib/catalog.mjs';
 
 function arg(name, fallback) {
   const i = process.argv.indexOf(`--${name}`);
@@ -27,19 +26,14 @@ function arg(name, fallback) {
 const dashboardDir = path.join(ROOT, 'dashboard');
 const dataDir = path.resolve(arg('data-dir', 'test-output/site-data'));
 const outDir = path.resolve(arg('out', '_site'));
-const descriptionsPath = path.join(ROOT, 'config', 'descriptions.json');
 
 // Check everything before touching the output folder.
-const { config, cases } = loadCatalog();
-const descriptions = JSON.parse(fs.readFileSync(descriptionsPath, 'utf8'));
-const docCheck = checkDescriptions(
-  descriptions,
-  cases.map((c) => c.id),
-  (id) => Object.keys(cases.find((c) => c.id === id)?.params ?? {}),
-);
-for (const warning of docCheck.warnings) console.warn(`Warning: config/descriptions.json: ${describeDocError(warning)}`);
-if (docCheck.errors.length) {
-  console.error(`config/descriptions.json has problems:\n- ${docCheck.errors.map(describeDocError).join('\n- ')}`);
+let config, cases, descriptions;
+try {
+  ({ config, cases } = loadCatalog());
+  descriptions = loadDescriptions(cases);
+} catch (error) {
+  console.error(error.message);
   process.exit(1);
 }
 

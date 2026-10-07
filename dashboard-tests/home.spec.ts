@@ -53,7 +53,7 @@ test.describe('Home page', () => {
 
     await home.trendBars.nth(2).click();
     await expect(home.page).toHaveURL(new RegExp(`#/run/${RUNS.mixed}$`));
-    await expect(runPage.heading).toHaveText('執行 #3 手動');
+    await expect(runPage.heading).toHaveText('執行 #3 手動 production');
   });
 
   test('opens a run when its row is clicked anywhere', async ({ home, runPage }) => {
@@ -62,7 +62,7 @@ test.describe('Home page', () => {
     await home.runRow('執行 #2').locator('td').nth(4).click();
 
     await expect(home.page).toHaveURL(new RegExp(`#/run/${RUNS.broken}$`));
-    await expect(runPage.heading).toHaveText('執行 #2 手動');
+    await expect(runPage.heading).toHaveText('執行 #2 手動 production');
   });
 
   test('invites to run tests while no run has been published', async ({ home, siteData }) => {

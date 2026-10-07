@@ -33,10 +33,10 @@ test.describe('Language switch and routing', () => {
     await expect(home.kpi('Latest pass rate')).toContainText('100%');
 
     await runPage.open(`/run/${RUNS.mixed}`);
-    await expect(runPage.heading).toHaveText('Run #3 Manual');
+    await expect(runPage.heading).toHaveText('Run #3 Manual production');
     await expect(runPage.scoreDetails).toHaveText('Passed 8 · Failed 1 · Skipped 3');
 
     await runPage.switchLanguage('zh-TW');
-    await expect(runPage.heading).toHaveText('執行 #3 手動');
+    await expect(runPage.heading).toHaveText('執行 #3 手動 production');
   });
 });

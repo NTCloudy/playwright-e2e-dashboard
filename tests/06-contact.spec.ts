@@ -62,7 +62,7 @@ test.describe('Contact', () => {
 
     /** Reloads the page for an empty form (a full page load, see BotCheck). */
     const freshForm = async (): Promise<void> => {
-      await page.reload();
+      await page.reload({ waitUntil: 'domcontentloaded' });
       await botCheck.waitFor(contactPage.submit);
       await contactPage.verifyLoaded();
     };

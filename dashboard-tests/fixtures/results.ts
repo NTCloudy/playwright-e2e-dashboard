@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Page } from '@playwright/test';
-import { ROOT, SITE, siteCatalog } from './site';
+import { applicableCaseCount, ROOT, SITE, siteCatalog, type Target } from './site';
 
 /**
  * The run history of the fixture site (dashboard-tests/fixtures/data/results,
@@ -25,6 +25,7 @@ export interface RunEntry {
   id: string;
   runNumber: number | null;
   trigger: 'manual' | 'scheduled' | 'local';
+  target?: Target;
   startedAt: string;
   durationMs: number;
   rounds: number;
@@ -32,6 +33,7 @@ export interface RunEntry {
   totals: Totals;
   brokenRounds: number;
   /** Missing in runs recorded before case selection existed. */
+  selection?: 'all' | 'subset';
   caseCount?: number;
   catalogSize?: number;
   customData?: boolean;
@@ -42,6 +44,7 @@ export interface CaseResult {
   status: ResultStatus;
   durationMs: number;
   error: string | null;
+  errors?: string[];
   skipReason: string | null;
   blocked: boolean;
   screenshot: string | null;
@@ -75,6 +78,7 @@ export interface RunSummary {
   id: string;
   runNumber: number | null;
   trigger: RunEntry['trigger'];
+  target?: Target;
   commit: string | null;
   repoUrl: string | null;
   workflowRunUrl: string | null;
@@ -82,7 +86,7 @@ export interface RunSummary {
   finishedAt: string;
   durationMs: number;
   rounds: number;
-  selection?: { all: boolean; cases: string[]; catalogSize: number };
+  selection?: { all: boolean; cases: string[]; applicable?: number; catalogSize: number };
   browser: string;
   playwrightVersion: string;
   baseURL: string;
@@ -121,6 +125,8 @@ export interface CaseOutcome {
   id: string;
   /** One status per round. */
   statuses: ResultStatus[];
+  /** Error message(s) for failed rounds (defaults to a generic expect error). */
+  errors?: string[];
   /** Test data that differs from the defaults of config/cases.json. */
   params?: Record<string, string | number>;
 }
@@ -140,22 +146,27 @@ export function publishedRun({
   runNumber,
   startedAt,
   cases,
-  baseURL = 'https://practicesoftwaretesting.com',
+  target = 'production',
+  baseURL = target === 'with-bugs' ? 'https://with-bugs.practicesoftwaretesting.com' : 'https://practicesoftwaretesting.com',
 }: {
   id: string;
   runNumber: number;
   startedAt: Date;
   cases: CaseOutcome[];
+  target?: Target;
   baseURL?: string;
 }): PublishedRun {
   const catalog = siteCatalog();
+  const applicable = applicableCaseCount(target);
+  const full = cases.length === applicable;
   const rounds = Math.max(...cases.map((c) => c.statuses.length));
   const caseMs = 4_000;
   const durationMs = 60_000 + rounds * cases.length * caseMs;
   const report = (round: number) => `rounds/round-${round}/report/index.html`;
-  const summaries: CaseSummary[] = cases.map(({ id: caseId, statuses, params = {} }) => {
+  const summaries: CaseSummary[] = cases.map(({ id: caseId, statuses, errors, params = {} }) => {
     const known = catalog.cases.find((c) => c.id === caseId);
     if (!known) throw new Error(`${caseId} is not in the catalog`);
+    const messages = errors?.length ? errors : ['Error: expect(locator).toBeVisible() failed'];
     return {
       id: caseId,
       module: known.module,
@@ -165,7 +176,8 @@ export function publishedRun({
         round: i + 1,
         status,
         durationMs: caseMs,
-        error: status === 'failed' ? 'Error: expect(locator).toBeVisible() failed' : null,
+        error: status === 'failed' ? messages[0] : null,
+        ...(status === 'failed' ? { errors: messages } : {}),
         skipReason: null,
         blocked: false,
         screenshot: null,
@@ -196,6 +208,7 @@ export function publishedRun({
     id,
     runNumber,
     trigger: 'manual',
+    target,
     commit,
     repoUrl: 'https://github.com/NTCloudy/playwright-e2e-dashboard',
     workflowRunUrl: `https://github.com/NTCloudy/playwright-e2e-dashboard/actions/runs/${id}`,
@@ -203,7 +216,7 @@ export function publishedRun({
     finishedAt: new Date(startedAt.getTime() + durationMs).toISOString(),
     durationMs,
     rounds,
-    selection: { all: cases.length === catalog.cases.length, cases: cases.map((c) => c.id), catalogSize: catalog.cases.length },
+    selection: { all: full, cases: cases.map((c) => c.id), applicable, catalogSize: catalog.cases.length },
     browser: 'chromium',
     playwrightVersion: '1.62.1',
     baseURL,
@@ -216,14 +229,16 @@ export function publishedRun({
     id,
     runNumber,
     trigger: 'manual',
+    target,
     startedAt: summary.startedAt,
     durationMs,
     rounds,
     commit,
     totals,
     brokenRounds: 0,
+    selection: full ? 'all' : 'subset',
     caseCount: cases.length,
-    catalogSize: catalog.cases.length,
+    catalogSize: applicable,
     customData,
   };
   return { entry, summary };

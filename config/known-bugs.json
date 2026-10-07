@@ -14,7 +14,42 @@
       },
       "cases": ["TC07"],
       "match": "getByTestId\\('sort'\\)\\.locator\\('option:checked'\\)",
-      "issue": null
+      "issue": 2,
+      "evidence": "docs/bugs/02-sort-order.png"
+    },
+    {
+      "id": 26,
+      "severity": "medium",
+      "title": {
+        "zh-TW": "首頁商品卡片的圖片無法載入（破圖）",
+        "en": "Product card images on the home page fail to load (broken images)"
+      },
+      "cases": ["TC17"],
+      "match": "\\[TC17 product-images\\]",
+      "issue": 6
+    },
+    {
+      "id": 27,
+      "severity": "medium",
+      "title": {
+        "zh-TW": "調整價格區間滑桿後，商品列表沒有依價格上限篩選",
+        "en": "Adjusting the price range slider does not filter products by maximum price"
+      },
+      "cases": ["TC20"],
+      "match": "\\[TC20 within-range\\]",
+      "issue": 3,
+      "evidence": "docs/bugs/27-price-range.png"
+    },
+    {
+      "id": 28,
+      "severity": "low",
+      "title": {
+        "zh-TW": "頁首的 Toolshop 標誌圖片無法載入（破圖）",
+        "en": "The Toolshop logo in the header fails to load (broken image)"
+      },
+      "cases": ["TC17"],
+      "match": "\\[TC17 logo\\]",
+      "issue": 6
     },
     {
       "id": 29,
@@ -25,8 +60,30 @@
       },
       "cases": ["TC02"],
       "match": "toHaveURL[\\s\\S]*#/contact",
-      "issue": null,
+      "issue": 4,
       "evidence": "docs/bugs/29-home-link.png"
+    },
+    {
+      "id": 30,
+      "severity": "low",
+      "title": {
+        "zh-TW": "側邊欄「Search」標題旁的放大鏡圖示無法載入（破圖）",
+        "en": "The magnifying-glass icon next to the \"Search\" sidebar heading fails to load"
+      },
+      "cases": ["TC17"],
+      "match": "\\[TC17 search-icon\\]",
+      "issue": 6
+    },
+    {
+      "id": 31,
+      "severity": "low",
+      "title": {
+        "zh-TW": "導覽列的「Contact」連結拼錯成「Contakt」",
+        "en": "The \"Contact\" link in the navigation bar is misspelled as \"Contakt\""
+      },
+      "cases": ["TC17"],
+      "match": "\\[TC17 nav-labels\\]",
+      "issue": 6
     },
     {
       "id": 32,
@@ -37,8 +94,30 @@
       },
       "cases": ["TC09", "TC15"],
       "match": "getByTestId\\('nav-menu'\\)|User Data not found",
-      "issue": null,
+      "issue": 5,
       "evidence": "docs/bugs/32-user-menu.png"
+    },
+    {
+      "id": 33,
+      "severity": "low",
+      "title": {
+        "zh-TW": "側邊欄的「Sort」標題拼錯成「Sorth」",
+        "en": "The \"Sort\" heading in the sidebar is misspelled as \"Sorth\""
+      },
+      "cases": ["TC17"],
+      "match": "\\[TC17 sidebar-headings\\]",
+      "issue": 6
+    },
+    {
+      "id": 34,
+      "severity": "low",
+      "title": {
+        "zh-TW": "搜尋按鈕的文字「Search」拼錯成「Serch」",
+        "en": "The search button label \"Search\" is misspelled as \"Serch\""
+      },
+      "cases": ["TC17"],
+      "match": "\\[TC17 search-button\\]",
+      "issue": 6
     },
     {
       "id": 40,
@@ -49,7 +128,20 @@
       },
       "cases": ["TC13"],
       "match": "getByTestId\\('quantity'\\)[\\s\\S]*Received: \"1\"",
-      "issue": null
+      "issue": 7,
+      "evidence": "docs/bugs/40-quantity-buttons.png"
+    },
+    {
+      "id": 42,
+      "severity": "low",
+      "title": {
+        "zh-TW": "商品頁的「Related products」標題拼錯成「Related produts」",
+        "en": "The \"Related products\" heading on the product page is misspelled as \"Related produts\""
+      },
+      "cases": ["TC17"],
+      "match": "\\[TC17 related-heading\\]",
+      "issue": 6,
+      "evidence": "docs/bugs/42-related-heading.png"
     },
     {
       "id": 43,
@@ -61,7 +153,54 @@
       "cases": ["TC11"],
       "match": "getByText\\('Product added to shopping cart\\.'",
       "blocks": ["TC12", "TC13", "TC14", "TC16"],
-      "issue": null
+      "issue": 1,
+      "evidence": "docs/bugs/43-add-to-cart.png"
+    },
+    {
+      "id": 47,
+      "severity": "medium",
+      "title": {
+        "zh-TW": "購物車單項商品數量上限變成 10，無法購買 11～99 個（規格上限為 99）",
+        "en": "Cart item quantity is capped at 10 instead of the specified limit of 99"
+      },
+      "cases": ["TC18"],
+      "match": "\\[TC18 qty-(11|99|100|100-warning)\\]",
+      "issue": 7,
+      "evidence": "docs/bugs/47-cart-quantity.png"
+    },
+    {
+      "id": 68,
+      "severity": "medium",
+      "title": {
+        "zh-TW": "聯絡表單拒絕上傳 PDF 與 JPG 附件（US6100 規定應接受 txt、pdf、jpg）",
+        "en": "Contact form rejects PDF and JPG attachments (US6100 allows txt, pdf and jpg)"
+      },
+      "cases": ["TC19"],
+      "match": "\\[TC19 (pdf|jpg)-accepted\\]",
+      "issue": 8,
+      "evidence": "docs/bugs/68-contact-attachment.png"
+    },
+    {
+      "id": 69,
+      "severity": "low",
+      "title": {
+        "zh-TW": "聯絡表單的附件欄位未設定 accept 屬性，檔案選擇器未過濾為 txt、pdf、jpg（US6100 ACC3）",
+        "en": "Contact form attachment input has no accept filter for txt, pdf and jpg in the file dialog (US6100 ACC3)"
+      },
+      "cases": ["TC19"],
+      "match": "\\[TC19 accept-filter\\]",
+      "issue": 8
+    },
+    {
+      "id": 70,
+      "severity": "medium",
+      "title": {
+        "zh-TW": "聯絡表單允許送出 0 KB 空檔案與超過 500 KB 的附件（US6100 規定須大於 0 KB 且不超過 500 KB）",
+        "en": "Contact form accepts 0 KB empty files and attachments over 500 KB (US6100 requires >0 KB and ≤500 KB)"
+      },
+      "cases": ["TC19"],
+      "match": "\\[TC19 (empty|oversize)-rejected\\]",
+      "issue": 8
     }
   ],
   "unlisted": [
@@ -74,7 +213,8 @@
       },
       "cases": ["TC06"],
       "match": "getByTestId\\('no-results'\\)",
-      "issue": null
+      "issue": 9,
+      "evidence": "docs/bugs/unlisted-no-results.png"
     }
   ],
   "outOfScope": [

@@ -51,7 +51,7 @@ export class HomePage {
 
   /** Direct navigation is only used to start a test; later steps use the UI. */
   async open(): Promise<void> {
-    await this.page.goto('/');
+    await this.page.goto('/', { waitUntil: 'domcontentloaded' });
     await this.verifyLoaded();
   }
 

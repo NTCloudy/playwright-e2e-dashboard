@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { FIXED_NOW } from './clock';
 import { OWNER, OWNER_TOKEN, type WorkflowRun } from './github-mock';
-import { estimateMinutes, siteCatalog, type Language } from './site';
+import { applicableCaseCount, estimateMinutes, type Language, type Target } from './site';
 
 /** The browser storage keys of the dashboard (core.js, console.js, github.js). */
 export const STORAGE_KEYS = {
@@ -24,9 +24,10 @@ export interface TokenEntry {
   savedAt: string;
 }
 
-/** The console's remembered form: rounds, selected case ids and test data that differs from the defaults. */
+/** The console's remembered form: rounds, target, selected case ids and test data that differs from the defaults. */
 export interface Draft {
   rounds: number;
+  target: Target;
   selected: string[];
   values: Record<string, Record<string, string | number>>;
 }
@@ -39,6 +40,7 @@ export interface TrackedRun {
   dispatchedAt: string;
   startedAt: string | null;
   rounds: number;
+  target?: Target;
   caseCount: number;
   total: number;
   customCases: number;
@@ -50,7 +52,10 @@ export interface TrackedRun {
 }
 
 /** What the console stores right after it started `run` for `caseCount` cases (as if the owner had pressed "Run" earlier). */
-export function trackedRun(run: WorkflowRun, { caseCount, customCases = 0 }: { caseCount: number; customCases?: number }): TrackedRun {
+export function trackedRun(
+  run: WorkflowRun,
+  { caseCount, customCases = 0, target = 'production' }: { caseCount: number; customCases?: number; target?: Target },
+): TrackedRun {
   return {
     id: run.id,
     htmlUrl: run.htmlUrl,
@@ -58,8 +63,9 @@ export function trackedRun(run: WorkflowRun, { caseCount, customCases = 0 }: { c
     dispatchedAt: run.createdAt.toISOString(),
     startedAt: null,
     rounds: run.rounds,
+    target,
     caseCount,
-    total: siteCatalog().cases.length,
+    total: applicableCaseCount(target),
     customCases,
     estimate: estimateMinutes(caseCount, run.rounds),
     status: 'queued',

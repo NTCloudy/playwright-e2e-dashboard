@@ -1,6 +1,7 @@
 import { test as base, expect } from '@playwright/test';
 import { FakeClock } from './clock';
 import { GitHubMock } from './github-mock';
+import { BugsPage } from './pages/bugs-page';
 import { ConsolePage } from './pages/console-page';
 import { HomePage } from './pages/home-page';
 import { RunPage } from './pages/run-page';
@@ -21,19 +22,7 @@ import { BrowserStorage } from './storage';
  * Helpers: `storage` prepares browser storage before the first page load
  * (signed in, remembered draft, followed run, language); `siteData` changes
  * what the site serves under data/ (e.g. a run published during the test);
- * `home`, `runPage` and `consolePage` are the page objects.
- *
- * Extending the suite for upcoming features:
- * - Environment switch (production vs. the bug-injected Toolshop): add the new
- *   workflow input to WORKFLOW_INPUTS (the mock refuses unknown inputs like
- *   GitHub does) and assert it with `github.dispatches()`; build runs against
- *   the other site with `publishedRun({ baseURL })`.
- * - Bug-detection page: add a page object extending DashboardPage, serve its
- *   data with `siteData.serveJson()` or add files to fixtures/data/results.
- * - Visitor mode: a test without `storage.signIn()` is an anonymous visitor;
- *   `github.calls(...)` shows which requests went out without a token,
- *   `github.failNext(endpoint, 403, 'API rate limit exceeded ...')` simulates
- *   the anonymous rate limit, and `clock` drives any demo playback.
+ * `home`, `runPage`, `consolePage` and `bugsPage` are the page objects.
  */
 export interface DashboardFixtures {
   clock: FakeClock;
@@ -43,6 +32,7 @@ export interface DashboardFixtures {
   home: HomePage;
   runPage: RunPage;
   consolePage: ConsolePage;
+  bugsPage: BugsPage;
 }
 
 interface Guards {
@@ -119,6 +109,10 @@ export const test = base.extend<DashboardFixtures & Guards>({
 
   consolePage: async ({ page }, use) => {
     await use(new ConsolePage(page));
+  },
+
+  bugsPage: async ({ page }, use) => {
+    await use(new BugsPage(page));
   },
 });
 

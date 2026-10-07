@@ -49,6 +49,7 @@ export const WORKFLOW_INPUTS: Record<string, { options?: string[] }> = {
   rounds: { options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] },
   cases: {},
   params: {},
+  target: { options: ['production', 'with-bugs'] },
 };
 
 export type Permission = 'none' | 'read' | 'write';

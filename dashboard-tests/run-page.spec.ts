@@ -6,7 +6,7 @@ test.describe('Run page', () => {
   test("shows the run's meta data, score, round cards and a case × round matrix grouped by module", async ({ runPage }) => {
     await runPage.goto(RUNS.mixed);
 
-    await expect(runPage.heading).toHaveText('執行 #3 手動');
+    await expect(runPage.heading).toHaveText('執行 #3 手動 production');
     await expect(runPage.meta('開始時間')).toHaveText('2026/10/5 16:00');
     await expect(runPage.meta('耗時')).toHaveText('4 分 5 秒');
     await expect(runPage.meta('輪數')).toHaveText('3');
@@ -41,7 +41,7 @@ test.describe('Run page', () => {
   test('marks the cases that ran with custom test data', async ({ runPage }) => {
     await runPage.goto(RUNS.local);
 
-    await expect(runPage.heading).toHaveText('本機執行 本機');
+    await expect(runPage.heading).toHaveText('本機執行 本機 production');
     await expect(runPage.meta('測試資料')).toHaveText('2 條案例用了自訂值');
     await expect(runPage.caseRows.filter({ has: runPage.page.locator('.tag-custom') }).locator('.case-id')).toHaveText(['TC02', 'TC04']);
     await expect(runPage.caseRow('TC04').locator('.tag-custom')).toHaveAttribute('title', '關鍵字: pliers');
@@ -68,7 +68,7 @@ test.describe('Run page', () => {
   test('shows a run recorded before case selection existed as a run of all its cases', async ({ runPage }) => {
     await runPage.goto(RUNS.legacy);
 
-    await expect(runPage.heading).toHaveText('執行 #1 每週排程');
+    await expect(runPage.heading).toHaveText('執行 #1 每週排程 production');
     await expect(runPage.meta('測試案例')).toHaveText('全部 4 條');
     await expect(runPage.meta('測試資料')).toHaveText('預設值');
     await expect(runPage.caseRows).toHaveCount(4);

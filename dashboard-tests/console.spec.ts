@@ -1,12 +1,14 @@
 import { expect, test } from './fixtures/test';
 import { OWNER_TOKEN } from './fixtures/github-mock';
 import { STORAGE_KEYS, type Draft } from './fixtures/storage';
-import { catalogCase, deployedText, estimateMinutes, filledDescription, moduleCases, siteCatalog } from './fixtures/site';
+import { applicableCaseCount, catalogCase, deployedText, estimateMinutes, filledDescription, moduleCases, siteCatalog, type Target } from './fixtures/site';
 
 const NEEDS_TOKEN = '按「執行」時會請你設定 GitHub token';
 const caseCount = () => siteCatalog().cases.length;
-/** The selection part of the run bar, e.g. "2 / 16 條案例 × 1 輪 · 約 3 分鐘". */
-const selectionText = (cases: number, rounds: number) => `${cases} / ${caseCount()} 條案例 × ${rounds} 輪 · 約 ${estimateMinutes(cases, rounds)} 分鐘`;
+const defaultCaseCount = () => applicableCaseCount('production');
+/** The selection part of the run bar, e.g. "2 / 19 條案例 × 1 輪 · 約 3 分鐘 · 網站：production". */
+const selectionText = (cases: number, rounds: number, target: Target = 'production') =>
+  `${cases} / ${applicableCaseCount(target)} 條案例 × ${rounds} 輪 · 約 ${estimateMinutes(cases, rounds)} 分鐘 · 網站：${target}`;
 
 test.describe('Test console', () => {
   test('lists every catalog case by module with its title, description and test data', async ({ consolePage }) => {
@@ -14,7 +16,7 @@ test.describe('Test console', () => {
 
     await expect(consolePage.heading).toHaveText('執行測試');
     await expect(consolePage.caseItems).toHaveCount(caseCount());
-    await expect(consolePage.moduleNames()).toHaveText(['首頁', '搜尋', '會員', '購物車', '結帳']);
+    await expect(consolePage.moduleNames()).toHaveText(['首頁', '搜尋', '會員', '購物車', '結帳', '聯絡我們']);
     await expect(consolePage.caseName('TC04')).toHaveText(deployedText('TC04', 'title', 'zh-TW'));
     await expect(consolePage.caseBody('TC04')).toBeHidden();
 
@@ -75,7 +77,7 @@ test.describe('Test console', () => {
   test('summarizes the selection in the run bar and blocks the run without any case', async ({ consolePage }) => {
     await consolePage.goto();
 
-    await expect(consolePage.summary).toHaveText(`${selectionText(caseCount(), 3)} · ${NEEDS_TOKEN}`);
+    await expect(consolePage.summary).toHaveText(`${selectionText(defaultCaseCount(), 3)} · ${NEEDS_TOKEN}`);
     await expect(consolePage.runButton).toBeEnabled();
 
     await consolePage.selectNoneButton.click();
@@ -89,7 +91,25 @@ test.describe('Test console', () => {
     await expect(consolePage.runButton).toBeEnabled();
 
     await consolePage.selectAllButton.click();
-    await expect(consolePage.root.locator('input[data-act="toggle-case"]:checked')).toHaveCount(caseCount());
+    await expect(consolePage.root.locator('input[data-act="toggle-case"]:checked')).toHaveCount(defaultCaseCount());
+  });
+
+  test('disables with-bugs-only cases on production and enables them when switched to with-bugs', async ({ consolePage }) => {
+    await consolePage.goto();
+
+    await expect(consolePage.target).toHaveValue('production');
+    await expect(consolePage.targetOnlyTag('TC19')).toHaveText('僅 with-bugs');
+    await expect(consolePage.caseCheckbox('TC19')).toBeDisabled();
+    await expect(consolePage.caseCheckbox('TC19')).not.toBeChecked();
+    await expect(consolePage.moduleCount('Contact')).toHaveText('已選 0 / 0');
+
+    await consolePage.setTarget('with-bugs');
+
+    await expect(consolePage.targetNote).toContainText('官方預先埋了 94 個已知問題');
+    await expect(consolePage.caseCheckbox('TC19')).toBeEnabled();
+    await expect(consolePage.caseCheckbox('TC19')).toBeChecked();
+    await expect(consolePage.moduleCount('Contact')).toHaveText('已選 1 / 1');
+    await expect(consolePage.summary).toHaveText(`${selectionText(applicableCaseCount('with-bugs'), 3, 'with-bugs')} · ${NEEDS_TOKEN}`);
   });
 
   test('shows a partly selected module as indeterminate and toggles a whole module at once', async ({ consolePage }) => {
@@ -118,7 +138,7 @@ test.describe('Test console', () => {
     await storage.signIn();
     await consolePage.goto();
     await consolePage.expand('TC04');
-    await expect(consolePage.summary).toHaveText(selectionText(caseCount(), 3));
+    await expect(consolePage.summary).toHaveText(selectionText(defaultCaseCount(), 3));
     await expect(consolePage.customTag('TC04')).toBeHidden();
     await expect(consolePage.resetParamButton('TC04', 'keyword')).toBeHidden();
 
@@ -129,7 +149,7 @@ test.describe('Test console', () => {
     await expect(consolePage.customTag('TC04')).toHaveText('自訂');
     await expect(consolePage.customTag('TC04')).toBeVisible();
     await expect(consolePage.resetParamButton('TC04', 'keyword')).toBeVisible();
-    await expect(consolePage.summary).toHaveText(`${selectionText(caseCount(), 3)} · 1 條用了自訂測試資料`);
+    await expect(consolePage.summary).toHaveText(`${selectionText(defaultCaseCount(), 3)} · 1 條用了自訂測試資料`);
   });
 
   test('restores the defaults of one field, one case or every case', async ({ consolePage }) => {
@@ -156,7 +176,7 @@ test.describe('Test console', () => {
     await expect(consolePage.param('TC04', 'keyword')).toHaveValue('hammer');
     await expect(consolePage.param('TC12', 'quantity')).toHaveValue('3');
     await expect(consolePage.root.locator('[data-custom-tag]:visible')).toHaveCount(0);
-    await expect(consolePage.summary).toHaveText(`${selectionText(caseCount(), 3)} · ${NEEDS_TOKEN}`);
+    await expect(consolePage.summary).toHaveText(`${selectionText(defaultCaseCount(), 3)} · ${NEEDS_TOKEN}`);
   });
 
   test('fixes the letter case of known product names and only warns about unknown ones', async ({ consolePage }) => {
@@ -183,7 +203,7 @@ test.describe('Test console', () => {
     await consolePage.setParam('TC04', 'keyword', 'pliers');
     await expect
       .poll(() => storage.read<Draft>('local', STORAGE_KEYS.draft))
-      .toEqual({ rounds: 2, selected: ['TC04', 'TC05'], values: { TC04: { keyword: 'pliers' } } });
+      .toEqual({ rounds: 2, target: 'production', selected: ['TC04', 'TC05'], values: { TC04: { keyword: 'pliers' } } });
 
     await page.reload();
 

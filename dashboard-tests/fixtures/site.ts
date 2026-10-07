@@ -16,6 +16,7 @@ export const SITE = {
 } as const;
 
 export type Language = 'zh-TW' | 'en';
+export type Target = 'production' | 'with-bugs';
 
 /** One case in config/descriptions.json. */
 export interface DescriptionEntry {
@@ -44,6 +45,7 @@ export interface CatalogCase {
   module: string;
   file: string;
   line: number;
+  targets?: Target[];
   params: Record<string, ParamDef>;
   rules: unknown[];
 }
@@ -56,12 +58,17 @@ export interface Catalog {
   cases: CatalogCase[];
   /** The descriptions of the deploy (config/descriptions.json when the site was built). */
   descriptions: Descriptions;
+  knownBugs?: {
+    source: { total: number; listUrl: string };
+    bugs: { id: number; cases: string[] }[];
+    unlisted: { key: string; cases: string[] }[];
+  };
 }
 
 let catalog: Catalog | null = null;
 
 /**
- * The catalog of the built site. Tests derive counts from it (e.g. "16 / 16
+ * The catalog of the built site. Tests derive counts from it (e.g. "19 / 19
  * cases") so they keep working when test cases are added.
  */
 export function siteCatalog(): Catalog {
@@ -75,10 +82,16 @@ export function catalogCase(id: string): CatalogCase {
   return found;
 }
 
+/** Cases that apply to `target` (cases without `targets` run on every target). */
+export const applicableCases = (target: Target = 'production'): CatalogCase[] =>
+  siteCatalog().cases.filter((c) => !Array.isArray(c.targets) || c.targets.includes(target));
+
+export const applicableCaseCount = (target: Target = 'production'): number => applicableCases(target).length;
+
 /** Ids of the cases of one module, in catalog order. */
-export const moduleCases = (module: string): string[] =>
-  siteCatalog()
-    .cases.filter((c) => c.module === module)
+export const moduleCases = (module: string, target?: Target): string[] =>
+  (target ? applicableCases(target) : siteCatalog().cases)
+    .filter((c) => c.module === module)
     .map((c) => c.id);
 
 /**

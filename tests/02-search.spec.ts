@@ -1,4 +1,5 @@
 import { expect, softExpect, test } from '../src/fixtures';
+import type { HomePage } from '../src/pages/HomePage';
 import { isSorted, parseMoney } from '../src/support/ui';
 
 /** Grid page size: the caption counts all matches, the grid shows at most one page. */
@@ -11,6 +12,13 @@ const SORT_LABELS: Record<string, string> = {
   'name,asc': 'Name (A - Z)',
   'name,desc': 'Name (Z - A)',
 };
+
+/** What each sort field compares on the product cards, and the annotation that records the values. */
+const SORT_FIELDS = {
+  price: { annotation: 'prices', values: (home: HomePage) => home.productPriceList() },
+  name: { annotation: 'names', values: (home: HomePage) => home.productNameList() },
+};
+const DIRECTION_NAMES = { asc: 'ascending', desc: 'descending' };
 
 test.describe('Search', () => {
   test('TC04 Search by keyword', async ({ home, data }) => {
@@ -73,18 +81,18 @@ test.describe('Search', () => {
       await expect(home.selectedSortOption()).toHaveText(label);
     });
 
-    await test.step(`Products are sorted by ${field}, ${direction === 'asc' ? 'ascending' : 'descending'}`, async () => {
-      const values = () => (field === 'price' ? home.productPriceList() : home.productNameList());
+    await test.step(`Products are sorted by ${field}, ${DIRECTION_NAMES[direction]}`, async () => {
+      const sortField = SORT_FIELDS[field];
       await expect
         .poll(
           async () => {
-            const list = await values();
+            const list = await sortField.values(home);
             return list.length > 1 && isSorted(list, direction);
           },
           { message: `products should be sorted by ${field} (${direction})` },
         )
         .toBe(true);
-      test.info().annotations.push({ type: field === 'price' ? 'prices' : 'names', description: (await values()).join(', ') });
+      test.info().annotations.push({ type: sortField.annotation, description: (await sortField.values(home)).join(', ') });
     });
   });
 

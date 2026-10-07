@@ -2,6 +2,7 @@ import { expect, test } from './fixtures/test';
 import { BETWEEN_TICKS, FIXED_NOW, POLL_INTERVAL_MS } from './fixtures/clock';
 import { OWNER_TOKEN } from './fixtures/github-mock';
 import { publishedRun } from './fixtures/results';
+import { applicableCaseCount } from './fixtures/site';
 import { STORAGE_KEYS, trackedRun, type TrackedRun } from './fixtures/storage';
 
 test.describe('Run lifecycle', () => {
@@ -12,11 +13,13 @@ test.describe('Run lifecycle', () => {
     await consolePage.setRounds(1);
     await consolePage.expand('TC04');
     await consolePage.setParam('TC04', 'keyword', 'pliers');
+    const release = github.hold('dispatch');
 
     await consolePage.runButton.click();
 
     await expect(consolePage.runButton).toBeDisabled();
     await expect(consolePage.runButton).toHaveText('啟動中…');
+    release();
 
     const run = await github.dispatchedRun();
     expect(github.dispatches()).toEqual([
@@ -26,6 +29,7 @@ test.describe('Run lifecycle', () => {
           rounds: '1',
           cases: 'TC04,TC12',
           params: JSON.stringify({ TC04: { keyword: 'pliers' } }),
+          target: 'production',
         },
       },
     ]);
@@ -44,7 +48,7 @@ test.describe('Run lifecycle', () => {
     expect(github.lastCall('listRuns').query).toEqual({ event: 'workflow_dispatch', per_page: '5' });
 
     await expect(consolePage.runPanel.heading).toContainText('排隊中');
-    await expect(consolePage.runPanel.message).toHaveText('2 / 16 條案例 × 1 輪');
+    await expect(consolePage.runPanel.message).toHaveText(`production 2 / ${applicableCaseCount('production')} 條案例 × 1 輪`);
     await consolePage.runPanel.expectPhase('queued');
     await expect(consolePage.runPanel.logLink).toHaveAttribute('href', run.htmlUrl);
     await expect(consolePage.runButton).toBeDisabled();
@@ -53,6 +57,7 @@ test.describe('Run lifecycle', () => {
     await expect.poll(() => storage.read<TrackedRun>('local', STORAGE_KEYS.run)).toMatchObject({
       id: run.id,
       rounds: 1,
+      target: 'production',
       caseCount: 2,
       customCases: 1,
       done: false,

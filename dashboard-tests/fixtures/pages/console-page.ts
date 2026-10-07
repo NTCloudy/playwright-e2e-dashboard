@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
-import type { Language } from '../site';
+import type { Language, Target } from '../site';
 import { DashboardPage } from './dashboard-page';
 import { DescriptionEditor } from './description-editor';
 import { RunPanel } from './run-panel';
@@ -10,6 +10,8 @@ export class ConsolePage extends DashboardPage {
   readonly root: Locator;
   readonly heading: Locator;
   readonly caseItems: Locator;
+  readonly target: Locator;
+  readonly targetNote: Locator;
   readonly rounds: Locator;
   readonly selectAllButton: Locator;
   readonly selectNoneButton: Locator;
@@ -26,6 +28,8 @@ export class ConsolePage extends DashboardPage {
     this.root = page.locator('#console-root');
     this.heading = this.root.getByRole('heading', { level: 1 });
     this.caseItems = this.root.locator('[data-case-item]');
+    this.target = page.locator('#c-target');
+    this.targetNote = page.locator('#target-note');
     this.rounds = page.locator('#c-rounds');
     this.selectAllButton = this.root.locator('[data-act="select-all"]');
     this.selectNoneButton = this.root.locator('[data-act="select-none"]');
@@ -74,6 +78,10 @@ export class ConsolePage extends DashboardPage {
     return this.root.locator(`[data-custom-tag="${id}"]`);
   }
 
+  targetOnlyTag(id: string): Locator {
+    return this.root.locator(`#target-tag-${id}`);
+  }
+
   errorTag(id: string): Locator {
     return this.root.locator(`[data-error-tag="${id}"]`);
   }
@@ -104,6 +112,10 @@ export class ConsolePage extends DashboardPage {
 
   async setRounds(rounds: number): Promise<void> {
     await this.rounds.selectOption(String(rounds));
+  }
+
+  async setTarget(target: Target): Promise<void> {
+    await this.target.selectOption(target);
   }
 
   // ---------------------------------------------------------------- test data

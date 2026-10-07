@@ -36,6 +36,10 @@ export const test = base.extend<PageFixtures, WorkerFixtures>({
     async ({ playwright }, use) => {
       const api = await playwright.request.newContext({ baseURL: API_URL });
       const user = await registerTestUser(api).finally(() => api.dispose());
+      if (user.source === 'demo') {
+        // Last resort: anyone can change or lock the shared demo account, so make its use visible in the log too.
+        console.warn(`[test account] Registration failed, using the public demo account ${user.email}: ${user.note}`);
+      }
       await use(user);
     },
     { scope: 'worker' },
@@ -47,7 +51,7 @@ export const test = base.extend<PageFixtures, WorkerFixtures>({
       description:
         registeredUser.source === 'registered'
           ? `Fresh account registered via API for this round (${registeredUser.email})`
-          : `Fallback to public demo account: ${registeredUser.note}`,
+          : `Fallback to public demo account (last resort): ${registeredUser.note}`,
     });
     await use(registeredUser);
   },

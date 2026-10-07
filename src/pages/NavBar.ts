@@ -21,7 +21,8 @@ export class NavBar {
     this.categories = page.getByTestId('nav-categories');
     this.contact = page.getByTestId('nav-contact');
     this.signIn = page.getByTestId('nav-sign-in');
-    this.userMenu = page.getByTestId('nav-menu');
+    // The with-bugs release names the user menu "nav-user-menu"; production only has "nav-menu".
+    this.userMenu = page.getByTestId('nav-menu').or(page.getByTestId('nav-user-menu'));
     this.signOut = page.getByTestId('nav-sign-out');
     this.cart = page.getByTestId('nav-cart');
     this.cartQuantity = page.getByTestId('cart-quantity');

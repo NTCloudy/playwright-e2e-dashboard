@@ -1,11 +1,19 @@
 import { expect, type Page } from '@playwright/test';
 import { API_URL, type TestUser } from '../api/toolshopApi';
+import { currentTarget, type Target } from './target';
 
 /** Where the Toolshop web app keeps the sign-in token. */
 const TOKEN_KEY = 'auth-token';
+/** Production keeps the token in localStorage; the with-bugs release keeps it in sessionStorage. */
+const TOKEN_STORAGE: Record<Target, 'localStorage' | 'sessionStorage'> = {
+  production: 'localStorage',
+  'with-bugs': 'sessionStorage',
+};
 
 /** Browser-side sign-in state of the Toolshop web app. */
 export class Session {
+  private readonly storage = TOKEN_STORAGE[currentTarget()];
+
   constructor(private readonly page: Page) {}
 
   /**
@@ -22,17 +30,17 @@ export class Session {
     const { access_token: token } = (await response.json()) as { access_token: string };
 
     await this.page.addInitScript(
-      ({ key, token }) => {
+      ({ key, token, storage }) => {
         if (window !== window.top || sessionStorage.getItem('e2e-session-seeded')) return;
-        localStorage.setItem(key, token);
+        window[storage].setItem(key, token);
         sessionStorage.setItem('e2e-session-seeded', 'true');
       },
-      { key: TOKEN_KEY, token },
+      { key: TOKEN_KEY, token, storage: this.storage },
     );
   }
 
   /** The token the web app currently keeps, or null when signed out. */
   async storedToken(): Promise<string | null> {
-    return this.page.evaluate((key) => localStorage.getItem(key), TOKEN_KEY);
+    return this.page.evaluate(({ key, storage }) => window[storage].getItem(key), { key: TOKEN_KEY, storage: this.storage });
   }
 }

@@ -1,5 +1,4 @@
-import { expect, test } from '../src/fixtures';
-import type { HomePage } from '../src/pages/HomePage';
+import { expect, softExpect, test } from '../src/fixtures';
 import { isSorted, parseMoney } from '../src/support/ui';
 
 /** Grid page size: the caption counts all matches, the grid shows at most one page. */
@@ -12,13 +11,6 @@ const SORT_LABELS: Record<string, string> = {
   'name,asc': 'Name (A - Z)',
   'name,desc': 'Name (Z - A)',
 };
-
-/** What each sort field compares on the product cards, and the annotation that records the values. */
-const SORT_FIELDS = {
-  price: { annotation: 'prices', values: (home: HomePage) => home.productPriceList() },
-  name: { annotation: 'names', values: (home: HomePage) => home.productNameList() },
-};
-const DIRECTION_NAMES = { asc: 'ascending', desc: 'descending' };
 
 test.describe('Search', () => {
   test('TC04 Search by keyword', async ({ home, data }) => {
@@ -81,18 +73,18 @@ test.describe('Search', () => {
       await expect(home.selectedSortOption()).toHaveText(label);
     });
 
-    await test.step(`Products are sorted by ${field}, ${DIRECTION_NAMES[direction]}`, async () => {
-      const sortField = SORT_FIELDS[field];
+    await test.step(`Products are sorted by ${field}, ${direction === 'asc' ? 'ascending' : 'descending'}`, async () => {
+      const values = () => (field === 'price' ? home.productPriceList() : home.productNameList());
       await expect
         .poll(
           async () => {
-            const list = await sortField.values(home);
+            const list = await values();
             return list.length > 1 && isSorted(list, direction);
           },
           { message: `products should be sorted by ${field} (${direction})` },
         )
         .toBe(true);
-      test.info().annotations.push({ type: sortField.annotation, description: (await sortField.values(home)).join(', ') });
+      test.info().annotations.push({ type: field === 'price' ? 'prices' : 'names', description: (await values()).join(', ') });
     });
   });
 
@@ -112,6 +104,28 @@ test.describe('Search', () => {
       // openProduct verifies the name, quantity "1" and that the purchase controls are enabled.
       const productPage = await home.openProduct(product);
       expect(await productPage.getUnitPrice(), 'price on the product page').toBeCloseTo(listPrice, 2);
+    });
+  });
+
+  test('TC20 Filter by price range', async ({ home, data }) => {
+    const max = data.number('max');
+    let range = { min: 0, max: 0 };
+
+    await test.step(`Move the upper handle of "Price Range" down to ${max}`, async () => {
+      await home.open();
+      await home.lowerMaxPrice(max);
+      range = await home.selectedPriceRange();
+      test.info().annotations.push({ type: 'price range', description: `${range.min} - ${range.max}` });
+    });
+
+    await test.step(`Every listed product costs between ${range.min} and ${range.max}`, async () => {
+      // Polled: the grid is replaced when the filtered results arrive.
+      await softExpect
+        .poll(() => home.productsPricedOutside(range.min, range.max), {
+          message: `[TC20 within-range] Every listed product must cost between $${range.min} and $${range.max}`,
+        })
+        .toEqual([]);
+      await expect.soft(home.productCards.first(), '[TC20 results-listed] Products in the range must be listed').toBeVisible();
     });
   });
 });

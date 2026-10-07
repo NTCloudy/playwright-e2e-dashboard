@@ -159,5 +159,35 @@
       "zh-TW": "「{product}」× {quantity} 放進購物車 → 登入 → 帳單地址（等郵遞區號自動帶入完成）→ 貨到付款 → 訂單建立成功並顯示訂單編號（不使用信用卡）",
       "en": "\"{product}\" × {quantity} in the cart → sign in → billing address (after the postcode auto-fill completes) → Cash on Delivery → the order is created and an invoice number is shown (no card data)"
     }
+  },
+  "TC17": {
+    "title": {
+      "zh-TW": "頁面文字與圖片",
+      "en": "Page text and images"
+    },
+    "description": {
+      "zh-TW": "首頁：Logo、搜尋標題圖示與商品圖片都有載入；導覽列、側欄標題與搜尋按鈕的文字正確 → 打開第一個商品，「Related products」標題正確（用軟性斷言，一次列出所有問題）",
+      "en": "Home page: the logo, the search heading icon and the product images load; the navigation, sidebar headings and search button read correctly → open the first product: the \"Related products\" heading is correct (soft assertions list every problem in one run)"
+    }
+  },
+  "TC18": {
+    "title": {
+      "zh-TW": "購買數量上限",
+      "en": "Purchase quantity upper limit"
+    },
+    "description": {
+      "zh-TW": "邊界值測試：購物車裡的「{product}」數量依序改成 10、11、99 → 都能接受，總計跟著更新；改成 100 → 自動降回上限 99 並出現提示",
+      "en": "Boundary values: change the quantity of \"{product}\" in the cart to 10, 11 and 99 → each is accepted and the total follows; 100 → reduced to the limit of 99 with a warning"
+    }
+  },
+  "TC20": {
+    "title": {
+      "zh-TW": "價格區間篩選",
+      "en": "Filter by price range"
+    },
+    "description": {
+      "zh-TW": "把「Price Range」的上限拉到 {max} → 列出的每個商品價格都在區間內，而且至少有一個商品",
+      "en": "Move the \"Price Range\" maximum down to {max} → every listed product is priced within the range, and at least one is listed"
+    }
   }
 }

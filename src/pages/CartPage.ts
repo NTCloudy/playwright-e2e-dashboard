@@ -44,10 +44,23 @@ export class CartPage {
 
   /** Types a new quantity; the app saves it when the field loses focus. */
   async setQuantity(productName: string, quantity: number): Promise<void> {
+    await this.typeQuantity(productName, quantity);
+    await expect(toast(this.page, 'Product quantity updated.')).toBeVisible();
+  }
+
+  /** Like setQuantity, but without waiting for a toast: the caller checks the outcome (see quantityAndTotal). */
+  async typeQuantity(productName: string, quantity: number): Promise<void> {
     const input = this.quantityInput(productName);
     await input.fill(String(quantity));
     await input.press('Tab');
-    await expect(toast(this.page, 'Product quantity updated.')).toBeVisible();
+  }
+
+  /** The quantity in the row and the cart total (two decimals), read together so one poll can compare both. */
+  async quantityAndTotal(productName: string): Promise<{ quantity: number; total: string }> {
+    return {
+      quantity: Number(await this.quantityInput(productName).inputValue()),
+      total: parseMoney(await this.cartTotal.innerText()).toFixed(2),
+    };
   }
 
   async remove(productName: string): Promise<void> {

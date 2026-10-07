@@ -5,6 +5,7 @@ import { CartPage } from './pages/CartPage';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { HomePage } from './pages/HomePage';
 import { NavBar } from './pages/NavBar';
+import { ProductPage } from './pages/ProductPage';
 import { BotCheck } from './support/botCheck';
 import { Session } from './support/session';
 import { TestData } from './support/testData';
@@ -12,6 +13,7 @@ import { TestData } from './support/testData';
 type PageFixtures = {
   home: HomePage;
   nav: NavBar;
+  productPage: ProductPage;
   loginPage: LoginPage;
   accountPage: AccountPage;
   cartPage: CartPage;
@@ -64,6 +66,7 @@ export const test = base.extend<PageFixtures, WorkerFixtures>({
 
   home: async ({ page }, use) => use(new HomePage(page)),
   nav: async ({ page }, use) => use(new NavBar(page)),
+  productPage: async ({ page }, use) => use(new ProductPage(page)),
   loginPage: async ({ page }, use) => use(new LoginPage(page)),
   accountPage: async ({ page }, use) => use(new AccountPage(page)),
   cartPage: async ({ page }, use) => use(new CartPage(page)),
@@ -73,3 +76,9 @@ export const test = base.extend<PageFixtures, WorkerFixtures>({
 });
 
 export { expect };
+
+/**
+ * Soft assertions that can poll: `await softExpect.poll(() => value, { message }).toEqual(expected)` records
+ * a failure and lets the test go on, like expect.soft (whose `.poll` the Playwright lint rules reject).
+ */
+export const softExpect = expect.configure({ soft: true });

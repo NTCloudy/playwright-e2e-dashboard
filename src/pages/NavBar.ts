@@ -7,9 +7,13 @@ export function categorySlug(name: string): string {
 
 /** Top navigation bar, shared by every page. */
 export class NavBar {
+  /** The Toolshop logo (top left), a link to the home page. */
+  readonly brand: Locator;
   readonly home: Locator;
   readonly categories: Locator;
   readonly contact: Locator;
+  /** "Home", "Categories" and "Contact", in that order. */
+  readonly links: Locator;
   readonly signIn: Locator;
   readonly userMenu: Locator;
   readonly signOut: Locator;
@@ -17,9 +21,11 @@ export class NavBar {
   readonly cartQuantity: Locator;
 
   constructor(private readonly page: Page) {
+    this.brand = page.locator('a.navbar-brand');
     this.home = page.getByTestId('nav-home');
     this.categories = page.getByTestId('nav-categories');
     this.contact = page.getByTestId('nav-contact');
+    this.links = page.getByTestId(/^nav-(home|categories|contact)$/);
     this.signIn = page.getByTestId('nav-sign-in');
     // The with-bugs release names the user menu "nav-user-menu"; production only has "nav-menu".
     this.userMenu = page.getByTestId('nav-menu').or(page.getByTestId('nav-user-menu'));

@@ -1,5 +1,13 @@
-import { expect, test } from '../src/fixtures';
-import { expectMoney } from '../src/support/ui';
+import { expect, softExpect, test } from '../src/fixtures';
+import { expectMoney, toast } from '../src/support/ui';
+
+/** The site's limit per product, on the product page and in the cart (larger quantities are reduced to it). */
+const MAX_QUANTITY = 99;
+/**
+ * Quantities the cart must accept: 10 and 11 on either side of the cap of 10 that an older release had
+ * (bug #47), and the limit itself. MAX_QUANTITY + 1 is the value just above the limit.
+ */
+const ACCEPTED_QUANTITIES = [10, 11, MAX_QUANTITY];
 
 test.describe('Cart', () => {
   test('TC11 Add a product to the cart', async ({ home, nav, data }) => {
@@ -110,6 +118,54 @@ test.describe('Cart', () => {
       await expect(cartPage.emptyMessage).toBeVisible();
       await expect(cartPage.rows).toHaveCount(0);
       await expect(nav.cartQuantity).toHaveCount(0);
+    });
+  });
+
+  test('TC18 Purchase quantity upper limit', async ({ page, home, nav, cartPage, data }) => {
+    // A failing boundary value waits for the whole expect timeout; this leaves time to report them all.
+    test.slow();
+    const product = data.text('product');
+    let unitPrice = 0;
+    /** The expected cart: the quantity and the cart total for it. */
+    const cartWith = (quantity: number) => ({ quantity, total: (unitPrice * quantity).toFixed(2) });
+
+    await test.step(`Precondition: "${product}" x1 in the cart`, async () => {
+      await home.open();
+      const productPage = await home.findAndOpenProduct(product);
+      unitPrice = await productPage.getUnitPrice();
+      // This case checks the cart itself; TC11 checks the "added" message.
+      await productPage.addToCartWithoutToastCheck();
+      await nav.verifyCartQuantity(1);
+      await nav.openCart();
+      await cartPage.verifyLoaded();
+      await expect.poll(() => cartPage.quantityAndTotal(product), { message: 'cart before the change' }).toEqual(cartWith(1));
+    });
+
+    for (const quantity of ACCEPTED_QUANTITIES) {
+      await test.step(`Change the quantity to ${quantity}: accepted, the cart total follows`, async () => {
+        await cartPage.typeQuantity(product, quantity);
+        await softExpect
+          .poll(() => cartPage.quantityAndTotal(product), {
+            message: `[TC18 qty-${quantity}] A quantity of ${quantity} must be accepted (the limit is ${MAX_QUANTITY})`,
+          })
+          .toEqual(cartWith(quantity));
+      });
+    }
+
+    await test.step(`Change the quantity to ${MAX_QUANTITY + 1}: reduced to ${MAX_QUANTITY} with a warning`, async () => {
+      await cartPage.typeQuantity(product, MAX_QUANTITY + 1);
+      // The warning shows at once (the update follows), so it is checked first.
+      await expect
+        .soft(
+          toast(page, `You can order at most ${MAX_QUANTITY} of this product.`),
+          `[TC18 qty-${MAX_QUANTITY + 1}-warning] A warning must explain the limit of ${MAX_QUANTITY}`,
+        )
+        .toBeVisible();
+      await softExpect
+        .poll(() => cartPage.quantityAndTotal(product), {
+          message: `[TC18 qty-${MAX_QUANTITY + 1}] A quantity of ${MAX_QUANTITY + 1} must be reduced to the limit of ${MAX_QUANTITY}`,
+        })
+        .toEqual(cartWith(MAX_QUANTITY));
     });
   });
 });

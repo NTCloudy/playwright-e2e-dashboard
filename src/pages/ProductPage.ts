@@ -18,6 +18,8 @@ export class ProductPage {
   readonly increaseQuantity: Locator;
   readonly decreaseQuantity: Locator;
   readonly addToCartButton: Locator;
+  /** Heading of the related products section, found by position (the row after the separator), not by its text. */
+  readonly relatedHeading: Locator;
 
   constructor(private readonly page: Page) {
     this.name = page.getByTestId('product-name');
@@ -26,6 +28,7 @@ export class ProductPage {
     this.increaseQuantity = page.getByTestId('increase-quantity');
     this.decreaseQuantity = page.getByTestId('decrease-quantity');
     this.addToCartButton = page.getByTestId('add-to-cart');
+    this.relatedHeading = page.locator('hr + .row > :is(h1, h2)');
   }
 
   /** Verifies the product name and price. Out-of-stock products have no usable purchase controls. */
@@ -58,5 +61,13 @@ export class ProductPage {
   async addToCart(): Promise<void> {
     await this.addToCartButton.click();
     await expect(toast(this.page, 'Product added to shopping cart.')).toBeVisible();
+  }
+
+  /**
+   * Clicks "Add to cart" without checking the toast, for cases that only need the product in the cart
+   * and verify the cart instead (TC11 checks the toast).
+   */
+  async addToCartWithoutToastCheck(): Promise<void> {
+    await this.addToCartButton.click();
   }
 }

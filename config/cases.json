@@ -254,6 +254,30 @@
         }
       },
       "rules": [{ "type": "onePerCart", "product": "product", "quantity": "quantity" }]
+    },
+    "TC17": {},
+    "TC18": {
+      "params": {
+        "product": {
+          "type": "text",
+          "default": "Claw Hammer",
+          "suggestions": "products",
+          "label": { "zh-TW": "商品", "en": "Product" },
+          "hint": { "zh-TW": "有庫存的商品（Thor Hammer 每次限購一個，不適用）", "en": "An in-stock product (not Thor Hammer, which is limited to one per cart)" }
+        }
+      }
+    },
+    "TC20": {
+      "params": {
+        "max": {
+          "type": "integer",
+          "default": 30,
+          "min": 10,
+          "max": 99,
+          "label": { "zh-TW": "價格上限", "en": "Maximum price" },
+          "hint": { "zh-TW": "要低於預設上限 100", "en": "Below the default maximum of 100" }
+        }
+      }
     }
   }
 }

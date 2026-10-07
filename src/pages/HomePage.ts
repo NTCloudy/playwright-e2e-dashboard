@@ -19,6 +19,10 @@ export class HomePage {
   readonly noResults: Locator;
   readonly pageTitle: Locator;
   readonly categoryFilters: Locator;
+  readonly sidebarHeadings: Locator;
+  readonly searchHeading: Locator;
+  readonly priceMin: Locator;
+  readonly priceMax: Locator;
 
   constructor(private readonly page: Page) {
     this.nav = new NavBar(page);
@@ -37,6 +41,12 @@ export class HomePage {
     this.pageTitle = page.getByTestId('page-title');
     // Sidebar "Filters" section: one checkbox per category (data-test="category-<id>").
     this.categoryFilters = page.locator('input[data-test^="category-"]');
+    // Sidebar section headings ("Sort", "Price Range", "Search", "Filters"), each with an icon; no data-test.
+    this.sidebarHeadings = page.locator('h4.grid-title');
+    this.searchHeading = this.sidebarHeadings.filter({ hasText: 'Search' });
+    // The two handles of the "Price Range" slider (ngx-slider), named by their aria-label.
+    this.priceMin = page.getByRole('slider', { name: 'ngx-slider', exact: true });
+    this.priceMax = page.getByRole('slider', { name: 'ngx-slider-max', exact: true });
   }
 
   /** Direct navigation is only used to start a test; later steps use the UI. */
@@ -126,5 +136,50 @@ export class HomePage {
     await this.search(name);
     await expect(this.card(name)).toHaveCount(1);
     return this.openProduct(name);
+  }
+
+  /** Names of the product cards whose image is not really shown: hidden, still loading or broken. */
+  async productsWithoutImage(): Promise<string[]> {
+    return this.productCards.evaluateAll((cards) =>
+      cards
+        .filter((card) => {
+          const image = card.querySelector('img');
+          return !image || !image.checkVisibility() || !image.complete || image.naturalWidth === 0;
+        })
+        .map((card) => card.querySelector('[data-test="product-name"]')?.textContent?.trim() ?? '(no name)'),
+    );
+  }
+
+  /**
+   * Moves the upper handle of the "Price Range" slider down to `max` with the keyboard, like a user
+   * holding the left arrow key: one key-down per step and a single key-up, so the app filters once.
+   */
+  async lowerMaxPrice(max: number): Promise<void> {
+    const current = Number(await this.priceMax.getAttribute('aria-valuenow'));
+    await this.priceMax.focus();
+    for (let value = current; value > max; value--) await this.page.keyboard.down('ArrowLeft');
+    await this.page.keyboard.up('ArrowLeft');
+    await expect(this.priceMax).toHaveAttribute('aria-valuenow', String(max));
+  }
+
+  /** The price range selected with the slider handles. */
+  async selectedPriceRange(): Promise<{ min: number; max: number }> {
+    return {
+      min: Number(await this.priceMin.getAttribute('aria-valuenow')),
+      max: Number(await this.priceMax.getAttribute('aria-valuenow')),
+    };
+  }
+
+  /** Listed products priced outside [min, max], e.g. ["Bolt Cutters $48.41"]. Name and price are read together. */
+  async productsPricedOutside(min: number, max: number): Promise<string[]> {
+    const products = await this.productCards.evaluateAll((cards) =>
+      cards.map((card) => ({
+        name: card.querySelector('[data-test="product-name"]')?.textContent?.trim() ?? '',
+        price: card.querySelector('[data-test="product-price"]')?.textContent?.trim() ?? '',
+      })),
+    );
+    return products
+      .filter(({ price }) => parseMoney(price) < min || parseMoney(price) > max)
+      .map(({ name, price }) => `${name} ${price}`);
   }
 }

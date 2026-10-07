@@ -56,6 +56,10 @@ export class NavBar {
     await this.signIn.click();
   }
 
+  async openContact(): Promise<void> {
+    await this.contact.click();
+  }
+
   async openCart(): Promise<void> {
     await this.cart.click();
   }

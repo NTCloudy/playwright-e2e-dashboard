@@ -267,6 +267,9 @@
         }
       }
     },
+    "TC19": {
+      "targets": ["with-bugs"]
+    },
     "TC20": {
       "params": {
         "max": {

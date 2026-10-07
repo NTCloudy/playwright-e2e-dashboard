@@ -3,6 +3,7 @@ import { API_URL, registerTestUser, type TestUser } from './api/toolshopApi';
 import { AccountPage, LoginPage } from './pages/AuthPages';
 import { CartPage } from './pages/CartPage';
 import { CheckoutPage } from './pages/CheckoutPage';
+import { ContactPage } from './pages/ContactPage';
 import { HomePage } from './pages/HomePage';
 import { NavBar } from './pages/NavBar';
 import { ProductPage } from './pages/ProductPage';
@@ -18,6 +19,7 @@ type PageFixtures = {
   accountPage: AccountPage;
   cartPage: CartPage;
   checkoutPage: CheckoutPage;
+  contactPage: ContactPage;
   /** Sign-in state in the browser (API sign-in for preconditions, stored token). */
   session: Session;
   /** Skips the case instead of failing it when Cloudflare challenges a page load. */
@@ -71,6 +73,7 @@ export const test = base.extend<PageFixtures, WorkerFixtures>({
   accountPage: async ({ page }, use) => use(new AccountPage(page)),
   cartPage: async ({ page }, use) => use(new CartPage(page)),
   checkoutPage: async ({ page }, use) => use(new CheckoutPage(page)),
+  contactPage: async ({ page }, use) => use(new ContactPage(page)),
   session: async ({ page }, use) => use(new Session(page)),
   botCheck: async ({ page }, use) => use(new BotCheck(page)),
 });

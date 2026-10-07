@@ -180,6 +180,16 @@
       "en": "Boundary values: change the quantity of \"{product}\" in the cart to 10, 11 and 99 → each is accepted and the total follows; 100 → reduced to the limit of 99 with a warning"
     }
   },
+  "TC19": {
+    "title": {
+      "zh-TW": "聯絡表單附件（US6100）",
+      "en": "Contact form attachment (US6100)"
+    },
+    "description": {
+      "zh-TW": "依使用者故事 US6100：1 KB 的 txt、pdf、jpg 都能送出；0 KB、501 KB 與 png 檔會被拒絕並說明原因；選檔視窗只列出 txt、pdf、jpg（只在 with-bugs 版本執行，正式站的上傳規則不同，會略過）",
+      "en": "Per user story US6100: 1 KB txt, pdf and jpg files are sent; 0 KB, 501 KB and png files are refused with an error that says why; the file dialog offers only txt, pdf and jpg (with-bugs release only; skipped on production, which has a different upload rule)"
+    }
+  },
   "TC20": {
     "title": {
       "zh-TW": "價格區間篩選",

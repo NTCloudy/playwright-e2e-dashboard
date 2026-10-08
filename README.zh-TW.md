@@ -10,6 +10,10 @@
 
 **結果網站：https://ntcloudy.github.io/playwright-e2e-dashboard/**
 
+> **QA 自動化測試雙作品集導覽**：
+> - 🛒 **作品集一（本專案 — 電商購物網站端對端 E2E 與 94 項已知問題對照）**：[`NTCloudy/playwright-e2e-dashboard`](https://github.com/NTCloudy/playwright-e2e-dashboard) · [電商測試結果網站](https://ntcloudy.github.io/playwright-e2e-dashboard/)
+> - 🎰 **作品集二（博奕百家樂桌台、單一錢包高併發與 10 萬局蒙地卡羅 RTP 驗證）**：[`NTCloudy/baccarat-e2e-dashboard`](https://github.com/NTCloudy/baccarat-e2e-dashboard) · [皇家賭場 QA 儀表板](https://ntcloudy.github.io/baccarat-e2e-dashboard/) · [被測線上百家樂賭桌](https://ntcloudy.github.io/baccarat-e2e-dashboard/table/)
+
 ![結果網站](docs/dashboard.zh-TW.png)
 
 ## 特色

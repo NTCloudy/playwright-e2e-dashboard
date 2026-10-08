@@ -10,6 +10,10 @@ On the **public, bilingual dashboard** the owner chooses the target site (`produ
 
 **Live dashboard: https://ntcloudy.github.io/playwright-e2e-dashboard/**
 
+> **QA Automation Portfolio Series**:
+> - 🛒 **Project #1 (This Repo — E-Commerce Web Store E2E & 94-Bug Audit)**: [`NTCloudy/playwright-e2e-dashboard`](https://github.com/NTCloudy/playwright-e2e-dashboard) · [Live E-Commerce QA Dashboard](https://ntcloudy.github.io/playwright-e2e-dashboard/)
+> - 🎰 **Project #2 (iGaming / Baccarat Casino Table, Seamless Wallet Concurrency & 100k-Round RTP)**: [`NTCloudy/baccarat-e2e-dashboard`](https://github.com/NTCloudy/baccarat-e2e-dashboard) · [Live Casino QA Dashboard](https://ntcloudy.github.io/baccarat-e2e-dashboard/) · [Live Playable Table](https://ntcloudy.github.io/baccarat-e2e-dashboard/table/)
+
 ![Dashboard](docs/dashboard.png)
 
 ## Highlights

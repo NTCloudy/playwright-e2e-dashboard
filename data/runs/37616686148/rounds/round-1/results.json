@@ -1,0 +1,655 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/24.21.0/x64/bin/node",
+      "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/node_modules/.bin/playwright",
+      "test",
+      "--grep",
+      "(^|\\s)(TC01|TC02|TC03|TC11|TC12|TC13|TC14|TC16)(\\s|$)"
+    ],
+    "configFile": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/playwright.config.ts",
+    "rootDir": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/NTCloudy/playwright-e2e-dashboard/commit/35089b7c08776753e4e68392c8b1b151c1891bc7",
+        "commitHash": "35089b7c08776753e4e68392c8b1b151c1891bc7",
+        "buildHref": "https://github.com/NTCloudy/playwright-e2e-dashboard/actions/runs/37616686148"
+      },
+      "gitCommit": {
+        "shortHash": "35089b7",
+        "hash": "35089b7c08776753e4e68392c8b1b151c1891bc7",
+        "subject": "Ignore Cloudflare-challenged product images in HomePage.productsWithoutImage",
+        "body": "Ignore Cloudflare-challenged product images in HomePage.productsWithoutImage\n",
+        "author": {
+          "name": "NTCloudy",
+          "email": "210337045+NTCloudy@users.noreply.github.com",
+          "time": 1791362250000
+        },
+        "committer": {
+          "name": "NTCloudy",
+          "email": "210337045+NTCloudy@users.noreply.github.com",
+          "time": 1791362250000
+        },
+        "branch": "main"
+      },
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/test-output/run/rounds/round-1/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/NTCloudy/playwright-e2e-dashboard/commit/35089b7c08776753e4e68392c8b1b151c1891bc7",
+            "commitHash": "35089b7c08776753e4e68392c8b1b151c1891bc7",
+            "buildHref": "https://github.com/NTCloudy/playwright-e2e-dashboard/actions/runs/37616686148"
+          },
+          "gitCommit": {
+            "shortHash": "35089b7",
+            "hash": "35089b7c08776753e4e68392c8b1b151c1891bc7",
+            "subject": "Ignore Cloudflare-challenged product images in HomePage.productsWithoutImage",
+            "body": "Ignore Cloudflare-challenged product images in HomePage.productsWithoutImage\n",
+            "author": {
+              "name": "NTCloudy",
+              "email": "210337045+NTCloudy@users.noreply.github.com",
+              "time": 1791362250000
+            },
+            "committer": {
+              "name": "NTCloudy",
+              "email": "210337045+NTCloudy@users.noreply.github.com",
+              "time": 1791362250000
+            },
+            "branch": "main"
+          },
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "line",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/test-output/run/rounds/round-1/results.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "/home/runner/work/playwright-e2e-dashboard/playwright-e2e-dashboard/test-output/run/rounds/round-1/report",
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "01-home.spec.ts",
+      "file": "01-home.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Home",
+          "file": "01-home.spec.ts",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "TC01 Home page loads",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1929,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Open the home page",
+                          "duration": 1586
+                        },
+                        {
+                          "title": "Navigation, search, sorting and filters are usable; products are listed",
+                          "duration": 37
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:50:10.384Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c4396361884a96dbe527-29134c1b8e5f013f312d",
+              "file": "01-home.spec.ts",
+              "line": 6,
+              "column": 7
+            },
+            {
+              "title": "TC02 Return to the home page from a product page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "position = 1 (default)"
+                    },
+                    {
+                      "type": "product",
+                      "description": "Combination Pliers"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3308,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Open the home page and click product #1",
+                          "duration": 2300
+                        },
+                        {
+                          "title": "Click \"Home\" in the navigation bar",
+                          "duration": 104
+                        },
+                        {
+                          "title": "Back on the home page: product grid and filters are shown again",
+                          "duration": 587
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:50:13.956Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "position = 1 (default)"
+                        },
+                        {
+                          "type": "product",
+                          "description": "Combination Pliers"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c4396361884a96dbe527-5791a0265f4fc32772f2",
+              "file": "01-home.spec.ts",
+              "line": 20,
+              "column": 7
+            },
+            {
+              "title": "TC03 Browse a category",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "category = \"Hand Tools\" (default)"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2885,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Open Categories > Hand Tools",
+                          "duration": 1797
+                        },
+                        {
+                          "title": "Category title and its products are shown",
+                          "duration": 909
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:50:17.279Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "category = \"Hand Tools\" (default)"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c4396361884a96dbe527-ac5643ac60809f1bf890",
+              "file": "01-home.spec.ts",
+              "line": 41,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "04-cart.spec.ts",
+      "file": "04-cart.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Cart",
+          "file": "04-cart.spec.ts",
+          "line": 12,
+          "column": 6,
+          "specs": [
+            {
+              "title": "TC11 Add a product to the cart",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "product = \"Claw Hammer\" (default); quantity = 1 (default)"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4349,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Open \"Claw Hammer\", set the quantity to 1 and click \"Add to cart\"",
+                          "duration": 4159
+                        },
+                        {
+                          "title": "The cart badge shows 1",
+                          "duration": 8
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:50:20.184Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "product = \"Claw Hammer\" (default); quantity = 1 (default)"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5f513903b8063c1b134f-81348e9c1139cfaa1a01",
+              "file": "04-cart.spec.ts",
+              "line": 13,
+              "column": 7
+            },
+            {
+              "title": "TC12 Increase quantity in the cart",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "product = \"Claw Hammer\" (default); quantity = 3 (default)"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5673,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Precondition: \"Claw Hammer\" x1 in the cart",
+                          "duration": 4498
+                        },
+                        {
+                          "title": "Change the quantity to 3",
+                          "duration": 883
+                        },
+                        {
+                          "title": "Line total = unit price x 3; cart total and badge are updated",
+                          "duration": 74
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:50:24.545Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "product = \"Claw Hammer\" (default); quantity = 3 (default)"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5f513903b8063c1b134f-a87fdab5e8b66a81d855",
+              "file": "04-cart.spec.ts",
+              "line": 30,
+              "column": 7
+            },
+            {
+              "title": "TC13 Decrease quantity in the cart",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "product = \"Claw Hammer\" (default); from = 3 (default); to = 1 (default)"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5833,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Precondition: \"Claw Hammer\" x3 in the cart",
+                          "duration": 4686
+                        },
+                        {
+                          "title": "Change the quantity to 1",
+                          "duration": 891
+                        },
+                        {
+                          "title": "Line total = unit price x 1; cart total and badge are updated",
+                          "duration": 71
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:50:30.231Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "product = \"Claw Hammer\" (default); from = 3 (default); to = 1 (default)"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5f513903b8063c1b134f-9d12e61560faa8d06d3d",
+              "file": "04-cart.spec.ts",
+              "line": 55,
+              "column": 7
+            },
+            {
+              "title": "TC14 Remove products from the cart",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test data",
+                      "description": "first = \"Claw Hammer\" (default); second = \"Thor Hammer\" (default)"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 9619,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Precondition: \"Claw Hammer\" and \"Thor Hammer\" in the cart",
+                          "duration": 7576
+                        },
+                        {
+                          "title": "Remove \"Claw Hammer\": the cart total is recalculated",
+                          "duration": 941
+                        },
+                        {
+                          "title": "Remove \"Thor Hammer\": the cart is empty",
+                          "duration": 917
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:50:36.076Z",
+                      "annotations": [
+                        {
+                          "type": "test data",
+                          "description": "first = \"Claw Hammer\" (default); second = \"Thor Hammer\" (default)"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5f513903b8063c1b134f-8e1f506d25b7b5d621cf",
+              "file": "04-cart.spec.ts",
+              "line": 83,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "05-checkout.spec.ts",
+      "file": "05-checkout.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Checkout",
+          "file": "05-checkout.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "TC16 Complete checkout (Cash on Delivery)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "test account",
+                      "description": "Fresh account registered via API for this round (e2e.1791373845756449@example.com)"
+                    },
+                    {
+                      "type": "test data",
+                      "description": "product = \"Claw Hammer\" (default); quantity = 1 (default)"
+                    },
+                    {
+                      "type": "invoice",
+                      "description": "INV-2026000015"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 10704,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Cart: \"Claw Hammer\" x1, proceed to checkout",
+                          "duration": 5365
+                        },
+                        {
+                          "title": "Sign in with the test account",
+                          "duration": 1032
+                        },
+                        {
+                          "title": "Billing address is prefilled and completed by the postcode lookup; continue",
+                          "duration": 1991
+                        },
+                        {
+                          "title": "Pay with \"Cash on Delivery\" and confirm",
+                          "duration": 1859
+                        },
+                        {
+                          "title": "The order is placed and the cart is empty",
+                          "duration": 293
+                        }
+                      ],
+                      "startTime": "2026-10-07T11:50:45.709Z",
+                      "annotations": [
+                        {
+                          "type": "test account",
+                          "description": "Fresh account registered via API for this round (e2e.1791373845756449@example.com)"
+                        },
+                        {
+                          "type": "test data",
+                          "description": "product = \"Claw Hammer\" (default); quantity = 1 (default)"
+                        },
+                        {
+                          "type": "invoice",
+                          "description": "INV-2026000015"
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d86ddf78af31f4d55a78-37f7725a8ed6312a9deb",
+              "file": "05-checkout.spec.ts",
+              "line": 5,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-07T11:50:09.881Z",
+    "duration": 47518.89,
+    "expected": 8,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

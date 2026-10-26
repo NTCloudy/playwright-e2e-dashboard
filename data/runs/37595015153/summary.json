@@ -1,0 +1,565 @@
+{
+  "schemaVersion": 3,
+  "id": "37595015153",
+  "runNumber": 13,
+  "trigger": "manual",
+  "commit": "35089b7",
+  "repoUrl": "https://github.com/NTCloudy/playwright-e2e-dashboard",
+  "workflowRunUrl": "https://github.com/NTCloudy/playwright-e2e-dashboard/actions/runs/37595015153",
+  "startedAt": "2026-10-07T08:38:27.941Z",
+  "finishedAt": "2026-10-07T08:40:40.951Z",
+  "durationMs": 133010,
+  "rounds": 1,
+  "target": "production",
+  "selection": {
+    "all": true,
+    "cases": [
+      "TC01",
+      "TC02",
+      "TC03",
+      "TC04",
+      "TC05",
+      "TC06",
+      "TC07",
+      "TC08",
+      "TC09",
+      "TC10",
+      "TC11",
+      "TC12",
+      "TC13",
+      "TC14",
+      "TC15",
+      "TC16",
+      "TC17",
+      "TC18",
+      "TC20"
+    ],
+    "catalogSize": 20,
+    "applicable": 19
+  },
+  "browser": "chromium",
+  "playwrightVersion": "1.62.1",
+  "baseURL": "https://practicesoftwaretesting.com",
+  "apiURL": "https://api.practicesoftwaretesting.com",
+  "totals": {
+    "passed": 17,
+    "failed": 0,
+    "skipped": 2,
+    "total": 19,
+    "passRate": 1
+  },
+  "brokenRounds": 0,
+  "roundSummaries": [
+    {
+      "round": 1,
+      "startedAt": "2026-10-07T08:38:27.941Z",
+      "durationMs": 133010,
+      "passed": 17,
+      "failed": 0,
+      "skipped": 2,
+      "report": "rounds/round-1/report/index.html",
+      "error": null
+    }
+  ],
+  "cases": [
+    {
+      "id": "TC01",
+      "module": "Home",
+      "title": "Home page loads",
+      "file": "01-home.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 2650,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=c4396361884a96dbe527-29134c1b8e5f013f312d"
+        }
+      ],
+      "passRate": 1,
+      "params": []
+    },
+    {
+      "id": "TC02",
+      "module": "Home",
+      "title": "Return to the home page from a product page",
+      "file": "01-home.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 3963,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=c4396361884a96dbe527-5791a0265f4fc32772f2"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "position",
+          "value": 1,
+          "default": 1
+        }
+      ]
+    },
+    {
+      "id": "TC03",
+      "module": "Home",
+      "title": "Browse a category",
+      "file": "01-home.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 9523,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=c4396361884a96dbe527-ac5643ac60809f1bf890"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "category",
+          "value": "Hand Tools",
+          "default": "Hand Tools"
+        }
+      ]
+    },
+    {
+      "id": "TC04",
+      "module": "Search",
+      "title": "Search by keyword",
+      "file": "02-search.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 2221,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=dcea8af15a48fefe4e67-39fe02b6f4c2a7a98929"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "keyword",
+          "value": "hammer",
+          "default": "hammer"
+        }
+      ]
+    },
+    {
+      "id": "TC05",
+      "module": "Search",
+      "title": "Find a specific product",
+      "file": "02-search.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 2231,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=dcea8af15a48fefe4e67-e13b5d48181219545c13"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "product",
+          "value": "Claw Hammer",
+          "default": "Claw Hammer"
+        }
+      ]
+    },
+    {
+      "id": "TC06",
+      "module": "Search",
+      "title": "Search with no results",
+      "file": "02-search.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 4944,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=dcea8af15a48fefe4e67-f87d0de4115730e2e48f"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "keyword",
+          "value": "NoSuchTool12345",
+          "default": "NoSuchTool12345"
+        }
+      ]
+    },
+    {
+      "id": "TC07",
+      "module": "Search",
+      "title": "Sort products",
+      "file": "02-search.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 3974,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=dcea8af15a48fefe4e67-c43a4eaf8304a34db29a"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "sort",
+          "value": "price,asc",
+          "default": "price,asc"
+        }
+      ]
+    },
+    {
+      "id": "TC08",
+      "module": "Search",
+      "title": "Product details match the search result",
+      "file": "02-search.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 4600,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=dcea8af15a48fefe4e67-58f43b7350a2ca17db16"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "keyword",
+          "value": "hammer",
+          "default": "hammer"
+        },
+        {
+          "key": "product",
+          "value": "Thor Hammer",
+          "default": "Thor Hammer"
+        }
+      ]
+    },
+    {
+      "id": "TC09",
+      "module": "Account",
+      "title": "Sign in with a valid account",
+      "file": "03-account.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "skipped",
+          "durationMs": 13453,
+          "error": null,
+          "skipReason": "Blocked by the site's Cloudflare bot check (common for cloud/CI IP addresses). Not a product failure: the case runs normally from a regular network.",
+          "blocked": true,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=264985d381f77363394a-3517e4007e818f4f65d9"
+        }
+      ],
+      "passRate": null,
+      "params": []
+    },
+    {
+      "id": "TC10",
+      "module": "Account",
+      "title": "Sign in with an unknown account is rejected",
+      "file": "03-account.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 3048,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=264985d381f77363394a-69544e9f7583417d33e5"
+        }
+      ],
+      "passRate": 1,
+      "params": []
+    },
+    {
+      "id": "TC11",
+      "module": "Cart",
+      "title": "Add a product to the cart",
+      "file": "04-cart.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 3538,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=5f513903b8063c1b134f-81348e9c1139cfaa1a01"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "product",
+          "value": "Claw Hammer",
+          "default": "Claw Hammer"
+        },
+        {
+          "key": "quantity",
+          "value": 1,
+          "default": 1
+        }
+      ]
+    },
+    {
+      "id": "TC12",
+      "module": "Cart",
+      "title": "Increase quantity in the cart",
+      "file": "04-cart.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 7796,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=5f513903b8063c1b134f-a87fdab5e8b66a81d855"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "product",
+          "value": "Claw Hammer",
+          "default": "Claw Hammer"
+        },
+        {
+          "key": "quantity",
+          "value": 3,
+          "default": 3
+        }
+      ]
+    },
+    {
+      "id": "TC13",
+      "module": "Cart",
+      "title": "Decrease quantity in the cart",
+      "file": "04-cart.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 12932,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=5f513903b8063c1b134f-9d12e61560faa8d06d3d"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "product",
+          "value": "Claw Hammer",
+          "default": "Claw Hammer"
+        },
+        {
+          "key": "from",
+          "value": 3,
+          "default": 3
+        },
+        {
+          "key": "to",
+          "value": 1,
+          "default": 1
+        }
+      ]
+    },
+    {
+      "id": "TC14",
+      "module": "Cart",
+      "title": "Remove products from the cart",
+      "file": "04-cart.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 8951,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=5f513903b8063c1b134f-8e1f506d25b7b5d621cf"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "first",
+          "value": "Claw Hammer",
+          "default": "Claw Hammer"
+        },
+        {
+          "key": "second",
+          "value": "Thor Hammer",
+          "default": "Thor Hammer"
+        }
+      ]
+    },
+    {
+      "id": "TC15",
+      "module": "Account",
+      "title": "Sign out",
+      "file": "03-account.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "skipped",
+          "durationMs": 23838,
+          "error": null,
+          "skipReason": "Blocked by the site's Cloudflare bot check (common for cloud/CI IP addresses). Not a product failure: the case runs normally from a regular network.",
+          "blocked": true,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=264985d381f77363394a-b2246baf2fb3e089ec60"
+        }
+      ],
+      "passRate": null,
+      "params": []
+    },
+    {
+      "id": "TC16",
+      "module": "Checkout",
+      "title": "Complete checkout (Cash on Delivery)",
+      "file": "05-checkout.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 8275,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=d86ddf78af31f4d55a78-37f7725a8ed6312a9deb"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "product",
+          "value": "Claw Hammer",
+          "default": "Claw Hammer"
+        },
+        {
+          "key": "quantity",
+          "value": 1,
+          "default": 1
+        }
+      ]
+    },
+    {
+      "id": "TC17",
+      "module": "Home",
+      "title": "Page text and images",
+      "file": "01-home.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 2548,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=c4396361884a96dbe527-e73c62823dea6f6a8164"
+        }
+      ],
+      "passRate": 1,
+      "params": []
+    },
+    {
+      "id": "TC18",
+      "module": "Cart",
+      "title": "Purchase quantity upper limit",
+      "file": "04-cart.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 7723,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=5f513903b8063c1b134f-e38916f11d463e29b1e6"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "product",
+          "value": "Claw Hammer",
+          "default": "Claw Hammer"
+        }
+      ]
+    },
+    {
+      "id": "TC20",
+      "module": "Search",
+      "title": "Filter by price range",
+      "file": "02-search.spec.ts",
+      "results": [
+        {
+          "round": 1,
+          "status": "passed",
+          "durationMs": 2827,
+          "error": null,
+          "skipReason": null,
+          "blocked": false,
+          "screenshot": null,
+          "reportLink": "rounds/round-1/report/index.html#?testId=dcea8af15a48fefe4e67-a29b0b93b1b6f69133f8"
+        }
+      ],
+      "passRate": 1,
+      "params": [
+        {
+          "key": "max",
+          "value": 30,
+          "default": 30
+        }
+      ]
+    }
+  ]
+}
